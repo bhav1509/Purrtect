@@ -1,0 +1,197 @@
+{
+  "extName": {
+    "message": "Purrtect"
+  },
+  "extDescription": {
+    "message": "一个友好的小助手，帮你识别 Gmail 和 WhatsApp 网页版中的诈骗信息。"
+  },
+  "menuCheck": {
+    "message": "用 Purrtect 检查"
+  },
+  "badgeTitle": {
+    "message": "Purrtect 已检查此消息，点击查看详情。"
+  },
+  "verdict_safe": {
+    "message": "看起来安全"
+  },
+  "verdict_suspicious": {
+    "message": "请小心"
+  },
+  "verdict_dangerous": {
+    "message": "很可能是诈骗"
+  },
+  "checking": {
+    "message": "正在检查…"
+  },
+  "riskScore": {
+    "message": "风险分数：$1 / 100"
+  },
+  "redFlags": {
+    "message": "危险信号"
+  },
+  "whatToDo": {
+    "message": "该怎么做"
+  },
+  "offlineNote": {
+    "message": "仅快速检查 — 无法连接 Purrtect 服务器。"
+  },
+  "iClickedIt": {
+    "message": "我已经点击、付款或透露了信息"
+  },
+  "mascot_cat": {
+    "message": "猫"
+  },
+  "mascot_dog": {
+    "message": "狗"
+  },
+  "mascot_bird": {
+    "message": "鸟"
+  },
+  "close": {
+    "message": "关闭"
+  },
+  "reason_keyword_urgency": {
+    "message": "催你赶快行动"
+  },
+  "reason_keyword_credentials": {
+    "message": "索要验证码、密码或身份信息"
+  },
+  "reason_keyword_money": {
+    "message": "提到奖金、退款或付款"
+  },
+  "reason_keyword_threats": {
+    "message": "用警察或罚款威胁你"
+  },
+  "reason_keyword_secrecy": {
+    "message": "要求你保密"
+  },
+  "reason_keyword_click_bait": {
+    "message": "催你点击或安装东西"
+  },
+  "reason_keyword_job_scam": {
+    "message": "承诺做简单任务就能轻松赚钱"
+  },
+  "reason_keyword_impersonation": {
+    "message": "用新号码冒充家人或朋友"
+  },
+  "reason_keyword_safety_advice": {
+    "message": "包含正常的安全提示"
+  },
+  "reason_brand_impersonation": {
+    "message": "冒用公司名称，但链接指向别处"
+  },
+  "reason_risky_domain_ending": {
+    "message": "链接网址后缀不寻常"
+  },
+  "reason_ip_address_link": {
+    "message": "链接只有数字，没有名称"
+  },
+  "reason_punycode_link": {
+    "message": "链接使用了形似字符"
+  },
+  "reason_url_shortener": {
+    "message": "短链接隐藏了真实地址"
+  },
+  "reason_lookalike_domain": {
+    "message": "链接假冒知名网站"
+  },
+  "reason_many_links": {
+    "message": "包含很多不同的链接"
+  },
+  "clickWarningTitle": {
+    "message": "等一下！你确定吗？"
+  },
+  "clickWarningBody": {
+    "message": "这条消息看起来有风险。链接指向 $1。真正的银行和公司绝不会通过这样的链接索要验证码或密码。"
+  },
+  "goBack": {
+    "message": "保护我 — 不打开"
+  },
+  "openAnyway": {
+    "message": "仍然打开"
+  },
+  "recoveryTitle": {
+    "message": "我们一起来处理"
+  },
+  "reassurance": {
+    "message": "别担心 — 很多谨慎的人也会遇到这种事。尽快行动会很有帮助。"
+  },
+  "whatHappened": {
+    "message": "发生了什么？"
+  },
+  "happened_clicked_link": {
+    "message": "我点击了链接"
+  },
+  "happened_entered_password": {
+    "message": "我输入了密码"
+  },
+  "happened_shared_otp": {
+    "message": "我透露了验证码"
+  },
+  "happened_paid_money": {
+    "message": "我付了钱"
+  },
+  "happened_installed_app": {
+    "message": "我安装了应用"
+  },
+  "happened_shared_id": {
+    "message": "我透露了证件或银行卡信息"
+  },
+  "yourCountry": {
+    "message": "你所在的国家"
+  },
+  "country_IN": {
+    "message": "印度"
+  },
+  "country_US": {
+    "message": "美国"
+  },
+  "country_GB": {
+    "message": "英国"
+  },
+  "country_JP": {
+    "message": "日本"
+  },
+  "country_CN": {
+    "message": "中国"
+  },
+  "country_SG": {
+    "message": "新加坡"
+  },
+  "country_AU": {
+    "message": "澳大利亚"
+  },
+  "detailsPlaceholder": {
+    "message": "可以多说一点（选填）。不要输入密码或卡号。"
+  },
+  "getHelp": {
+    "message": "告诉我该怎么做"
+  },
+  "officialHelp": {
+    "message": "$1 的官方求助渠道"
+  },
+  "static_step1_title": {
+    "message": "立即致电你的银行"
+  },
+  "static_step1_detail": {
+    "message": "拨打银行卡背面的电话，要求冻结卡片并拦截付款。"
+  },
+  "static_step2_title": {
+    "message": "修改密码"
+  },
+  "static_step2_detail": {
+    "message": "先改邮箱和网银密码，使用从未用过的新密码。"
+  },
+  "static_step3_title": {
+    "message": "删除陌生应用"
+  },
+  "static_step3_detail": {
+    "message": "卸载按消息要求安装的应用，尤其是屏幕共享类应用。"
+  },
+  "static_step4_title": {
+    "message": "报告"
+  },
+  "static_step4_detail": {
+    "message": "向警方或国家反诈热线报告。真正的机构不会收费帮你追回钱款。"
+  }
+}

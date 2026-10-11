@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "version": "0.1.0",
+  "default_locale": "en",
+  "icons": {
+    "16": "mascots/cat/safe.png",
+    "48": "mascots/cat/safe.png",
+    "128": "mascots/cat/safe.png"
+  },
+  "action": {
+    "default_title": "__MSG_extName__",
+    "default_icon": "mascots/cat/safe.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://web.whatsapp.com/*",
+    "http://localhost:8000/*",
+    "https://*.web.app/*",
+    "https://*.run.app/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": [
+        "rules.js", "ui/common.js", "ui/badge.js", "ui/verdict-card.js", "ui/click-warning.js",
+        "ui/recovery-panel.js", "content/menu-listener.js", "content/shared.js", "content/gmail.js"
+      ],
+      "css": ["ui/ui.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": [
+        "rules.js", "ui/common.js", "ui/badge.js", "ui/verdict-card.js", "ui/click-warning.js",
+        "ui/recovery-panel.js", "content/menu-listener.js", "content/shared.js", "content/whatsapp.js"
+      ],
+      "css": ["ui/ui.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["mascots/*/*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

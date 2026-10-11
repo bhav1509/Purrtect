@@ -1,0 +1,484 @@
+{
+  "version": 1,
+  "thresholds": {
+    "suspicious": 25,
+    "dangerous": 50
+  },
+  "points": {
+    "brand_impersonation": 35,
+    "risky_domain_ending": 20,
+    "ip_address_link": 25,
+    "punycode_link": 25,
+    "url_shortener": 10,
+    "lookalike_domain": 30,
+    "many_links": 5,
+    "max_per_category": 30
+  },
+  "keywords": {
+    "urgency": {
+      "points": 10,
+      "terms": [
+        "urgent",
+        "immediately",
+        "within 24 hours",
+        "act now",
+        "final notice",
+        "last warning",
+        "account will be suspended",
+        "account suspended",
+        "account will be blocked",
+        "expires today",
+        "turant",
+        "abhi",
+        "jaldi",
+        "तुरंत",
+        "अभी",
+        "अंतिम चेतावनी",
+        "बंद हो जाएगा",
+        "至急",
+        "直ちに",
+        "本日中",
+        "停止されます",
+        "緊急",
+        "紧急",
+        "立即",
+        "马上",
+        "24小时内",
+        "将被冻结",
+        "最后通知"
+      ]
+    },
+    "credentials": {
+      "points": 15,
+      "terms": [
+        "verify your account",
+        "confirm your password",
+        "login to verify",
+        "update your kyc",
+        "kyc",
+        "share the otp",
+        "send the otp",
+        "otp",
+        "pin number",
+        "cvv",
+        "one-time password",
+        "ओटीपी",
+        "पासवर्ड",
+        "केवाईसी",
+        "パスワード",
+        "暗証番号",
+        "認証コード",
+        "本人確認",
+        "验证码",
+        "密码",
+        "验证您的账户",
+        "身份验证"
+      ]
+    },
+    "money": {
+      "points": 12,
+      "terms": [
+        "refund",
+        "you have won",
+        "you won",
+        "lottery",
+        "prize",
+        "cashback",
+        "gift card",
+        "processing fee",
+        "pay a small fee",
+        "wire transfer",
+        "bitcoin",
+        "crypto",
+        "investment opportunity",
+        "guaranteed returns",
+        "double your money",
+        "customs fee",
+        "unpaid",
+        "outstanding payment",
+        "इनाम",
+        "लॉटरी",
+        "रिफंड",
+        "जीत",
+        "当選",
+        "返金",
+        "未払い",
+        "ギフトカード",
+        "手数料",
+        "中奖",
+        "退款",
+        "奖金",
+        "礼品卡",
+        "手续费",
+        "高回报"
+      ]
+    },
+    "threats": {
+      "points": 12,
+      "terms": [
+        "legal action",
+        "arrest",
+        "police case",
+        "warrant",
+        "penalty",
+        "your parcel is held",
+        "digital arrest",
+        "cyber cell",
+        "court notice",
+        "गिरफ्तार",
+        "पुलिस",
+        "कानूनी कार्रवाई",
+        "逮捕",
+        "法的措置",
+        "警察",
+        "逮捕令",
+        "法律责任",
+        "公安",
+        "money laundering",
+        "safe account",
+        "安全账户",
+        "洗钱",
+        "マネーロンダリング",
+        "मनी लॉन्ड्रिंग"
+      ]
+    },
+    "secrecy": {
+      "points": 10,
+      "terms": [
+        "do not tell anyone",
+        "keep this confidential",
+        "don't tell your family",
+        "this is a secret",
+        "किसी को मत बताना",
+        "誰にも言わないで",
+        "秘密にして",
+        "不要告诉任何人",
+        "保密"
+      ]
+    },
+    "click_bait": {
+      "points": 8,
+      "terms": [
+        "click here",
+        "click the link",
+        "tap the link",
+        "open the link below",
+        "download the app",
+        "install this apk",
+        ".apk",
+        "anydesk",
+        "teamviewer",
+        "यहां क्लिक करें",
+        "लिंक पर क्लिक",
+        "こちらをクリック",
+        "リンクをタップ",
+        "点击链接",
+        "点击这里",
+        "下载"
+      ]
+    },
+    "job_scam": {
+      "points": 12,
+      "terms": [
+        "work from home",
+        "earn from home",
+        "daily from home",
+        "part-time job",
+        "part time job",
+        "like youtube videos",
+        "rate products",
+        "prepaid task",
+        "घर बैठे कमाएं",
+        "副業",
+        "在宅ワーク",
+        "刷单",
+        "兼职",
+        "日赚"
+      ]
+    },
+    "impersonation": {
+      "points": 12,
+      "terms": [
+        "this is my new number",
+        "my new number",
+        "my phone broke",
+        "lost my phone",
+        "hi mum",
+        "hi mom",
+        "hi dad",
+        "मेरा नया नंबर",
+        "新しい番号",
+        "我换号了",
+        "这是我的新号码"
+      ]
+    },
+    "safety_advice": {
+      "points": -15,
+      "terms": [
+        "never share",
+        "do not share",
+        "don't share",
+        "if this was you",
+        "did not request this",
+        "किसी के साथ साझा न करें",
+        "誰にも教えないでください",
+        "请勿泄露",
+        "切勿告诉他人"
+      ]
+    }
+  },
+  "risky_domain_endings": [
+    ".xyz",
+    ".top",
+    ".click",
+    ".link",
+    ".work",
+    ".rest",
+    ".zip",
+    ".mov",
+    ".tk",
+    ".ml",
+    ".ga",
+    ".cf",
+    ".gq",
+    ".icu",
+    ".cyou",
+    ".buzz",
+    ".sbs",
+    ".monster",
+    ".cam",
+    ".loan",
+    ".win",
+    ".bid",
+    ".country",
+    ".support",
+    ".live",
+    ".shop"
+  ],
+  "url_shorteners": [
+    "bit.ly",
+    "tinyurl.com",
+    "t.co",
+    "goo.gl",
+    "is.gd",
+    "cutt.ly",
+    "rb.gy",
+    "shorturl.at",
+    "ow.ly",
+    "tiny.cc"
+  ],
+  "brands": [
+    {
+      "name": "Amazon",
+      "aliases": [
+        "amazon",
+        "アマゾン",
+        "亚马逊"
+      ],
+      "domains": [
+        "amazon.com",
+        "amazon.in",
+        "amazon.co.jp",
+        "amazon.cn",
+        "amazon.co.uk"
+      ]
+    },
+    {
+      "name": "PayPal",
+      "aliases": [
+        "paypal"
+      ],
+      "domains": [
+        "paypal.com"
+      ]
+    },
+    {
+      "name": "Apple",
+      "aliases": [
+        "apple id",
+        "icloud"
+      ],
+      "domains": [
+        "apple.com",
+        "icloud.com"
+      ]
+    },
+    {
+      "name": "Google",
+      "aliases": [
+        "google",
+        "gmail"
+      ],
+      "domains": [
+        "google.com",
+        "gmail.com"
+      ]
+    },
+    {
+      "name": "Microsoft",
+      "aliases": [
+        "microsoft",
+        "outlook",
+        "office 365"
+      ],
+      "domains": [
+        "microsoft.com",
+        "live.com",
+        "outlook.com",
+        "office.com"
+      ]
+    },
+    {
+      "name": "Netflix",
+      "aliases": [
+        "netflix"
+      ],
+      "domains": [
+        "netflix.com"
+      ]
+    },
+    {
+      "name": "WhatsApp",
+      "aliases": [
+        "whatsapp"
+      ],
+      "domains": [
+        "whatsapp.com",
+        "whatsapp.net",
+        "wa.me"
+      ]
+    },
+    {
+      "name": "SBI",
+      "aliases": [
+        "sbi",
+        "state bank of india",
+        "yono"
+      ],
+      "domains": [
+        "sbi.co.in",
+        "onlinesbi.sbi",
+        "onlinesbi.com"
+      ]
+    },
+    {
+      "name": "HDFC Bank",
+      "aliases": [
+        "hdfc"
+      ],
+      "domains": [
+        "hdfcbank.com"
+      ]
+    },
+    {
+      "name": "ICICI Bank",
+      "aliases": [
+        "icici"
+      ],
+      "domains": [
+        "icicibank.com"
+      ]
+    },
+    {
+      "name": "Paytm",
+      "aliases": [
+        "paytm"
+      ],
+      "domains": [
+        "paytm.com"
+      ]
+    },
+    {
+      "name": "India Post",
+      "aliases": [
+        "india post",
+        "indiapost"
+      ],
+      "domains": [
+        "indiapost.gov.in"
+      ]
+    },
+    {
+      "name": "Income Tax India",
+      "aliases": [
+        "income tax department",
+        "आयकर"
+      ],
+      "domains": [
+        "incometax.gov.in"
+      ]
+    },
+    {
+      "name": "Japan Post",
+      "aliases": [
+        "japan post",
+        "日本郵便",
+        "郵便局"
+      ],
+      "domains": [
+        "post.japanpost.jp",
+        "japanpost.jp"
+      ]
+    },
+    {
+      "name": "Rakuten",
+      "aliases": [
+        "rakuten",
+        "楽天"
+      ],
+      "domains": [
+        "rakuten.co.jp",
+        "rakuten.com"
+      ]
+    },
+    {
+      "name": "Alipay",
+      "aliases": [
+        "alipay",
+        "支付宝"
+      ],
+      "domains": [
+        "alipay.com"
+      ]
+    },
+    {
+      "name": "WeChat",
+      "aliases": [
+        "wechat",
+        "微信"
+      ],
+      "domains": [
+        "wechat.com",
+        "weixin.qq.com",
+        "qq.com"
+      ]
+    },
+    {
+      "name": "DHL",
+      "aliases": [
+        "dhl"
+      ],
+      "domains": [
+        "dhl.com"
+      ]
+    },
+    {
+      "name": "FedEx",
+      "aliases": [
+        "fedex"
+      ],
+      "domains": [
+        "fedex.com"
+      ]
+    },
+    {
+      "name": "USPS",
+      "aliases": [
+        "usps"
+      ],
+      "domains": [
+        "usps.com"
+      ]
+    }
+  ]
+}

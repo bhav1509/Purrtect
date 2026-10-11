@@ -1,0 +1,197 @@
+{
+  "extName": {
+    "message": "Purrtect"
+  },
+  "extDescription": {
+    "message": "A friendly mascot that spots scam messages in Gmail and WhatsApp Web."
+  },
+  "menuCheck": {
+    "message": "Check this with Purrtect"
+  },
+  "badgeTitle": {
+    "message": "Purrtect checked this message. Click for details."
+  },
+  "verdict_safe": {
+    "message": "Looks safe"
+  },
+  "verdict_suspicious": {
+    "message": "Be careful"
+  },
+  "verdict_dangerous": {
+    "message": "Likely a scam"
+  },
+  "checking": {
+    "message": "Checking…"
+  },
+  "riskScore": {
+    "message": "Risk score: $1 / 100"
+  },
+  "redFlags": {
+    "message": "Warning signs"
+  },
+  "whatToDo": {
+    "message": "What to do"
+  },
+  "offlineNote": {
+    "message": "Quick check only — the Purrtect server could not be reached."
+  },
+  "iClickedIt": {
+    "message": "I already clicked, paid or shared something"
+  },
+  "mascot_cat": {
+    "message": "Cat"
+  },
+  "mascot_dog": {
+    "message": "Dog"
+  },
+  "mascot_bird": {
+    "message": "Bird"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "reason_keyword_urgency": {
+    "message": "Rushes you to act fast"
+  },
+  "reason_keyword_credentials": {
+    "message": "Asks for codes, passwords or KYC"
+  },
+  "reason_keyword_money": {
+    "message": "Talks about prizes, refunds or payments"
+  },
+  "reason_keyword_threats": {
+    "message": "Threatens you with police or penalties"
+  },
+  "reason_keyword_secrecy": {
+    "message": "Asks you to keep it secret"
+  },
+  "reason_keyword_click_bait": {
+    "message": "Pushes you to click or install something"
+  },
+  "reason_keyword_job_scam": {
+    "message": "Promises easy money for simple online tasks"
+  },
+  "reason_keyword_impersonation": {
+    "message": "Pretends to be family or a friend on a new number"
+  },
+  "reason_keyword_safety_advice": {
+    "message": "Includes normal safety advice"
+  },
+  "reason_brand_impersonation": {
+    "message": "Uses a company's name but links elsewhere"
+  },
+  "reason_risky_domain_ending": {
+    "message": "Link has an unusual web address ending"
+  },
+  "reason_ip_address_link": {
+    "message": "Link is just numbers, not a name"
+  },
+  "reason_punycode_link": {
+    "message": "Link uses look-alike letters"
+  },
+  "reason_url_shortener": {
+    "message": "Link is shortened, hiding where it goes"
+  },
+  "reason_lookalike_domain": {
+    "message": "Link pretends to be a well-known site"
+  },
+  "reason_many_links": {
+    "message": "Contains many different links"
+  },
+  "clickWarningTitle": {
+    "message": "Wait! Are you sure?"
+  },
+  "clickWarningBody": {
+    "message": "This message looks risky. The link goes to $1. Real banks and companies never ask for codes or passwords through links like this."
+  },
+  "goBack": {
+    "message": "Keep me safe — don't open"
+  },
+  "openAnyway": {
+    "message": "Open anyway"
+  },
+  "recoveryTitle": {
+    "message": "Let's fix this together"
+  },
+  "reassurance": {
+    "message": "Don't worry — this happens to many careful people. Acting quickly helps a lot."
+  },
+  "whatHappened": {
+    "message": "What happened?"
+  },
+  "happened_clicked_link": {
+    "message": "I clicked the link"
+  },
+  "happened_entered_password": {
+    "message": "I typed my password"
+  },
+  "happened_shared_otp": {
+    "message": "I shared an OTP / code"
+  },
+  "happened_paid_money": {
+    "message": "I paid money"
+  },
+  "happened_installed_app": {
+    "message": "I installed an app"
+  },
+  "happened_shared_id": {
+    "message": "I shared ID or card details"
+  },
+  "yourCountry": {
+    "message": "Your country"
+  },
+  "country_IN": {
+    "message": "India"
+  },
+  "country_US": {
+    "message": "United States"
+  },
+  "country_GB": {
+    "message": "United Kingdom"
+  },
+  "country_JP": {
+    "message": "Japan"
+  },
+  "country_CN": {
+    "message": "China"
+  },
+  "country_SG": {
+    "message": "Singapore"
+  },
+  "country_AU": {
+    "message": "Australia"
+  },
+  "detailsPlaceholder": {
+    "message": "Tell us a little more (optional). Don't type passwords or card numbers."
+  },
+  "getHelp": {
+    "message": "Show me what to do"
+  },
+  "officialHelp": {
+    "message": "Official help in $1"
+  },
+  "static_step1_title": {
+    "message": "Call your bank now"
+  },
+  "static_step1_detail": {
+    "message": "Use the number on the back of your card. Ask them to block the card and stop any payments."
+  },
+  "static_step2_title": {
+    "message": "Change your passwords"
+  },
+  "static_step2_detail": {
+    "message": "Start with email and banking. Use a new password you haven't used anywhere else."
+  },
+  "static_step3_title": {
+    "message": "Remove unknown apps"
+  },
+  "static_step3_detail": {
+    "message": "Uninstall any app the message asked you to install, especially screen-sharing apps."
+  },
+  "static_step4_title": {
+    "message": "Report it"
+  },
+  "static_step4_detail": {
+    "message": "Report to the police or your national scam helpline. Nobody genuine will charge a fee to get your money back."
+  }
+}

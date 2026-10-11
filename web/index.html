@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Purrtect Scam Checker</title>
+  <meta name="description" content="Paste a message and Purrtect tells you if it looks like a scam.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <img id="mascot" src="mascots/cat/checking.png" alt="" width="96" height="96">
+      <div>
+        <h1>Purrtect</h1>
+        <p class="tagline">Paste a message. We'll tell you if it looks like a scam.</p>
+      </div>
+    </header>
+
+    <form id="form">
+      <label for="text">Message</label>
+      <textarea id="text" rows="8" required
+        placeholder="Paste the email, SMS or WhatsApp message here. You can remove names and numbers first — we hide them anyway."></textarea>
+      <div class="row">
+        <label>Reply language
+          <select id="lang">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="ja">日本語</option>
+            <option value="zh_CN">简体中文</option>
+          </select>
+        </label>
+        <label>Mascot
+          <select id="pet">
+            <option value="cat">Cat</option>
+            <option value="dog">Dog</option>
+            <option value="bird">Bird</option>
+          </select>
+        </label>
+      </div>
+      <button id="submit" type="submit">Check message</button>
+    </form>
+
+    <section id="result" class="card" hidden aria-live="polite"></section>
+
+    <section id="recover" class="card help" hidden>
+      <h2>Already clicked, paid or shared something?</h2>
+      <p>Don't worry — this happens to many careful people. Acting quickly helps a lot.</p>
+      <fieldset id="happened">
+        <label><input type="checkbox" value="clicked_link"> I clicked the link</label>
+        <label><input type="checkbox" value="entered_password"> I typed my password</label>
+        <label><input type="checkbox" value="shared_otp"> I shared an OTP / code</label>
+        <label><input type="checkbox" value="paid_money"> I paid money</label>
+        <label><input type="checkbox" value="installed_app"> I installed an app</label>
+        <label><input type="checkbox" value="shared_id"> I shared ID or card details</label>
+      </fieldset>
+      <label>Your country
+        <select id="country">
+          <option value="IN">India</option>
+          <option value="US">United States</option>
+          <option value="GB">United Kingdom</option>
+          <option value="JP">Japan</option>
+          <option value="CN">China</option>
+          <option value="SG">Singapore</option>
+          <option value="AU">Australia</option>
+        </select>
+      </label>
+      <button id="recoverBtn" type="button">Show me what to do</button>
+      <div id="recoverOut"></div>
+    </section>
+
+    <footer>
+      Purrtect hides phone numbers, emails, card and account numbers before checking.
+      It can make mistakes — when in doubt, call the company using a number you already trust.
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

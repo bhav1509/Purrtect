@@ -1,0 +1,25 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": ["firebase.json", "**/.*"],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": { "serviceId": "purrtect-api", "region": "asia-south1" }
+      },
+      {
+        "source": "/health",
+        "run": { "serviceId": "purrtect-api", "region": "asia-south1" }
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "no-referrer" }
+        ]
+      }
+    ]
+  }
+}

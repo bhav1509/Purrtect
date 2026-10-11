@@ -1,0 +1,197 @@
+{
+  "extName": {
+    "message": "Purrtect"
+  },
+  "extDescription": {
+    "message": "Gmail と WhatsApp Web の詐欺メッセージを見つけてくれる、やさしいマスコット。"
+  },
+  "menuCheck": {
+    "message": "Purrtect でチェック"
+  },
+  "badgeTitle": {
+    "message": "Purrtect がこのメッセージを確認しました。クリックで詳細。"
+  },
+  "verdict_safe": {
+    "message": "安全そうです"
+  },
+  "verdict_suspicious": {
+    "message": "注意してください"
+  },
+  "verdict_dangerous": {
+    "message": "詐欺の可能性大"
+  },
+  "checking": {
+    "message": "確認中…"
+  },
+  "riskScore": {
+    "message": "危険度: $1 / 100"
+  },
+  "redFlags": {
+    "message": "注意すべき点"
+  },
+  "whatToDo": {
+    "message": "どうすればいい？"
+  },
+  "offlineNote": {
+    "message": "簡易チェックのみ — Purrtect サーバーに接続できませんでした。"
+  },
+  "iClickedIt": {
+    "message": "もうクリック・支払い・情報共有してしまった"
+  },
+  "mascot_cat": {
+    "message": "ネコ"
+  },
+  "mascot_dog": {
+    "message": "イヌ"
+  },
+  "mascot_bird": {
+    "message": "トリ"
+  },
+  "close": {
+    "message": "閉じる"
+  },
+  "reason_keyword_urgency": {
+    "message": "急がせようとしている"
+  },
+  "reason_keyword_credentials": {
+    "message": "コードやパスワードを求めている"
+  },
+  "reason_keyword_money": {
+    "message": "当選・返金・支払いの話"
+  },
+  "reason_keyword_threats": {
+    "message": "警察や罰金で脅している"
+  },
+  "reason_keyword_secrecy": {
+    "message": "秘密にするよう言っている"
+  },
+  "reason_keyword_click_bait": {
+    "message": "クリックやインストールを促している"
+  },
+  "reason_keyword_job_scam": {
+    "message": "簡単な作業で楽に稼げると誘っている"
+  },
+  "reason_keyword_impersonation": {
+    "message": "新しい番号で家族や友人を名乗っている"
+  },
+  "reason_keyword_safety_advice": {
+    "message": "通常の注意書きがある"
+  },
+  "reason_brand_impersonation": {
+    "message": "会社名を名乗っているのにリンク先が別"
+  },
+  "reason_risky_domain_ending": {
+    "message": "リンクのアドレスの末尾が怪しい"
+  },
+  "reason_ip_address_link": {
+    "message": "リンクが名前ではなく数字だけ"
+  },
+  "reason_punycode_link": {
+    "message": "リンクに紛らわしい文字が使われている"
+  },
+  "reason_url_shortener": {
+    "message": "短縮リンクで行き先が隠れている"
+  },
+  "reason_lookalike_domain": {
+    "message": "有名サイトになりすましたリンク"
+  },
+  "reason_many_links": {
+    "message": "たくさんのリンクがある"
+  },
+  "clickWarningTitle": {
+    "message": "ちょっと待って！本当に開きますか？"
+  },
+  "clickWarningBody": {
+    "message": "このメッセージは危険そうです。リンク先は $1 です。本物の銀行や会社がこのようなリンクでコードやパスワードを求めることはありません。"
+  },
+  "goBack": {
+    "message": "安全のため開かない"
+  },
+  "openAnyway": {
+    "message": "それでも開く"
+  },
+  "recoveryTitle": {
+    "message": "一緒に対処しましょう"
+  },
+  "reassurance": {
+    "message": "大丈夫、慎重な人でもよくあることです。早く動けば被害を大きく減らせます。"
+  },
+  "whatHappened": {
+    "message": "何がありましたか？"
+  },
+  "happened_clicked_link": {
+    "message": "リンクをクリックした"
+  },
+  "happened_entered_password": {
+    "message": "パスワードを入力した"
+  },
+  "happened_shared_otp": {
+    "message": "認証コードを教えた"
+  },
+  "happened_paid_money": {
+    "message": "お金を払った"
+  },
+  "happened_installed_app": {
+    "message": "アプリをインストールした"
+  },
+  "happened_shared_id": {
+    "message": "身分証やカード情報を教えた"
+  },
+  "yourCountry": {
+    "message": "お住まいの国"
+  },
+  "country_IN": {
+    "message": "インド"
+  },
+  "country_US": {
+    "message": "アメリカ"
+  },
+  "country_GB": {
+    "message": "イギリス"
+  },
+  "country_JP": {
+    "message": "日本"
+  },
+  "country_CN": {
+    "message": "中国"
+  },
+  "country_SG": {
+    "message": "シンガポール"
+  },
+  "country_AU": {
+    "message": "オーストラリア"
+  },
+  "detailsPlaceholder": {
+    "message": "もう少し教えてください（任意）。パスワードやカード番号は書かないで。"
+  },
+  "getHelp": {
+    "message": "やるべきことを見る"
+  },
+  "officialHelp": {
+    "message": "$1 の公式窓口"
+  },
+  "static_step1_title": {
+    "message": "すぐに銀行に電話する"
+  },
+  "static_step1_detail": {
+    "message": "カード裏面の番号に電話し、カードの停止と支払いの差し止めを依頼してください。"
+  },
+  "static_step2_title": {
+    "message": "パスワードを変更する"
+  },
+  "static_step2_detail": {
+    "message": "まずメールと銀行から。他で使っていない新しいパスワードにしてください。"
+  },
+  "static_step3_title": {
+    "message": "知らないアプリを削除する"
+  },
+  "static_step3_detail": {
+    "message": "メッセージに言われて入れたアプリ、特に画面共有アプリを削除してください。"
+  },
+  "static_step4_title": {
+    "message": "通報する"
+  },
+  "static_step4_detail": {
+    "message": "警察や公的な相談窓口に通報してください。「お金を取り戻す」と手数料を求めるのは詐欺です。"
+  }
+}

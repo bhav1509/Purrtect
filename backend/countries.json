@@ -1,0 +1,76 @@
+{
+  "IN": {
+    "name": "India",
+    "helplines": [
+      { "label": "National Cyber Crime Helpline", "number": "1930" },
+      { "label": "Police emergency", "number": "112" }
+    ],
+    "report_sites": [
+      { "label": "National Cyber Crime Reporting Portal", "url": "https://cybercrime.gov.in" },
+      { "label": "Sanchar Saathi (report fraud calls/SMS)", "url": "https://sancharsaathi.gov.in" }
+    ]
+  },
+  "US": {
+    "name": "United States",
+    "helplines": [
+      { "label": "Emergency", "number": "911" }
+    ],
+    "report_sites": [
+      { "label": "FTC fraud report", "url": "https://reportfraud.ftc.gov" },
+      { "label": "FBI Internet Crime Complaint Center", "url": "https://www.ic3.gov" },
+      { "label": "Identity theft recovery plan", "url": "https://www.identitytheft.gov" }
+    ]
+  },
+  "GB": {
+    "name": "United Kingdom",
+    "helplines": [
+      { "label": "Action Fraud", "number": "0300 123 2040" },
+      { "label": "Stop Scams UK (connects to your bank)", "number": "159" },
+      { "label": "Forward scam texts to", "number": "7726" }
+    ],
+    "report_sites": [
+      { "label": "Action Fraud", "url": "https://www.actionfraud.police.uk" }
+    ]
+  },
+  "JP": {
+    "name": "Japan",
+    "helplines": [
+      { "label": "警察相談専用電話 (Police consultation)", "number": "#9110" },
+      { "label": "消費者ホットライン (Consumer hotline)", "number": "188" },
+      { "label": "警察 (Police emergency)", "number": "110" }
+    ],
+    "report_sites": [
+      { "label": "フィッシング対策協議会 (Council of Anti-Phishing Japan)", "url": "https://www.antiphishing.jp" }
+    ]
+  },
+  "CN": {
+    "name": "China",
+    "helplines": [
+      { "label": "反诈预警专线 (Anti-fraud hotline)", "number": "96110" },
+      { "label": "报警 (Police)", "number": "110" }
+    ],
+    "report_sites": [
+      { "label": "国家反诈中心 App (National Anti-Fraud Center app)", "url": "https://www.mps.gov.cn" }
+    ]
+  },
+  "SG": {
+    "name": "Singapore",
+    "helplines": [
+      { "label": "ScamShield Helpline", "number": "1799" },
+      { "label": "Police emergency", "number": "999" }
+    ],
+    "report_sites": [
+      { "label": "ScamShield", "url": "https://www.scamshield.gov.sg" }
+    ]
+  },
+  "AU": {
+    "name": "Australia",
+    "helplines": [
+      { "label": "IDCARE (identity & cyber support)", "number": "1800 595 160" }
+    ],
+    "report_sites": [
+      { "label": "Scamwatch", "url": "https://www.scamwatch.gov.au" },
+      { "label": "ReportCyber", "url": "https://www.cyber.gov.au/report-and-recover" }
+    ]
+  }
+}
