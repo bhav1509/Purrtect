@@ -1,79 +1,69 @@
-// Service worker: right-click "Check with Purrtect", and the only place that talks to the backend.
-importScripts("rules.js");
+// Service worker: "Scan with Purrtect" right-click menu, onboarding, and every backend call.
+importScripts("config.js");
 
-const DEFAULTS = { apiBase: "http://localhost:8000" };
-const UI_FILES = ["rules.js", "ui/common.js", "ui/badge.js", "ui/verdict-card.js", "ui/click-warning.js", "ui/recovery-panel.js"];
-const MENU_ID = "purrtect-check";
+const MENU_ID = "purrtect-scan";
+const API_TIMEOUT_MS = 25000; // backend caps scans at 8 s and recovery plans at 20 s; allow for the network
+const CONTENT_SITES = [/^https:\/\/mail\.google\.com\//, /^https:\/\/web\.whatsapp\.com\//];
 
 let rulesPromise = null;
+const localeCache = {};
+
 function getRules() {
   rulesPromise ??= fetch(chrome.runtime.getURL("rules.json")).then((r) => r.json());
   return rulesPromise;
 }
 
-async function api(path, payload) {
-  const { apiBase } = await chrome.storage.sync.get(DEFAULTS);
+function getLocale(lang) {
+  const safe = ["en", "hi", "ja", "zh_CN"].includes(lang) ? lang : "en";
+  localeCache[safe] ??= fetch(chrome.runtime.getURL(`_locales/${safe}/messages.json`)).then((r) => r.json());
+  return localeCache[safe];
+}
+
+async function api(path, body) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), API_TIMEOUT_MS);
   try {
-    const res = await fetch(apiBase.replace(/\/$/, "") + path, {
+    const res = await fetch(self.PURRTECT_CONFIG.apiBase.replace(/\/$/, "") + path, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(body),
+      signal: ctrl.signal,
     });
-    if (!res.ok) return { error: `HTTP ${res.status}` };
-    return await res.json();
+    const data = await res.json().catch(() => null);
+    return { ok: res.ok, status: res.status, data };
   } catch (e) {
-    return { error: String(e) };
+    return { ok: false, status: 0, data: null };
+  } finally {
+    clearTimeout(timer);
   }
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: MENU_ID,
-    title: chrome.i18n.getMessage("menuCheck"),
-    contexts: ["selection", "link"],
-  });
+chrome.runtime.onInstalled.addListener((details) => {
+  chrome.contextMenus.create({ id: MENU_ID, title: chrome.i18n.getMessage("menuScan"), contexts: ["selection", "link"] });
+  if (details.reason === "install") chrome.tabs.create({ url: chrome.runtime.getURL("ui/settings.html?welcome=1") });
 });
 
 chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
   if (msg.type === "getRules") getRules().then(reply);
-  else if (msg.type === "scan") api("/api/scan", msg.payload).then(reply);
-  else if (msg.type === "recover") api("/api/recover", msg.payload).then(reply);
+  else if (msg.type === "getLocale") getLocale(msg.lang).then(reply);
+  else if (msg.type === "api") api(msg.path, msg.body).then(reply);
   else return false;
   return true; // reply asynchronously
 });
 
-// Make sure the UI scripts are in the tab (they already are on Gmail/WhatsApp).
-async function ensureUI(tabId) {
-  try {
-    await chrome.tabs.sendMessage(tabId, { type: "ping" });
-  } catch (_) {
-    await chrome.scripting.insertCSS({ target: { tabId }, files: ["ui/ui.css"] });
-    await chrome.scripting.executeScript({ target: { tabId }, files: [...UI_FILES, "content/menu-listener.js"] });
-  }
-}
-
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== MENU_ID || !tab?.id) return;
-  const text = [info.selectionText, info.linkUrl].filter(Boolean).join("\n");
-  if (!text.trim()) return;
+  if (info.menuItemId !== MENU_ID) return;
+  const text = info.selectionText || "";
+  const links = info.linkUrl ? [info.linkUrl] : [];
+  if (!text.trim() && !links.length) return;
 
-  const rules = await getRules();
-  const local = PurrRules.score(text, rules);
-  try {
-    await ensureUI(tab.id);
-  } catch (_) {
-    return; // chrome:// pages, the Web Store, etc. can't be scripted
+  // On Gmail and WhatsApp the card opens in the page; anywhere else, in a small window.
+  if (tab && tab.id && CONTENT_SITES.some((re) => re.test(tab.url || ""))) {
+    try {
+      await chrome.tabs.sendMessage(tab.id, { type: "manualScan", text, links });
+      return;
+    } catch (_) { /* content script not ready; fall through */ }
   }
-  chrome.tabs.sendMessage(tab.id, { type: "showVerdict", result: { ...local, rules: local, pending: true } });
-
-  const { lang } = await chrome.storage.sync.get({ lang: "auto" });
-  const ai = await api("/api/scan", { text: PurrRules.mask(text), source: "selection", lang: resolveLang(lang) });
-  const result = ai && !ai.error ? ai : { ...local, rules: local, offline: true };
-  chrome.tabs.sendMessage(tab.id, { type: "showVerdict", result });
+  await chrome.storage.session.set({ pendingScan: { text, links } });
+  chrome.windows.create({ url: chrome.runtime.getURL("ui/scan.html"), type: "popup", width: 460, height: 720 });
 });
-
-function resolveLang(lang) {
-  if (lang !== "auto") return lang;
-  const ui = chrome.i18n.getUILanguage();
-  return ui.startsWith("hi") ? "hi" : ui.startsWith("ja") ? "ja" : ui.startsWith("zh") ? "zh_CN" : "en";
-}

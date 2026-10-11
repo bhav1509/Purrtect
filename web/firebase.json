@@ -1,14 +1,10 @@
 {
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", "**/.*"],
+    "ignore": ["firebase.json", ".firebaserc", "firebase-debug.log", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "/api/**",
-        "run": { "serviceId": "purrtect-api", "region": "asia-south1" }
-      },
-      {
-        "source": "/health",
         "run": { "serviceId": "purrtect-api", "region": "asia-south1" }
       }
     ],

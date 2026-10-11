@@ -1,0 +1,867 @@
+{
+  "version": 2,
+  "levels": {
+    "yellow": 30,
+    "red": 60
+  },
+  "sensitivity_shift": {
+    "relaxed": 10,
+    "normal": 0,
+    "strict": -10
+  },
+  "points": {
+    "ip_link": 40,
+    "lookalike": 40,
+    "display_name_claim": 35,
+    "shortener": 20,
+    "plain_http": 15,
+    "risky_tld": 15,
+    "urgency": 15,
+    "money_secret": 15,
+    "new_sender": 10
+  },
+  "keywords": {
+    "urgency": [
+      "urgent",
+      "immediately",
+      "within 24 hours",
+      "within 24 hrs",
+      "act now",
+      "last chance",
+      "final notice",
+      "final warning",
+      "account blocked",
+      "account will be blocked",
+      "account suspended",
+      "will be suspended",
+      "expires today",
+      "today only",
+      "right away",
+      "तुरंत",
+      "अभी",
+      "आज ही",
+      "अंतिम चेतावनी",
+      "बंद हो जाएगा",
+      "ब्लॉक हो जाएगा",
+      "24 घंटे",
+      "至急",
+      "直ちに",
+      "本日中",
+      "停止されます",
+      "利用停止",
+      "緊急",
+      "24時間以内",
+      "紧急",
+      "立即",
+      "马上",
+      "24小时内",
+      "将被冻结",
+      "最后通知",
+      "冻结",
+      "உடனடியாக",
+      "அவசரம்",
+      "இன்றே",
+      "முடக்கப்படும்",
+      "24 மணி நேரத்தில்",
+      "segera",
+      "dalam 24 jam",
+      "diblokir",
+      "akan diblokir",
+      "kesempatan terakhir",
+      "hari ini juga",
+      "arrest",
+      "warrant",
+      "legal action",
+      "digital arrest",
+      "गिरफ्तार",
+      "逮捕",
+      "逮捕令",
+      "கைது",
+      "ditangkap"
+    ],
+    "money_secret": [
+      "otp",
+      "one-time password",
+      "kyc",
+      "refund",
+      "prize",
+      "you have won",
+      "lottery",
+      "pay a fee",
+      "processing fee",
+      "gift card",
+      "cvv",
+      "pin number",
+      "bitcoin",
+      "crypto",
+      "guaranteed returns",
+      "customs fee",
+      "unpaid",
+      "safe account",
+      "work from home",
+      "daily income",
+      "part-time job",
+      "ओटीपी",
+      "केवाईसी",
+      "रिफंड",
+      "इनाम",
+      "लॉटरी",
+      "शुल्क",
+      "गिफ्ट कार्ड",
+      "घर बैठे",
+      "認証コード",
+      "暗証番号",
+      "本人確認",
+      "返金",
+      "当選",
+      "未払い",
+      "ギフトカード",
+      "手数料",
+      "副業",
+      "验证码",
+      "密码",
+      "退款",
+      "中奖",
+      "奖金",
+      "礼品卡",
+      "手续费",
+      "安全账户",
+      "刷单",
+      "兼职",
+      "ஓடிபி",
+      "கேஒய்சி",
+      "பரிசு",
+      "கட்டணம்",
+      "பணம் திரும்ப",
+      "kode otp",
+      "hadiah",
+      "pengembalian dana",
+      "biaya admin",
+      "biaya pengiriman",
+      "menang undian",
+      "kerja dari rumah"
+    ]
+  },
+  "claim_words": [
+    "bank",
+    "police",
+    "courier",
+    "post office",
+    "customs",
+    "government",
+    "income tax",
+    "tax department",
+    "telecom",
+    "cyber cell",
+    "kyc team",
+    "बैंक",
+    "पुलिस",
+    "सरकार",
+    "आयकर",
+    "銀行",
+    "警察",
+    "税務署",
+    "郵便局",
+    "银行",
+    "公安",
+    "警察",
+    "税务局",
+    "海关",
+    "வங்கி",
+    "காவல்",
+    "polisi",
+    "pajak",
+    "bea cukai",
+    "kurir"
+  ],
+  "free_mail_domains": [
+    "gmail.com",
+    "googlemail.com",
+    "yahoo.com",
+    "yahoo.co.in",
+    "yahoo.co.jp",
+    "ymail.com",
+    "outlook.com",
+    "hotmail.com",
+    "live.com",
+    "msn.com",
+    "icloud.com",
+    "me.com",
+    "aol.com",
+    "proton.me",
+    "protonmail.com",
+    "gmx.com",
+    "mail.com",
+    "zoho.com",
+    "rediffmail.com",
+    "qq.com",
+    "163.com",
+    "126.com",
+    "sina.com"
+  ],
+  "risky_tlds": [
+    ".top",
+    ".xyz",
+    ".click",
+    ".link",
+    ".work",
+    ".rest",
+    ".zip",
+    ".mov",
+    ".tk",
+    ".ml",
+    ".ga",
+    ".cf",
+    ".gq",
+    ".icu",
+    ".cyou",
+    ".buzz",
+    ".sbs",
+    ".monster",
+    ".cam",
+    ".loan",
+    ".win",
+    ".bid",
+    ".country",
+    ".support",
+    ".live",
+    ".shop",
+    ".vip",
+    ".online",
+    ".site"
+  ],
+  "shorteners": [
+    "bit.ly",
+    "tinyurl.com",
+    "t.co",
+    "goo.gl",
+    "is.gd",
+    "cutt.ly",
+    "rb.gy",
+    "shorturl.at",
+    "ow.ly",
+    "tiny.cc",
+    "s.id",
+    "t.ly",
+    "rebrand.ly",
+    "v.gd"
+  ],
+  "brands": [
+    {
+      "name": "SBI",
+      "kind": "bank",
+      "aliases": [
+        "sbi",
+        "state bank of india",
+        "yono"
+      ],
+      "domains": [
+        "sbi.co.in",
+        "onlinesbi.sbi",
+        "sbi.bank.in",
+        "onlinesbi.com"
+      ]
+    },
+    {
+      "name": "HDFC Bank",
+      "kind": "bank",
+      "aliases": [
+        "hdfc"
+      ],
+      "domains": [
+        "hdfcbank.com",
+        "hdfc.bank.in"
+      ]
+    },
+    {
+      "name": "ICICI Bank",
+      "kind": "bank",
+      "aliases": [
+        "icici"
+      ],
+      "domains": [
+        "icicibank.com",
+        "icici.bank.in"
+      ]
+    },
+    {
+      "name": "Axis Bank",
+      "kind": "bank",
+      "aliases": [
+        "axis bank"
+      ],
+      "domains": [
+        "axisbank.com",
+        "axis.bank.in"
+      ]
+    },
+    {
+      "name": "Paytm",
+      "kind": "wallet",
+      "aliases": [
+        "paytm"
+      ],
+      "domains": [
+        "paytm.com"
+      ]
+    },
+    {
+      "name": "PhonePe",
+      "kind": "wallet",
+      "aliases": [
+        "phonepe"
+      ],
+      "domains": [
+        "phonepe.com"
+      ]
+    },
+    {
+      "name": "India Post",
+      "kind": "courier",
+      "aliases": [
+        "india post",
+        "indiapost"
+      ],
+      "domains": [
+        "indiapost.gov.in"
+      ]
+    },
+    {
+      "name": "Income Tax India",
+      "kind": "government",
+      "aliases": [
+        "income tax department",
+        "आयकर विभाग"
+      ],
+      "domains": [
+        "incometax.gov.in"
+      ]
+    },
+    {
+      "name": "Airtel",
+      "kind": "telecom",
+      "aliases": [
+        "airtel"
+      ],
+      "domains": [
+        "airtel.in",
+        "airtel.com"
+      ]
+    },
+    {
+      "name": "Jio",
+      "kind": "telecom",
+      "aliases": [
+        "reliance jio"
+      ],
+      "domains": [
+        "jio.com"
+      ]
+    },
+    {
+      "name": "DBS",
+      "kind": "bank",
+      "aliases": [
+        "dbs bank",
+        "posb"
+      ],
+      "domains": [
+        "dbs.com",
+        "dbs.com.sg",
+        "posb.com.sg"
+      ]
+    },
+    {
+      "name": "OCBC",
+      "kind": "bank",
+      "aliases": [
+        "ocbc"
+      ],
+      "domains": [
+        "ocbc.com"
+      ]
+    },
+    {
+      "name": "UOB",
+      "kind": "bank",
+      "aliases": [
+        "uob"
+      ],
+      "domains": [
+        "uob.com.sg",
+        "uobgroup.com"
+      ]
+    },
+    {
+      "name": "SingPost",
+      "kind": "courier",
+      "aliases": [
+        "singpost"
+      ],
+      "domains": [
+        "singpost.com"
+      ]
+    },
+    {
+      "name": "Singtel",
+      "kind": "telecom",
+      "aliases": [
+        "singtel"
+      ],
+      "domains": [
+        "singtel.com"
+      ]
+    },
+    {
+      "name": "CommBank",
+      "kind": "bank",
+      "aliases": [
+        "commbank",
+        "commonwealth bank"
+      ],
+      "domains": [
+        "commbank.com.au"
+      ]
+    },
+    {
+      "name": "Westpac",
+      "kind": "bank",
+      "aliases": [
+        "westpac"
+      ],
+      "domains": [
+        "westpac.com.au"
+      ]
+    },
+    {
+      "name": "ANZ",
+      "kind": "bank",
+      "aliases": [
+        "anz bank"
+      ],
+      "domains": [
+        "anz.com.au",
+        "anz.com"
+      ]
+    },
+    {
+      "name": "NAB",
+      "kind": "bank",
+      "aliases": [
+        "national australia bank"
+      ],
+      "domains": [
+        "nab.com.au"
+      ]
+    },
+    {
+      "name": "Australia Post",
+      "kind": "courier",
+      "aliases": [
+        "australia post",
+        "auspost"
+      ],
+      "domains": [
+        "auspost.com.au"
+      ]
+    },
+    {
+      "name": "myGov",
+      "kind": "government",
+      "aliases": [
+        "mygov"
+      ],
+      "domains": [
+        "my.gov.au"
+      ]
+    },
+    {
+      "name": "ATO",
+      "kind": "government",
+      "aliases": [
+        "australian taxation office"
+      ],
+      "domains": [
+        "ato.gov.au"
+      ]
+    },
+    {
+      "name": "Telstra",
+      "kind": "telecom",
+      "aliases": [
+        "telstra"
+      ],
+      "domains": [
+        "telstra.com.au",
+        "telstra.com"
+      ]
+    },
+    {
+      "name": "BCA",
+      "kind": "bank",
+      "aliases": [
+        "bank bca",
+        "klikbca"
+      ],
+      "domains": [
+        "bca.co.id",
+        "klikbca.com"
+      ]
+    },
+    {
+      "name": "BRI",
+      "kind": "bank",
+      "aliases": [
+        "bank bri"
+      ],
+      "domains": [
+        "bri.co.id"
+      ]
+    },
+    {
+      "name": "Bank Mandiri",
+      "kind": "bank",
+      "aliases": [
+        "mandiri"
+      ],
+      "domains": [
+        "bankmandiri.co.id"
+      ]
+    },
+    {
+      "name": "BNI",
+      "kind": "bank",
+      "aliases": [
+        "bank bni"
+      ],
+      "domains": [
+        "bni.co.id"
+      ]
+    },
+    {
+      "name": "OJK",
+      "kind": "government",
+      "aliases": [
+        "ojk",
+        "otoritas jasa keuangan"
+      ],
+      "domains": [
+        "ojk.go.id"
+      ]
+    },
+    {
+      "name": "JNE",
+      "kind": "courier",
+      "aliases": [
+        "jne express"
+      ],
+      "domains": [
+        "jne.co.id"
+      ]
+    },
+    {
+      "name": "GoPay",
+      "kind": "wallet",
+      "aliases": [
+        "gopay",
+        "gojek"
+      ],
+      "domains": [
+        "gojek.com",
+        "gopay.co.id"
+      ]
+    },
+    {
+      "name": "Telkomsel",
+      "kind": "telecom",
+      "aliases": [
+        "telkomsel"
+      ],
+      "domains": [
+        "telkomsel.com"
+      ]
+    },
+    {
+      "name": "BDO",
+      "kind": "bank",
+      "aliases": [
+        "bdo unibank"
+      ],
+      "domains": [
+        "bdo.com.ph"
+      ]
+    },
+    {
+      "name": "BPI",
+      "kind": "bank",
+      "aliases": [
+        "bpi bank"
+      ],
+      "domains": [
+        "bpi.com.ph"
+      ]
+    },
+    {
+      "name": "Metrobank",
+      "kind": "bank",
+      "aliases": [
+        "metrobank"
+      ],
+      "domains": [
+        "metrobank.com.ph"
+      ]
+    },
+    {
+      "name": "GCash",
+      "kind": "wallet",
+      "aliases": [
+        "gcash"
+      ],
+      "domains": [
+        "gcash.com"
+      ]
+    },
+    {
+      "name": "Maya",
+      "kind": "wallet",
+      "aliases": [
+        "paymaya"
+      ],
+      "domains": [
+        "maya.ph",
+        "paymaya.com"
+      ]
+    },
+    {
+      "name": "LBC",
+      "kind": "courier",
+      "aliases": [
+        "lbc express"
+      ],
+      "domains": [
+        "lbcexpress.com"
+      ]
+    },
+    {
+      "name": "PHLPost",
+      "kind": "courier",
+      "aliases": [
+        "phlpost",
+        "philpost"
+      ],
+      "domains": [
+        "phlpost.gov.ph"
+      ]
+    },
+    {
+      "name": "Globe",
+      "kind": "telecom",
+      "aliases": [
+        "globe telecom"
+      ],
+      "domains": [
+        "globe.com.ph"
+      ]
+    },
+    {
+      "name": "MUFG",
+      "kind": "bank",
+      "aliases": [
+        "mufg",
+        "三菱ufj"
+      ],
+      "domains": [
+        "bk.mufg.jp",
+        "mufg.jp"
+      ]
+    },
+    {
+      "name": "SMBC",
+      "kind": "bank",
+      "aliases": [
+        "smbc",
+        "三井住友"
+      ],
+      "domains": [
+        "smbc.co.jp"
+      ]
+    },
+    {
+      "name": "Mizuho",
+      "kind": "bank",
+      "aliases": [
+        "mizuho",
+        "みずほ"
+      ],
+      "domains": [
+        "mizuhobank.co.jp",
+        "mizuho-fg.co.jp"
+      ]
+    },
+    {
+      "name": "Japan Post",
+      "kind": "courier",
+      "aliases": [
+        "japan post",
+        "日本郵便",
+        "ゆうちょ"
+      ],
+      "domains": [
+        "japanpost.jp",
+        "jp-bank.japanpost.jp"
+      ]
+    },
+    {
+      "name": "Yamato",
+      "kind": "courier",
+      "aliases": [
+        "yamato transport",
+        "ヤマト運輸",
+        "クロネコ"
+      ],
+      "domains": [
+        "kuronekoyamato.co.jp"
+      ]
+    },
+    {
+      "name": "Sagawa",
+      "kind": "courier",
+      "aliases": [
+        "sagawa",
+        "佐川急便"
+      ],
+      "domains": [
+        "sagawa-exp.co.jp"
+      ]
+    },
+    {
+      "name": "Rakuten",
+      "kind": "shop",
+      "aliases": [
+        "rakuten",
+        "楽天"
+      ],
+      "domains": [
+        "rakuten.co.jp",
+        "rakuten.com"
+      ]
+    },
+    {
+      "name": "NTT Docomo",
+      "kind": "telecom",
+      "aliases": [
+        "docomo",
+        "ドコモ"
+      ],
+      "domains": [
+        "docomo.ne.jp"
+      ]
+    },
+    {
+      "name": "Amazon",
+      "kind": "shop",
+      "aliases": [
+        "amazon",
+        "アマゾン",
+        "亚马逊"
+      ],
+      "domains": [
+        "amazon.com",
+        "amazon.in",
+        "amazon.co.jp",
+        "amazon.sg",
+        "amazon.com.au"
+      ]
+    },
+    {
+      "name": "PayPal",
+      "kind": "wallet",
+      "aliases": [
+        "paypal"
+      ],
+      "domains": [
+        "paypal.com"
+      ]
+    },
+    {
+      "name": "Apple",
+      "kind": "tech",
+      "aliases": [
+        "apple id",
+        "icloud"
+      ],
+      "domains": [
+        "apple.com",
+        "icloud.com"
+      ]
+    },
+    {
+      "name": "Google",
+      "kind": "tech",
+      "aliases": [
+        "google account"
+      ],
+      "domains": [
+        "google.com",
+        "gmail.com",
+        "youtube.com"
+      ]
+    },
+    {
+      "name": "Microsoft",
+      "kind": "tech",
+      "aliases": [
+        "microsoft",
+        "office 365"
+      ],
+      "domains": [
+        "microsoft.com",
+        "live.com",
+        "outlook.com",
+        "office.com"
+      ]
+    },
+    {
+      "name": "Netflix",
+      "kind": "shop",
+      "aliases": [
+        "netflix"
+      ],
+      "domains": [
+        "netflix.com"
+      ]
+    },
+    {
+      "name": "WhatsApp",
+      "kind": "tech",
+      "aliases": [
+        "whatsapp"
+      ],
+      "domains": [
+        "whatsapp.com",
+        "whatsapp.net",
+        "wa.me"
+      ]
+    },
+    {
+      "name": "DHL",
+      "kind": "courier",
+      "aliases": [
+        "dhl"
+      ],
+      "domains": [
+        "dhl.com"
+      ]
+    },
+    {
+      "name": "FedEx",
+      "kind": "courier",
+      "aliases": [
+        "fedex"
+      ],
+      "domains": [
+        "fedex.com"
+      ]
+    }
+  ]
+}

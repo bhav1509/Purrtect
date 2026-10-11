@@ -1,51 +1,51 @@
-// Intercepts link clicks inside a flagged message and asks "are you sure?" before opening.
+// Click blocking: a red link opens this warning first.
+// Go back (recommended) / Why is this risky? / Open anyway.
 (function () {
   "use strict";
   const UI = self.PurrUI;
   if (UI.guardLinks) return;
+  const { el, t } = UI;
 
-  function confirmOpen(href, result) {
-    return new Promise((resolve) => {
-      let host = href;
-      try { host = new URL(href).hostname; } catch (_) { /* keep raw */ }
-      const done = (ok) => { overlay.remove(); resolve(ok); };
-      const overlay = UI.el(
+  function warn(href, result, handlers) {
+    let host = href;
+    try { host = new URL(href).hostname; } catch (_) { /* keep raw */ }
+    const done = () => overlay.remove();
+    const overlay = el(
+      "div",
+      { class: "purr-overlay", onclick: (e) => { if (e.target === overlay) { done(); handlers.onBack(); } } },
+      el(
         "div",
-        { class: "purr-overlay", onclick: (e) => { if (e.target === overlay) done(false); } },
-        UI.el(
+        { class: "purr-warning", role: "alertdialog", "aria-labelledby": "purr-warning-title" },
+        UI.mascotImg("stop", 112),
+        el("div", { class: "purr-alert-line" }, UI.mascotLine("stop")),
+        el("h2", { id: "purr-warning-title", class: "purr-headline" }, result.headline || t("clickWarningTitle")),
+        el("p", {}, t("clickWarningBody", [host])),
+        el(
           "div",
-          { class: `purr-warning purr-${result.verdict}`, role: "alertdialog" },
-          UI.mascotImg(result.verdict, 96),
-          UI.el("h3", {}, UI.t("clickWarningTitle")),
-          UI.el("p", {}, UI.t("clickWarningBody", [host])),
-          UI.el(
-            "div",
-            { class: "purr-warning-actions" },
-            UI.el("button", { class: "purr-btn-safe", type: "button", onclick: () => done(false) }, UI.t("goBack")),
-            UI.el("button", { class: "purr-btn-risky", type: "button", onclick: () => done(true) }, UI.t("openAnyway"))
-          )
+          { class: "purr-actions purr-actions-stack" },
+          el("button", { type: "button", class: "purr-btn purr-btn-safe", onclick: () => { done(); handlers.onBack(); } }, t("goBack")),
+          el("button", { type: "button", class: "purr-btn", onclick: () => { done(); handlers.onWhy(); } }, t("whyRisky")),
+          el("button", { type: "button", class: "purr-btn purr-btn-quiet", onclick: () => { done(); handlers.onOpen(href); } }, t("openAnyway"))
         )
-      );
-      document.body.append(overlay);
-      overlay.querySelector(".purr-btn-safe").focus();
-    });
+      )
+    );
+    document.body.append(overlay);
+    overlay.querySelector(".purr-btn-safe").focus();
   }
 
-  // getResult is read at click time so a later AI verdict (e.g. downgrade to safe) applies.
-  UI.guardLinks = function guardLinks(container, getResult) {
+  // getResult is read at click time, so a later verdict (or "This is safe") applies.
+  UI.guardLinks = function guardLinks(container, getResult, handlers) {
     if (container.dataset.purrGuarded) return;
     container.dataset.purrGuarded = "1";
     container.addEventListener(
       "click",
-      async (e) => {
+      (e) => {
         const a = e.target.closest("a[href]");
         const result = getResult();
-        if (!a || !result || result.verdict === "safe" || a.dataset.purrAllowed) return;
+        if (!a || !result || result.level !== "red" || a.dataset.purrAllowed) return;
         e.preventDefault();
         e.stopImmediatePropagation();
-        if (await confirmOpen(a.href, result)) {
-          window.open(a.href, "_blank", "noopener,noreferrer");
-        }
+        warn(a.href, result, handlers);
       },
       true
     );

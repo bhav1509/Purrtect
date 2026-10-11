@@ -1,111 +1,132 @@
 # Purrtect
 
-A friendly mascot (cat, dog or bird) that spots scam messages in Gmail and WhatsApp Web, warns
-before you click a risky link, and walks you through recovery if you already did.
-Supports English, Hindi, Japanese and Simplified Chinese.
+**They filter. We explain, stop the click, and help you recover.**
+
+Purrtect is a friendly mascot (cat, dog or bird) for Gmail web and WhatsApp Web. It explains
+risky messages in plain words, blocks risky clicks, and walks scam victims through the first
+hour of recovery with verified helplines for their country.
+
+Built for the Google Cloud AI Builder Cup 2026 · Theme: **BFSI** (Intelligent Risk, Fraud &
+Financial Experiences).
+
+- **Web checker:** https://project-1e762a2b-4a0e-4e91-981.web.app (no install needed)
+- **Extension ZIP:** [latest release](https://github.com/bhav1509/Purrtect/releases/latest)
+
+## How it works
 
 ```
-shared/rules.json     brands, keywords, risky domain endings, points  (single source of truth)
-extension/            Chrome MV3 extension
-  background.js       right-click "Check with Purrtect", all backend calls
-  rules.js            local scoring + masking (browser and Node)
-  rules.json          copy of shared/rules.json
-  content/            gmail.js, whatsapp.js, shared.js (scan pipeline), menu-listener.js
-  ui/                 badge, verdict card, click warning, recovery panel, ui.css
-  mascots/cat|dog|bird/   checking, safe, suspicious, dangerous, help (.png)
-  _locales/en|hi|ja|zh_CN/messages.json
-backend/              FastAPI: /api/scan, /api/recover, /health
-  scoring.py          Python port of rules.js scoring
-  masking.py          Python port of rules.js masking
-  prompts.py          Claude prompts + JSON output schemas
-  countries.json      official scam helplines and report sites
-web/                  standalone web checker (Firebase Hosting)
-tests/                30 sample messages + runner
+Gmail / WhatsApp Web ──► Chrome extension ──(yellow/red only, masked)──► Cloud Run (FastAPI) ──► Gemini 3.5 Flash
+Web checker (Firebase) ──(every scan, masked)──────────────────────────►        │                (Agent Platform)
+                                                                     countries.json (verified helplines)
 ```
 
-## How a message is checked
+1. **Local rules** (`extension/rules.js` + `shared/rules.json`) score every link, and the full
+   text from new senders, in the browser in under 5 ms. 0–29 is green, 30–59 yellow, 60+ red.
+   Green never leaves the browser.
+2. **Masking**: phone numbers, emails, card, account and ID numbers, and OTPs become `[PHONE]`,
+   `[EMAIL]`, `[CARD]`, `[ACCOUNT]`, `[ID]` and `[OTP]` before anything is sent. The server
+   masks again as a backstop.
+3. **Gemini** (`gemini-3.5-flash`, fallback `gemini-3.1-flash-lite`) returns strict JSON: verdict,
+   scam type, a 3–6 word headline, up to 3 red flags and advice, in the message's own language.
+4. **Click blocking**: red links open a warning first (Go back / Why is this risky? / Open
+   anyway). "Open anyway" shows a 10-minute "Entered anything?" banner.
+5. **Recovery**: 4 tap-only questions, then a plan (Now / Today / Next few days), drafted
+   police report, bank message and timeline. Phone numbers and websites come only from
+   `backend/countries.json`. The server removes any other number or site from Gemini's reply.
 
-1. **Local rules** (`rules.js`) score the message in the browser, from 0 to 100: keywords
-   (urgency, OTP/password requests, prizes, threats, secrecy, job scams, "new number"
-   impersonation), and link checks (risky domain endings, IP-address links, look-alike letters,
-   URL shorteners, brand look-alikes, a brand named in the text but linking elsewhere). Normal
-   safety advice ("never share your OTP") lowers the score. A score of 25 or more is
-   *suspicious*, and 50 or more is *dangerous*.
-2. If the rules flag a message, or the user clicks the badge, the text is **masked** (phones,
-   emails, cards, account/ID numbers, OTPs → placeholders) and sent to `/api/scan`.
-3. The backend masks again, then asks Claude (`claude-opus-5-5`, structured JSON output) for a
-   verdict, scam type, red flags and advice in the user's language. The final score combines
-   70% AI and 30% rules, and a rules "dangerous" result can't drop below *suspicious*. If the
-   model is unreachable, the backend returns the rules-only result (`"source": "rules"`).
-4. Links in flagged messages are intercepted with a "Wait! Are you sure?" warning.
-5. **Recovery panel**: the user ticks what happened and picks a country. `/api/recover` returns
-   ordered steps plus official helplines from `countries.json`. If the model is unavailable,
-   generic offline steps are shown.
+There is no database and no login. The server logs only time, endpoint, verdict and latency.
 
-## Run it
+## Repository
 
-### Backend (Python 3.10+)
+```
+shared/rules.json        brands, keywords, risky endings, shorteners, points (source of truth)
+extension/               Chrome MV3 extension (plain JS)
+  background.js          right-click "Scan with Purrtect", onboarding, all backend calls
+  config.js              backend URL  ← set after the first Cloud Run deploy
+  rules.js               local scoring + masking (also used by web/ and the tests)
+  lib/store.js           settings, known senders, corrections, 24 h link cache (hashed)
+  content/               site.js (pipeline), gmail.js, whatsapp.js (selectors at the top)
+  ui/                    core, verdict card, recovery panel, badge, click warning, settings, scan window
+  mascots/{cat,dog,bird}/   idle, thinking, careful, stop, happy
+  _locales/{en,hi,ja,zh_CN}/
+backend/                 FastAPI on Cloud Run
+  main.py                GET /health, POST /api/scan, POST /api/recover
+  masking.py             server-side masking (identical to rules.js mask())
+  contacts.py            removes numbers/sites not in countries.json
+  prompts.py             system instructions + response schemas
+  countries.json         IN, SG, AU, ID, PH, JP (verified Oct 11; re-check Oct 17)
+web/                     web checker for Firebase Hosting (shared files copied in by scripts/sync.sh)
+tests/                   30 samples (20 scams, 10 genuine) + run_tests.py
+scripts/                 sync.sh, package-extension.sh
+```
+
+Shared files (rules, UI, locales, mascots) are edited in `shared/` and `extension/`, then
+copied into `web/` with `./scripts/sync.sh`. The tests fail if the copies drift.
+
+## Run locally
+
+Backend (needs Python 3.14 and `gcloud auth application-default login` once):
 
 ```bash
 cd backend
-python -m venv .venv && source .venv/bin/activate
+python3.14 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...     # optional; without it you get rules-only verdicts
-uvicorn main:app --reload --port 8000
+export GOOGLE_CLOUD_PROJECT=project-1e762a2b-4a0e-4e91-981
+uvicorn main:app --reload --port 8080
 ```
 
-Environment variables: `PURRTECT_MODEL` (default `claude-opus-5-5`) and `PURRTECT_CORS_ORIGINS`
-(default `*`; extension origins are always allowed). Requests use the server-side refusal
-fallback (`fallbacks="default"`), so if the model declines a message, the API retries it on a
-fallback model instead of failing.
+Extension: open `chrome://extensions`, turn on Developer mode, click **Load unpacked**, and choose `extension/`.
+It calls the Cloud Run backend; to use your local one, see the note under Deploy.
 
-### Extension
+Web checker:
 
 ```bash
-cp shared/rules.json extension/rules.json    # after every rules change
+cd web && python3 -m http.server 5500
+# open http://localhost:5500/?api=http://localhost:8080
 ```
 
-Open `chrome://extensions`, turn on Developer mode, click **Load unpacked** and select
-`extension/`. The extension calls `http://localhost:8000` by default (`apiBase` in
-`chrome.storage.sync`). Before publishing, change that default in `ui/common.js` and
-`background.js`, and narrow `host_permissions` in `manifest.json` to your backend's address.
+## Results (Oct 11, 2026, deployed backend)
 
-Gmail and WhatsApp Web markup is undocumented. If badges stop appearing, update the
-selectors at the top of `content/gmail.js` and `content/whatsapp.js`.
-
-### Web checker
-
-```bash
-cp -R extension/mascots web/mascots          # already done once; repeat if art changes
-cd web && python3 -m http.server 5500        # open http://localhost:5500/?api=http://localhost:8000
-```
-
-Deploy: run the backend on Cloud Run as `purrtect-api` in `asia-south1` (or change
-`web/firebase.json`), then `firebase deploy --only hosting` from `web/`. Firebase sends
-`/api/**` to the Cloud Run service, so the page and the API share one origin.
+30-message test set in 6 languages: scams caught **20/20**, genuine messages wrongly flagged
+**0/10**, average verdict time **3.1 s**, 0 failures. Local rules alone sent all 20 scams on for
+a Gemini check and kept all 10 genuine messages in the browser.
 
 ## Tests
 
 ```bash
-python3 tests/run_tests.py                          # offline: rules, JS/Python parity, masking
-python3 tests/run_tests.py --api http://localhost:8000   # also run all 30 samples through the API
+python3 tests/run_tests.py                              # offline: rules, masking, helpline filter, sync
+python3 tests/run_tests.py --api http://localhost:8080  # + 30 samples through Gemini (uses credits)
 ```
 
-The runner needs only the Python standard library. It also needs Node to check that
-`rules.js` and `scoring.py`/`masking.py` give identical results; without Node, that check
-is skipped. Pass criteria:
-- At least 80% of samples are correctly sorted into scam vs. not-scam.
-- No safe sample is called dangerous.
-- JS and Python give identical scores and masking.
-- `extension/rules.json` matches `shared/rules.json`.
+The `--api` run prints the deck numbers: scams caught out of 20, genuine messages wrongly
+flagged out of 10, and average verdict time.
 
-Currently the rules alone get 29/30 exact verdicts and 30/30 scam detection. Sample #2 (lottery
-plus a short link) scores *suspicious* rather than *dangerous* without the AI check.
+## Deploy
 
-## Before release
+```bash
+# Backend → Cloud Run
+cd backend
+gcloud run deploy purrtect-api --source . --region asia-south1 --allow-unauthenticated \
+  --set-env-vars GOOGLE_CLOUD_PROJECT=project-1e762a2b-4a0e-4e91-981,GOOGLE_CLOUD_LOCATION=global
 
-- **Check `backend/countries.json` against official sources.** Helpline numbers and sites
-  change. For example, the UK's Action Fraud service is being rebranded.
-- Replace the placeholder mascot art in `extension/mascots/` (256×256 PNG, same file names).
-- Have native speakers review the Hindi, Japanese and Chinese strings in `extension/_locales/`,
-  and the non-English keywords in `shared/rules.json`.
+# then allow the service to call Gemini (once)
+gcloud projects add-iam-policy-binding project-1e762a2b-4a0e-4e91-981 \
+  --member="serviceAccount:<PROJECT_NUMBER>-compute@developer.gserviceaccount.com" \
+  --role="roles/aiplatform.user"
+
+# Web checker → Firebase Hosting (/api/** is rewritten to the Cloud Run service)
+cd ../web && firebase deploy --only hosting
+
+# Extension ZIP for judges
+./scripts/package-extension.sh     # → dist/purrtect-extension.zip
+```
+
+The extension calls the deployed backend (https://purrtect-api-fzrq3bgblq-el.a.run.app), set in `extension/config.js` and
+`host_permissions` in `extension/manifest.json`. For local development, point both at
+`http://localhost:8080`.
+
+## Install the extension from the ZIP
+
+1. Download `purrtect-extension.zip` from the latest release and unzip it.
+2. Open `chrome://extensions` and turn on **Developer mode**.
+3. Click **Load unpacked** and choose the unzipped folder.

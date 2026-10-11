@@ -5,3 +5,9 @@ venv/
 .env
 .DS_Store
 .firebase/
+dist/
+firebase-debug.log
+
+# Local docs, not published
+CLAUDE.md
+Purrtect — Product Spec.md

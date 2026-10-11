@@ -1,114 +1,160 @@
-// Web checker. Talks to the backend at /api (Firebase rewrites it to Cloud Run).
-// For local dev, open index.html?api=http://localhost:8000
-(function () {
+// Web checker. Uses the same rules and UI as the extension. Every scan goes to the backend,
+// because the person chose to check it. Firebase Hosting rewrites /api/** to Cloud Run.
+// Local development: open index.html?api=http://localhost:8080
+(async function () {
   "use strict";
 
   const API = new URLSearchParams(location.search).get("api") || "";
-  const LABELS = { safe: "Looks safe", suspicious: "Be careful", dangerous: "Likely a scam" };
+  const COUNTRIES = ["IN", "SG", "AU", "ID", "PH", "JP"];
+  const PETS = ["cat", "dog", "bird"];
   const $ = (id) => document.getElementById(id);
 
-  function store(key, value) {
+  function stored(key, fallback, allowed) {
     try {
-      if (value === undefined) return localStorage.getItem(key);
-      localStorage.setItem(key, value);
-    } catch (_) { /* storage blocked */ }
-    return null;
+      const v = localStorage.getItem("purr-" + key);
+      return allowed.includes(v) ? v : fallback;
+    } catch (_) { return fallback; }
+  }
+  function store(key, value) {
+    try { localStorage.setItem("purr-" + key, value); } catch (_) { /* storage blocked */ }
+  }
+
+  function browserLang() {
+    const l = (navigator.language || "en").toLowerCase();
+    return l.startsWith("hi") ? "hi" : l.startsWith("ja") ? "ja" : l.startsWith("zh") ? "zh_CN" : "en";
+  }
+
+  const settings = {
+    uiLang: stored("lang", browserLang(), ["en", "hi", "ja", "zh_CN"]),
+    mascot: stored("pet", "cat", PETS),
+    country: stored("country", "IN", COUNTRIES),
+    voice: true,
+  };
+
+  const loadMessages = (lang) => fetch(`_locales/${lang}/messages.json`).then((r) => r.json());
+  const [rules, fallback] = await Promise.all([fetch("rules.json").then((r) => r.json()), loadMessages("en")]);
+
+  async function api(path, body) {
+    try {
+      const res = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const data = await res.json().catch(() => null);
+      return { ok: res.ok, status: res.status, data };
+    } catch (_) {
+      return { ok: false, status: 0, data: null };
+    }
+  }
+
+  async function applyLanguage() {
+    const messages = settings.uiLang === "en" ? fallback : await loadMessages(settings.uiLang);
+    PurrUI.configure({ messages, fallback, settings, api, assetUrl: (p) => p });
+    document.documentElement.lang = settings.uiLang.replace("_", "-");
+    document.querySelectorAll("[data-i18n]").forEach((n) => { n.textContent = PurrUI.t(n.dataset.i18n); });
+    $("text").placeholder = PurrUI.t("web_text_placeholder");
+    $("country").replaceChildren(...COUNTRIES.map((c) => PurrUI.el("option", { value: c }, PurrUI.t("country_" + c))));
+    $("country").value = settings.country;
+    renderPets();
   }
 
   function setMascot(state) {
-    $("mascot").src = `mascots/${$("pet").value}/${state}.png`;
+    $("mascot").src = `mascots/${settings.mascot}/${state}.png`;
   }
 
-  function el(tag, attrs, ...children) {
-    const node = document.createElement(tag);
-    Object.entries(attrs || {}).forEach(([k, v]) => node.setAttribute(k, v));
-    children.flat().forEach((c) => c != null && node.append(c));
-    return node;
+  function renderPets() {
+    $("pets").replaceChildren(...PETS.map((p) => PurrUI.el("button", {
+      type: "button", class: "pet", "aria-pressed": String(settings.mascot === p), title: PurrUI.t("mascot_" + p),
+      onclick: () => { settings.mascot = p; store("pet", p); renderPets(); setMascot("happy"); PurrUI.configure(PurrUI.env); },
+    }, PurrUI.el("img", { src: `mascots/${p}/happy.png`, alt: "", width: 40, height: 40, class: "purr-mascot" }), PurrUI.t("mascot_" + p))));
   }
 
-  async function post(path, body) {
-    const res = await fetch(API + path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+  // tabs
+  let mode = "text";
+  document.querySelectorAll("[data-tab]").forEach((tab) => tab.addEventListener("click", () => {
+    mode = tab.dataset.tab;
+    document.querySelectorAll("[data-tab]").forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+    document.querySelectorAll("[data-panel]").forEach((p) => { p.hidden = p.dataset.panel !== mode; });
+  }));
+
+  function readImage(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result));
+      r.onerror = reject;
+      r.readAsDataURL(file);
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
   }
 
-  function list(title, items) {
-    return items && items.length ? [el("h3", {}, title), el("ul", {}, items.map((i) => el("li", {}, i)))] : null;
+  function showRecovery() {
+    setMascot("careful");
+    PurrUI.recoveryPanel({ container: $("recovery"), onCountry: (c) => { settings.country = c; store("country", c); $("country").value = c; } });
+    $("recovery").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function showResult(r) {
-    const out = $("result");
-    out.className = `card ${r.verdict}`;
-    const flags = r.red_flags && r.red_flags.length
-      ? r.red_flags
-      : (r.rules?.reasons || []).filter((x) => x.points > 0).map((x) => `${x.code.replace(/_/g, " ")} (${x.detail})`);
-    out.replaceChildren(
-      el("div", { class: "verdict" }, LABELS[r.verdict]),
-      el("div", { class: "score" }, `Risk score: ${r.score} / 100`),
-      r.summary ? el("p", { class: "summary" }, r.summary) : null,
-      list("Warning signs", flags),
-      list("What to do", r.what_to_do),
-      r.source === "rules" ? el("p", { class: "note" }, "Quick check only — the AI check was not available.") : null
-    );
-    out.hidden = false;
-    $("recover").hidden = r.verdict === "safe";
-    setMascot(r.verdict);
+  async function check(text, link, imageFile) {
+    const err = $("formError");
+    err.hidden = true;
+    if (!text.trim() && !link.trim() && !imageFile) {
+      err.textContent = PurrUI.t("web_error");
+      err.hidden = false;
+      return;
+    }
+    $("recovery").replaceChildren();
+    $("submit").disabled = true;
+    setMascot("thinking");
+    PurrUI.verdictCard({ pending: true }, { container: $("result") });
+    $("result").scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+    const local = PurrRules.scoreMessage({ text, links: link ? [link] : [], scanText: true, sender: { isNew: true } }, rules, "normal");
+    const body = {
+      text: PurrRules.mask(text),
+      links: local.links.map((l) => PurrRules.mask(l.url)),
+      image_base64: imageFile ? await readImage(imageFile) : null,
+      sender: "new",
+      source: "web",
+      local_score: local.score,
+      local_hits: local.hits,
+      ui_lang: PurrUI.apiLang(),
+      country: settings.country,
+    };
+    const res = await api("/api/scan", body);
+    $("submit").disabled = false;
+
+    if (!res.ok && imageFile) {
+      setMascot("idle");
+      $("result").replaceChildren(PurrUI.el("p", { class: "error" }, PurrUI.t("web_image_needs_ai")));
+      return;
+    }
+    const result = res.ok ? PurrUI.resultFromApi(res.data, local) : PurrUI.resultFromLocal(local, true);
+    setMascot({ green: "happy", yellow: "careful", red: "stop" }[result.level]);
+    PurrUI.verdictCard(result, {
+      container: $("result"),
+      actions: [{ label: PurrUI.t("iClicked"), primary: true, onClick: showRecovery }],
+    });
   }
 
-  $("form").addEventListener("submit", async (e) => {
+  $("form").addEventListener("submit", (e) => {
     e.preventDefault();
-    const btn = $("submit");
-    btn.disabled = true;
-    btn.textContent = "Checking…";
-    setMascot("checking");
-    try {
-      showResult(await post("/api/scan", { text: $("text").value, source: "web", lang: $("lang").value }));
-    } catch (err) {
-      $("result").className = "card";
-      $("result").replaceChildren(el("p", {}, "Sorry, the checker is not reachable right now. Please try again in a minute."));
-      $("result").hidden = false;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Check message";
+    const file = $("image").files[0];
+    if (file && file.size > 4 * 1024 * 1024) {
+      $("formError").textContent = PurrUI.t("web_image_label");
+      $("formError").hidden = false;
+      return;
     }
+    check(mode === "text" ? $("text").value : "", mode === "link" ? $("link").value : "", mode === "image" ? file : null);
   });
 
-  $("recoverBtn").addEventListener("click", async () => {
-    const out = $("recoverOut");
-    out.replaceChildren(el("p", {}, "Getting your steps…"));
-    setMascot("help");
-    store("purr-country", $("country").value);
-    try {
-      const r = await post("/api/recover", {
-        what_happened: [...document.querySelectorAll("#happened input:checked")].map((i) => i.value),
-        country: $("country").value,
-        lang: $("lang").value,
-      });
-      const c = r.country;
-      out.replaceChildren(
-        r.reassurance ? el("p", { class: "summary" }, r.reassurance) : null,
-        r.steps.length
-          ? el("ol", {}, r.steps.map((s) => el("li", { class: s.urgent ? "urgent" : "" }, el("strong", {}, s.title), el("div", {}, s.detail))))
-          : el("p", {}, "Call your bank using the number on your card, change your passwords, and report it to the police."),
-        c ? el("div", { class: "contacts" },
-          el("h3", {}, `Official help in ${c.name}`),
-          el("ul", {},
-            c.helplines.map((h) => el("li", {}, `${h.label}: `, el("strong", {}, h.number))),
-            c.report_sites.map((s) => el("li", {}, el("a", { href: s.url, target: "_blank", rel: "noopener" }, s.label))))) : null
-      );
-    } catch (_) {
-      out.replaceChildren(el("p", {}, "Call your bank using the number on your card, change your passwords, and report it to the police."));
-    }
-  });
+  $("lang").addEventListener("change", async () => { settings.uiLang = $("lang").value; store("lang", settings.uiLang); await applyLanguage(); });
+  $("country").addEventListener("change", () => { settings.country = $("country").value; store("country", settings.country); });
 
-  $("pet").addEventListener("change", () => { store("purr-pet", $("pet").value); setMascot("checking"); });
-  $("lang").addEventListener("change", () => store("purr-lang", $("lang").value));
-  $("pet").value = store("purr-pet") || "cat";
-  $("lang").value = store("purr-lang") || "en";
-  $("country").value = store("purr-country") || "IN";
-  setMascot("checking");
+  $("lang").value = settings.uiLang;
+  await applyLanguage();
+  setMascot("idle");
+
+  $("samples").replaceChildren(...self.PURR_SAMPLES.map((s) => PurrUI.el("button", {
+    type: "button", class: "purr-btn sample",
+    onclick: () => {
+      document.querySelector('[data-tab="text"]').click();
+      $("text").value = s.text;
+      check(s.text, "", null);
+    },
+  }, s.label)));
 })();

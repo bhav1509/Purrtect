@@ -1,0 +1,11 @@
+# Files gcloud run deploy --source . must not upload.
+.gcloudignore
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+*.pem
+*.key
+*credentials*.json

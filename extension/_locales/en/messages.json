@@ -3,40 +3,397 @@
     "message": "Purrtect"
   },
   "extDescription": {
-    "message": "A friendly mascot that spots scam messages in Gmail and WhatsApp Web."
+    "message": "A friendly buddy that explains risky messages, stops risky clicks and helps you recover."
   },
-  "menuCheck": {
-    "message": "Check this with Purrtect"
-  },
-  "badgeTitle": {
-    "message": "Purrtect checked this message. Click for details."
-  },
-  "verdict_safe": {
-    "message": "Looks safe"
-  },
-  "verdict_suspicious": {
-    "message": "Be careful"
-  },
-  "verdict_dangerous": {
-    "message": "Likely a scam"
+  "menuScan": {
+    "message": "Scan with Purrtect"
   },
   "checking": {
     "message": "Checking…"
   },
-  "riskScore": {
-    "message": "Risk score: $1 / 100"
+  "level_green": {
+    "message": "Looks safe"
   },
-  "redFlags": {
-    "message": "Warning signs"
+  "level_yellow": {
+    "message": "Be careful"
   },
-  "whatToDo": {
-    "message": "What to do"
+  "level_red": {
+    "message": "Likely a scam"
   },
-  "offlineNote": {
-    "message": "Quick check only — the Purrtect server could not be reached."
+  "type_none": {
+    "message": ""
   },
-  "iClickedIt": {
-    "message": "I already clicked, paid or shared something"
+  "type_delivery": {
+    "message": "Fake delivery"
+  },
+  "type_bank_kyc": {
+    "message": "Fake bank or KYC update"
+  },
+  "type_otp_theft": {
+    "message": "Code stealing"
+  },
+  "type_job_offer": {
+    "message": "Fake job offer"
+  },
+  "type_investment": {
+    "message": "Investment trap"
+  },
+  "type_lottery_prize": {
+    "message": "Fake prize or lottery"
+  },
+  "type_impersonation": {
+    "message": "Someone pretending"
+  },
+  "type_romance": {
+    "message": "Romance trick"
+  },
+  "type_tech_support": {
+    "message": "Fake tech support"
+  },
+  "type_other": {
+    "message": "Other trick"
+  },
+  "readAloud": {
+    "message": "Read aloud"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "basicCheckOnly": {
+    "message": "Basic check only: the full check is not available right now."
+  },
+  "headline_green": {
+    "message": "Nothing worrying found"
+  },
+  "headline_yellow": {
+    "message": "Check before you act"
+  },
+  "headline_red": {
+    "message": "Don't click this link"
+  },
+  "advice_green": {
+    "message": "If something still feels wrong, ask someone you trust."
+  },
+  "advice_yellow": {
+    "message": "Contact the company yourself using its official app or the number on your card."
+  },
+  "advice_red": {
+    "message": "Don't click, reply or pay. Delete the message."
+  },
+  "thisIsSafe": {
+    "message": "This is safe"
+  },
+  "trustSender": {
+    "message": "Trust this sender"
+  },
+  "iClicked": {
+    "message": "I clicked or paid"
+  },
+  "copied": {
+    "message": "Copied"
+  },
+  "copy": {
+    "message": "Copy"
+  },
+  "hit_ip_link": {
+    "message": "Link is only numbers"
+  },
+  "hitwhy_ip_link": {
+    "message": "Real companies use names in their web addresses, not just numbers."
+  },
+  "hit_lookalike": {
+    "message": "Copycat web address"
+  },
+  "hitwhy_lookalike": {
+    "message": "The link looks like a well-known company, but it is not their real website."
+  },
+  "hit_display_name_claim": {
+    "message": "Pretends to be an official body"
+  },
+  "hitwhy_display_name_claim": {
+    "message": "The name says bank, courier or government, but it doesn't come from them."
+  },
+  "hit_shortener": {
+    "message": "Short link hides where it goes"
+  },
+  "hitwhy_shortener": {
+    "message": "You can't see the real website before you tap."
+  },
+  "hit_plain_http": {
+    "message": "Link is not protected"
+  },
+  "hitwhy_plain_http": {
+    "message": "Banks and shops always use secure https links."
+  },
+  "hit_risky_tld": {
+    "message": "Unusual web address ending"
+  },
+  "hitwhy_risky_tld": {
+    "message": "Endings like .top or .xyz are often used by scammers."
+  },
+  "hit_urgency": {
+    "message": "Rushes you"
+  },
+  "hitwhy_urgency": {
+    "message": "Scammers rush you so you don't stop to think."
+  },
+  "hit_money_secret": {
+    "message": "Asks for money or secret codes"
+  },
+  "hitwhy_money_secret": {
+    "message": "Nobody real needs your OTP, PIN or a fee to give you money."
+  },
+  "hit_new_sender": {
+    "message": "New sender"
+  },
+  "hitwhy_new_sender": {
+    "message": "You haven't heard from them before."
+  },
+  "line_cat_thinking": {
+    "message": "Let me sniff this..."
+  },
+  "line_cat_careful": {
+    "message": "Hmm, be careful here"
+  },
+  "line_cat_stop": {
+    "message": "No! Don't click!"
+  },
+  "line_cat_happy": {
+    "message": "Good choice!"
+  },
+  "line_dog_thinking": {
+    "message": "Sniffing it out..."
+  },
+  "line_dog_careful": {
+    "message": "Woof, something's off"
+  },
+  "line_dog_stop": {
+    "message": "Stop! Don't open it!"
+  },
+  "line_dog_happy": {
+    "message": "Good human!"
+  },
+  "line_bird_thinking": {
+    "message": "Taking a closer look..."
+  },
+  "line_bird_careful": {
+    "message": "Tweet! Be careful"
+  },
+  "line_bird_stop": {
+    "message": "Squawk! Don't click!"
+  },
+  "line_bird_happy": {
+    "message": "Well done!"
+  },
+  "whyRisky": {
+    "message": "Why is this risky?"
+  },
+  "goodChoice": {
+    "message": "Good choice!"
+  },
+  "enteredAnything": {
+    "message": "Entered anything? Tap here for help"
+  },
+  "clickWarningTitle": {
+    "message": "Wait! This link looks risky"
+  },
+  "clickWarningBody": {
+    "message": "It goes to $1. Real banks and companies never ask for codes or passwords through links like this."
+  },
+  "goBack": {
+    "message": "Go back (recommended)"
+  },
+  "openAnyway": {
+    "message": "Open anyway"
+  },
+  "buddyHint": {
+    "message": "Select any text and tap me to check it, or right-click and choose Scan with Purrtect."
+  },
+  "checkThis": {
+    "message": "Check this"
+  },
+  "nothingToScan": {
+    "message": "Nothing to check. Select text or a link, then right-click."
+  },
+  "recoveryTitle": {
+    "message": "Let's sort this out together"
+  },
+  "neverAsk": {
+    "message": "Purrtect will never ask for your OTP, PIN, password or full card number."
+  },
+  "q_happened": {
+    "message": "What happened?"
+  },
+  "q_country": {
+    "message": "Where are you?"
+  },
+  "q_payment": {
+    "message": "How did you pay?"
+  },
+  "q_when": {
+    "message": "When?"
+  },
+  "happened_opened_link": {
+    "message": "Opened the link"
+  },
+  "happened_typed_password": {
+    "message": "Typed a password"
+  },
+  "happened_shared_otp": {
+    "message": "Shared an OTP or code"
+  },
+  "happened_paid": {
+    "message": "Paid money"
+  },
+  "happened_installed_app": {
+    "message": "Installed an app or gave screen access"
+  },
+  "happened_shared_id": {
+    "message": "Shared ID documents"
+  },
+  "country_IN": {
+    "message": "India"
+  },
+  "country_SG": {
+    "message": "Singapore"
+  },
+  "country_AU": {
+    "message": "Australia"
+  },
+  "country_ID": {
+    "message": "Indonesia"
+  },
+  "country_PH": {
+    "message": "Philippines"
+  },
+  "country_JP": {
+    "message": "Japan"
+  },
+  "payment_card": {
+    "message": "Card"
+  },
+  "payment_bank_transfer": {
+    "message": "Bank transfer"
+  },
+  "payment_upi_or_wallet": {
+    "message": "UPI or e-wallet"
+  },
+  "payment_none": {
+    "message": "I didn't pay"
+  },
+  "when_minutes": {
+    "message": "Minutes ago"
+  },
+  "when_hours": {
+    "message": "Hours ago"
+  },
+  "when_days": {
+    "message": "Days ago"
+  },
+  "showPlan": {
+    "message": "Show me what to do"
+  },
+  "makingPlan": {
+    "message": "Making your plan…"
+  },
+  "reassurance": {
+    "message": "Don't worry: this happens to careful people too. Acting quickly helps a lot."
+  },
+  "planNow": {
+    "message": "Now (first 10 minutes)"
+  },
+  "planToday": {
+    "message": "Today"
+  },
+  "planNextDays": {
+    "message": "Next few days"
+  },
+  "officialHelp": {
+    "message": "Official help in $1"
+  },
+  "callFirst": {
+    "message": "Call first"
+  },
+  "reportOnline": {
+    "message": "Report online"
+  },
+  "otherHelp": {
+    "message": "Other help"
+  },
+  "callBankFallback": {
+    "message": "Call your bank on the number printed on your card or in its official app."
+  },
+  "draftReport": {
+    "message": "Police or cybercrime report"
+  },
+  "draftBank": {
+    "message": "Message to your bank or wallet"
+  },
+  "draftTimeline": {
+    "message": "What happened, in order"
+  },
+  "basicPlanOnly": {
+    "message": "Basic plan only: the personal plan is not available right now."
+  },
+  "basic_now_1": {
+    "message": "Call your bank, card or wallet on the number printed on your card or in the official app. Ask them to block it and stop any transfers."
+  },
+  "basic_now_2": {
+    "message": "Call the helpline for your country listed below."
+  },
+  "basic_now_3": {
+    "message": "Change the password you typed, and uninstall any app you were asked to install."
+  },
+  "basic_today_1": {
+    "message": "Report it on your country's official reporting website."
+  },
+  "basic_today_2": {
+    "message": "Sign out of other devices and turn on two-step sign-in."
+  },
+  "basic_next_1": {
+    "message": "Check your bank statements every day for a week."
+  },
+  "basic_next_2": {
+    "message": "Anyone who offers to get your money back for a fee is another scammer."
+  },
+  "tagline": {
+    "message": "They filter. We explain, stop the click, and help you recover."
+  },
+  "consentTitle": {
+    "message": "Before we start"
+  },
+  "consent_checked": {
+    "message": "Purrtect checks messages and links you open in Gmail and WhatsApp Web, right in your browser."
+  },
+  "consent_sent": {
+    "message": "Only suspicious items are sent for a closer check, after names, numbers and codes are hidden."
+  },
+  "consent_never": {
+    "message": "Nothing is stored on our server. Your settings stay in this browser."
+  },
+  "consent_secrets": {
+    "message": "We never ask for your OTP, PIN, password or full card number."
+  },
+  "set_country": {
+    "message": "Your country"
+  },
+  "set_language": {
+    "message": "Language"
+  },
+  "langName_en": {
+    "message": "English"
+  },
+  "langName_hi": {
+    "message": "हिन्दी"
+  },
+  "langName_ja": {
+    "message": "日本語"
+  },
+  "langName_zh_CN": {
+    "message": "简体中文"
+  },
+  "set_mascot": {
+    "message": "Your buddy"
   },
   "mascot_cat": {
     "message": "Cat"
@@ -47,151 +404,115 @@
   "mascot_bird": {
     "message": "Bird"
   },
-  "close": {
-    "message": "Close"
+  "set_voice": {
+    "message": "Voice"
   },
-  "reason_keyword_urgency": {
-    "message": "Rushes you to act fast"
+  "voice_on": {
+    "message": "On"
   },
-  "reason_keyword_credentials": {
-    "message": "Asks for codes, passwords or KYC"
+  "voice_off": {
+    "message": "Off"
   },
-  "reason_keyword_money": {
-    "message": "Talks about prizes, refunds or payments"
+  "set_mode_gmail": {
+    "message": "Gmail"
   },
-  "reason_keyword_threats": {
-    "message": "Threatens you with police or penalties"
+  "set_mode_whatsapp": {
+    "message": "WhatsApp Web"
   },
-  "reason_keyword_secrecy": {
-    "message": "Asks you to keep it secret"
+  "mode_auto": {
+    "message": "Auto"
   },
-  "reason_keyword_click_bait": {
-    "message": "Pushes you to click or install something"
+  "mode_manual": {
+    "message": "Manual"
   },
-  "reason_keyword_job_scam": {
-    "message": "Promises easy money for simple online tasks"
+  "modeHelp": {
+    "message": "Auto checks every link, and the full text from new senders. Manual checks only what you pick."
   },
-  "reason_keyword_impersonation": {
-    "message": "Pretends to be family or a friend on a new number"
+  "set_sensitivity": {
+    "message": "How careful?"
   },
-  "reason_keyword_safety_advice": {
-    "message": "Includes normal safety advice"
+  "sensitivity_relaxed": {
+    "message": "Relaxed"
   },
-  "reason_brand_impersonation": {
-    "message": "Uses a company's name but links elsewhere"
+  "sensitivity_normal": {
+    "message": "Normal"
   },
-  "reason_risky_domain_ending": {
-    "message": "Link has an unusual web address ending"
+  "sensitivity_strict": {
+    "message": "Strict"
   },
-  "reason_ip_address_link": {
-    "message": "Link is just numbers, not a name"
+  "set_data": {
+    "message": "Your data"
   },
-  "reason_punycode_link": {
-    "message": "Link uses look-alike letters"
+  "dataHelp": {
+    "message": "Clears trusted senders, \"This is safe\" choices and saved link checks."
   },
-  "reason_url_shortener": {
-    "message": "Link is shortened, hiding where it goes"
+  "clearData": {
+    "message": "Clear my data"
   },
-  "reason_lookalike_domain": {
-    "message": "Link pretends to be a well-known site"
+  "cleared": {
+    "message": "Cleared"
   },
-  "reason_many_links": {
-    "message": "Contains many different links"
+  "startProtecting": {
+    "message": "Start protecting me"
   },
-  "clickWarningTitle": {
-    "message": "Wait! Are you sure?"
+  "web_title": {
+    "message": "Is this a scam?"
   },
-  "clickWarningBody": {
-    "message": "This message looks risky. The link goes to $1. Real banks and companies never ask for codes or passwords through links like this."
+  "web_tagline": {
+    "message": "Paste a message, enter a link or upload a screenshot. Your buddy explains what it finds."
   },
-  "goBack": {
-    "message": "Keep me safe — don't open"
+  "web_tab_text": {
+    "message": "Paste text"
   },
-  "openAnyway": {
-    "message": "Open anyway"
+  "web_tab_link": {
+    "message": "Enter a link"
   },
-  "recoveryTitle": {
-    "message": "Let's fix this together"
+  "web_tab_image": {
+    "message": "Upload screenshot"
   },
-  "reassurance": {
-    "message": "Don't worry — this happens to many careful people. Acting quickly helps a lot."
+  "web_text_label": {
+    "message": "Message"
   },
-  "whatHappened": {
-    "message": "What happened?"
+  "web_text_placeholder": {
+    "message": "Paste the email, SMS or WhatsApp message here."
   },
-  "happened_clicked_link": {
-    "message": "I clicked the link"
+  "web_link_label": {
+    "message": "Link"
   },
-  "happened_entered_password": {
-    "message": "I typed my password"
+  "web_image_label": {
+    "message": "Screenshot (PNG, JPEG or WebP, up to 4 MB)"
   },
-  "happened_shared_otp": {
-    "message": "I shared an OTP / code"
+  "web_image_notice": {
+    "message": "A screenshot can't have its numbers hidden first. It is checked in memory and then dropped, never stored. Crop out anything private."
   },
-  "happened_paid_money": {
-    "message": "I paid money"
+  "web_check": {
+    "message": "Check it"
   },
-  "happened_installed_app": {
-    "message": "I installed an app"
+  "web_samples": {
+    "message": "Try a sample scam"
   },
-  "happened_shared_id": {
-    "message": "I shared ID or card details"
+  "web_get_extension": {
+    "message": "Get the Chrome extension"
   },
-  "yourCountry": {
-    "message": "Your country"
+  "web_download": {
+    "message": "Download the ZIP"
   },
-  "country_IN": {
-    "message": "India"
+  "web_install_1": {
+    "message": "Download and unzip the file."
   },
-  "country_US": {
-    "message": "United States"
+  "web_install_2": {
+    "message": "Open chrome://extensions and turn on Developer mode."
   },
-  "country_GB": {
-    "message": "United Kingdom"
+  "web_install_3": {
+    "message": "Click Load unpacked and choose the unzipped folder."
   },
-  "country_JP": {
-    "message": "Japan"
+  "web_privacy": {
+    "message": "Names, numbers and codes in pasted text are hidden before checking. Nothing is stored."
   },
-  "country_CN": {
-    "message": "China"
+  "web_error": {
+    "message": "Please paste a message, enter a link or choose a screenshot."
   },
-  "country_SG": {
-    "message": "Singapore"
-  },
-  "country_AU": {
-    "message": "Australia"
-  },
-  "detailsPlaceholder": {
-    "message": "Tell us a little more (optional). Don't type passwords or card numbers."
-  },
-  "getHelp": {
-    "message": "Show me what to do"
-  },
-  "officialHelp": {
-    "message": "Official help in $1"
-  },
-  "static_step1_title": {
-    "message": "Call your bank now"
-  },
-  "static_step1_detail": {
-    "message": "Use the number on the back of your card. Ask them to block the card and stop any payments."
-  },
-  "static_step2_title": {
-    "message": "Change your passwords"
-  },
-  "static_step2_detail": {
-    "message": "Start with email and banking. Use a new password you haven't used anywhere else."
-  },
-  "static_step3_title": {
-    "message": "Remove unknown apps"
-  },
-  "static_step3_detail": {
-    "message": "Uninstall any app the message asked you to install, especially screen-sharing apps."
-  },
-  "static_step4_title": {
-    "message": "Report it"
-  },
-  "static_step4_detail": {
-    "message": "Report to the police or your national scam helpline. Nobody genuine will charge a fee to get your money back."
+  "web_image_needs_ai": {
+    "message": "Screenshots need the full check, which is not available right now. Please try again in a minute."
   }
 }

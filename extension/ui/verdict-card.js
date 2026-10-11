@@ -1,71 +1,93 @@
-// Floating card with the verdict, reasons, advice, mascot picker and a "something went wrong" button.
+// Verdict card: headline, risk level and scam type, up to 3 red flags, advice, read aloud,
+// and at most 3 action buttons. Docks to the side of the page, or renders inside a container.
 (function () {
   "use strict";
   const UI = self.PurrUI;
   if (UI.verdictCard) return;
 
-  let current = null;
+  const STATE = { green: "happy", yellow: "careful", red: "stop" };
+  let docked = null;
 
-  function close() {
-    if (current) current.remove();
-    current = null;
+  function closeDocked() {
+    if (docked) docked.remove();
+    docked = null;
+    if ("speechSynthesis" in self) speechSynthesis.cancel();
   }
 
-  function list(items) {
-    return items.length ? UI.el("ul", {}, items.map((i) => UI.el("li", {}, i))) : null;
+  function spokenText(r) {
+    return [r.headline, ...r.redFlags.map((f) => `${f.flag}. ${f.why}`), r.advice].filter(Boolean).join(". ");
   }
 
-  // result: { verdict, score, summary?, red_flags?, what_to_do?, rules: {reasons}, pending? }
-  UI.verdictCard = function verdictCard(result) {
-    close();
-    const state = result.pending ? "checking" : result.verdict;
-    const ruleReasons = (result.rules?.reasons || []).filter((r) => r.points > 0).map((r) => UI.t("reason_" + r.code) + (r.detail ? ` (${r.detail})` : ""));
+  // result: see PurrUI.resultFromApi / resultFromLocal, or { pending: true }.
+  // opts.actions: [{ label, primary?, onClick }] (max 3), opts.container: render inline.
+  UI.verdictCard = function verdictCard(result, opts) {
+    opts = opts || {};
+    const { t, el } = UI;
+    const pending = !!result.pending;
+    const level = pending ? null : result.level;
+    const state = pending ? "thinking" : STATE[level];
 
-    const picker = UI.el(
+    const header = el(
       "div",
-      { class: "purr-picker" },
-      UI.MASCOTS.map((m) =>
-        UI.el(
-          "button",
-          {
-            type: "button",
-            class: "purr-pick" + (UI.settings.mascot === m ? " purr-picked" : ""),
-            title: UI.t("mascot_" + m),
-            onclick: () => { UI.setSetting("mascot", m); },
-          },
-          UI.t("mascot_" + m)
+      { class: "purr-card-head" },
+      UI.mascotImg(state, 72),
+      el(
+        "div",
+        { class: "purr-card-heading" },
+        el("div", { class: "purr-headline" }, pending ? (UI.mascotLine("thinking") || t("checking")) : result.headline),
+        pending ? null : el(
+          "div",
+          { class: "purr-level" },
+          el("span", { class: `purr-pill purr-${level}` }, t("level_" + level)),
+          result.scamType && result.scamType !== "none" ? el("span", { class: "purr-type" }, t("type_" + result.scamType)) : null
         )
+      ),
+      el(
+        "div",
+        { class: "purr-card-tools" },
+        !pending && UI.env.settings.voice !== false
+          ? el("button", { class: "purr-icon-btn", type: "button", title: t("readAloud"), "aria-label": t("readAloud"),
+              onclick: () => UI.speak(spokenText(result), result.language) }, "🔊")
+          : null,
+        opts.container ? null : el("button", { class: "purr-icon-btn", type: "button", title: t("close"), "aria-label": t("close"), onclick: closeDocked }, "×")
       )
     );
 
-    current = UI.el(
-      "div",
-      { class: `purr-card purr-${state}`, role: "dialog", "aria-label": UI.t("extName") },
-      UI.el("button", { class: "purr-close", type: "button", "aria-label": UI.t("close"), onclick: close }, "×"),
-      UI.el(
-        "div",
-        { class: "purr-card-head" },
-        UI.mascotImg(state, 72),
-        UI.el(
-          "div",
-          {},
-          UI.el("div", { class: "purr-card-title" }, result.pending ? UI.t("checking") : UI.t("verdict_" + result.verdict)),
-          result.pending ? null : UI.el("div", { class: "purr-card-score" }, UI.t("riskScore", [String(result.score)]))
-        )
-      ),
-      result.summary ? UI.el("p", { class: "purr-summary" }, result.summary) : null,
-      (result.red_flags?.length || ruleReasons.length)
-        ? UI.el("div", {}, UI.el("h4", {}, UI.t("redFlags")), list(result.red_flags?.length ? result.red_flags : ruleReasons))
+    const body = pending ? null : [
+      result.redFlags.length
+        ? el("ul", { class: "purr-flags" }, result.redFlags.slice(0, 3).map((f) =>
+            el("li", {}, el("strong", {}, f.flag), " ", f.why)))
         : null,
-      result.what_to_do?.length ? UI.el("div", {}, UI.el("h4", {}, UI.t("whatToDo")), list(result.what_to_do)) : null,
-      result.offline ? UI.el("p", { class: "purr-note" }, UI.t("offlineNote")) : null,
-      UI.el("button", { class: "purr-help-btn", type: "button", onclick: () => { close(); UI.recoveryPanel(); } }, UI.t("iClickedIt")),
-      picker
+      result.advice ? el("p", { class: "purr-advice" }, result.advice) : null,
+      result.basic ? el("p", { class: "purr-note" }, t("basicCheckOnly")) : null,
+    ];
+
+    const actions = pending ? [] : (opts.actions || []).slice(0, 3);
+    const card = el(
+      "section",
+      { class: `purr-card purr-${level || "thinking"}` + (opts.container ? " purr-inline" : " purr-docked"), role: "dialog", "aria-live": "polite" },
+      header,
+      body,
+      actions.length
+        ? el("div", { class: "purr-actions" }, actions.map((a) =>
+            el("button", { class: a.primary ? "purr-btn purr-btn-primary" : "purr-btn", type: "button",
+              onclick: () => { if (!opts.container) closeDocked(); a.onClick(); } }, a.label)))
+        : null
     );
-    document.body.append(current);
-    return current;
+
+    if (opts.container) {
+      opts.container.replaceChildren(card);
+    } else {
+      closeDocked();
+      docked = card;
+      document.body.append(card);
+    }
+    if (!pending && level !== "green" && UI.env.settings.voice !== false && opts.autoSpeak) {
+      UI.speak(spokenText(result), result.language);
+    }
+    return card;
   };
 
-  UI.closeVerdictCard = close;
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  UI.closeVerdictCard = closeDocked;
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDocked(); });
 })();

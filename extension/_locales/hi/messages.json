@@ -3,40 +3,397 @@
     "message": "Purrtect"
   },
   "extDescription": {
-    "message": "एक दोस्ताना साथी जो Gmail और WhatsApp Web में धोखाधड़ी वाले संदेश पहचानता है।"
+    "message": "एक दोस्ताना साथी जो जोखिम भरे संदेश समझाता है, खतरनाक क्लिक रोकता है और ठगी के बाद मदद करता है।"
   },
-  "menuCheck": {
+  "menuScan": {
     "message": "Purrtect से जाँचें"
-  },
-  "badgeTitle": {
-    "message": "Purrtect ने यह संदेश जाँचा। विवरण के लिए क्लिक करें।"
-  },
-  "verdict_safe": {
-    "message": "सुरक्षित लगता है"
-  },
-  "verdict_suspicious": {
-    "message": "सावधान रहें"
-  },
-  "verdict_dangerous": {
-    "message": "शायद धोखा है"
   },
   "checking": {
     "message": "जाँच हो रही है…"
   },
-  "riskScore": {
-    "message": "जोखिम स्कोर: $1 / 100"
+  "level_green": {
+    "message": "सुरक्षित लगता है"
   },
-  "redFlags": {
-    "message": "चेतावनी के संकेत"
+  "level_yellow": {
+    "message": "सावधान रहें"
   },
-  "whatToDo": {
-    "message": "क्या करें"
+  "level_red": {
+    "message": "शायद धोखा है"
   },
-  "offlineNote": {
-    "message": "सिर्फ़ त्वरित जाँच — Purrtect सर्वर से संपर्क नहीं हो सका।"
+  "type_none": {
+    "message": ""
   },
-  "iClickedIt": {
-    "message": "मैंने पहले ही क्लिक/भुगतान कर दिया या कुछ बता दिया"
+  "type_delivery": {
+    "message": "नकली डिलीवरी"
+  },
+  "type_bank_kyc": {
+    "message": "नकली बैंक / KYC अपडेट"
+  },
+  "type_otp_theft": {
+    "message": "OTP चोरी"
+  },
+  "type_job_offer": {
+    "message": "नकली नौकरी का ऑफ़र"
+  },
+  "type_investment": {
+    "message": "निवेश का जाल"
+  },
+  "type_lottery_prize": {
+    "message": "नकली इनाम / लॉटरी"
+  },
+  "type_impersonation": {
+    "message": "कोई और बनकर धोखा"
+  },
+  "type_romance": {
+    "message": "प्रेम का धोखा"
+  },
+  "type_tech_support": {
+    "message": "नकली तकनीकी सहायता"
+  },
+  "type_other": {
+    "message": "अन्य धोखा"
+  },
+  "readAloud": {
+    "message": "पढ़कर सुनाएँ"
+  },
+  "close": {
+    "message": "बंद करें"
+  },
+  "basicCheckOnly": {
+    "message": "सिर्फ़ बुनियादी जाँच: पूरी जाँच अभी उपलब्ध नहीं है।"
+  },
+  "headline_green": {
+    "message": "कुछ चिंताजनक नहीं मिला"
+  },
+  "headline_yellow": {
+    "message": "कुछ करने से पहले जाँचें"
+  },
+  "headline_red": {
+    "message": "इस लिंक पर क्लिक न करें"
+  },
+  "advice_green": {
+    "message": "फिर भी कुछ गलत लगे तो किसी भरोसेमंद से पूछें।"
+  },
+  "advice_yellow": {
+    "message": "कंपनी से खुद उसके आधिकारिक ऐप या कार्ड पर लिखे नंबर से संपर्क करें।"
+  },
+  "advice_red": {
+    "message": "क्लिक, जवाब या भुगतान न करें। संदेश हटा दें।"
+  },
+  "thisIsSafe": {
+    "message": "यह सुरक्षित है"
+  },
+  "trustSender": {
+    "message": "इस भेजने वाले पर भरोसा करें"
+  },
+  "iClicked": {
+    "message": "मैंने क्लिक या भुगतान कर दिया"
+  },
+  "copied": {
+    "message": "कॉपी हो गया"
+  },
+  "copy": {
+    "message": "कॉपी करें"
+  },
+  "hit_ip_link": {
+    "message": "लिंक में सिर्फ़ नंबर हैं"
+  },
+  "hitwhy_ip_link": {
+    "message": "असली कंपनियाँ वेब पते में नाम रखती हैं, सिर्फ़ नंबर नहीं।"
+  },
+  "hit_lookalike": {
+    "message": "नकली वेब पता"
+  },
+  "hitwhy_lookalike": {
+    "message": "लिंक किसी जानी-मानी कंपनी जैसा दिखता है, पर उनकी असली वेबसाइट नहीं है।"
+  },
+  "hit_display_name_claim": {
+    "message": "आधिकारिक संस्था होने का दिखावा"
+  },
+  "hitwhy_display_name_claim": {
+    "message": "नाम में बैंक, कूरियर या सरकार लिखा है, पर संदेश उनकी तरफ़ से नहीं है।"
+  },
+  "hit_shortener": {
+    "message": "छोटा लिंक असली जगह छिपाता है"
+  },
+  "hitwhy_shortener": {
+    "message": "टैप करने से पहले असली वेबसाइट दिखाई नहीं देती।"
+  },
+  "hit_plain_http": {
+    "message": "लिंक सुरक्षित नहीं है"
+  },
+  "hitwhy_plain_http": {
+    "message": "बैंक और दुकानें हमेशा सुरक्षित https लिंक इस्तेमाल करती हैं।"
+  },
+  "hit_risky_tld": {
+    "message": "वेब पते का अजीब अंत"
+  },
+  "hitwhy_risky_tld": {
+    "message": ".top या .xyz जैसे अंत अक्सर ठग इस्तेमाल करते हैं।"
+  },
+  "hit_urgency": {
+    "message": "जल्दी करने का दबाव"
+  },
+  "hitwhy_urgency": {
+    "message": "ठग जल्दी करवाते हैं ताकि आप सोच न सकें।"
+  },
+  "hit_money_secret": {
+    "message": "पैसे या गुप्त कोड की बात"
+  },
+  "hitwhy_money_secret": {
+    "message": "किसी असली संस्था को आपका OTP, PIN या फ़ीस नहीं चाहिए।"
+  },
+  "hit_new_sender": {
+    "message": "नया भेजने वाला"
+  },
+  "hitwhy_new_sender": {
+    "message": "इनसे पहले कभी संदेश नहीं आया।"
+  },
+  "line_cat_thinking": {
+    "message": "ज़रा सूँघकर देखूँ..."
+  },
+  "line_cat_careful": {
+    "message": "हम्म, यहाँ सावधान रहना"
+  },
+  "line_cat_stop": {
+    "message": "नहीं! क्लिक मत करो!"
+  },
+  "line_cat_happy": {
+    "message": "बहुत बढ़िया!"
+  },
+  "line_dog_thinking": {
+    "message": "खोजबीन कर रहा हूँ..."
+  },
+  "line_dog_careful": {
+    "message": "भौं, कुछ गड़बड़ है"
+  },
+  "line_dog_stop": {
+    "message": "रुको! मत खोलो!"
+  },
+  "line_dog_happy": {
+    "message": "शाबाश!"
+  },
+  "line_bird_thinking": {
+    "message": "ध्यान से देख रही हूँ..."
+  },
+  "line_bird_careful": {
+    "message": "चीं! सावधान"
+  },
+  "line_bird_stop": {
+    "message": "चीं-चीं! क्लिक मत करो!"
+  },
+  "line_bird_happy": {
+    "message": "बहुत अच्छे!"
+  },
+  "whyRisky": {
+    "message": "यह जोखिम भरा क्यों है?"
+  },
+  "goodChoice": {
+    "message": "बहुत बढ़िया!"
+  },
+  "enteredAnything": {
+    "message": "कुछ डाल दिया? मदद के लिए यहाँ टैप करें"
+  },
+  "clickWarningTitle": {
+    "message": "रुकिए! यह लिंक जोखिम भरा लगता है"
+  },
+  "clickWarningBody": {
+    "message": "यह $1 पर जाता है। असली बैंक और कंपनियाँ ऐसे लिंक से कभी कोड या पासवर्ड नहीं माँगतीं।"
+  },
+  "goBack": {
+    "message": "वापस जाएँ (सुझाया गया)"
+  },
+  "openAnyway": {
+    "message": "फिर भी खोलें"
+  },
+  "buddyHint": {
+    "message": "कोई भी टेक्स्ट चुनें और जाँचने के लिए मुझ पर टैप करें, या राइट-क्लिक करके 'Purrtect से जाँचें' चुनें।"
+  },
+  "checkThis": {
+    "message": "इसे जाँचें"
+  },
+  "nothingToScan": {
+    "message": "जाँचने को कुछ नहीं। टेक्स्ट या लिंक चुनकर राइट-क्लिक करें।"
+  },
+  "recoveryTitle": {
+    "message": "चलिए मिलकर ठीक करते हैं"
+  },
+  "neverAsk": {
+    "message": "Purrtect कभी आपका OTP, PIN, पासवर्ड या पूरा कार्ड नंबर नहीं माँगेगा।"
+  },
+  "q_happened": {
+    "message": "क्या हुआ?"
+  },
+  "q_country": {
+    "message": "आप कहाँ हैं?"
+  },
+  "q_payment": {
+    "message": "भुगतान कैसे किया?"
+  },
+  "q_when": {
+    "message": "कब?"
+  },
+  "happened_opened_link": {
+    "message": "लिंक खोला"
+  },
+  "happened_typed_password": {
+    "message": "पासवर्ड डाला"
+  },
+  "happened_shared_otp": {
+    "message": "OTP या कोड बताया"
+  },
+  "happened_paid": {
+    "message": "पैसे भेजे"
+  },
+  "happened_installed_app": {
+    "message": "ऐप डाला या स्क्रीन दिखाने दी"
+  },
+  "happened_shared_id": {
+    "message": "पहचान पत्र भेजे"
+  },
+  "country_IN": {
+    "message": "भारत"
+  },
+  "country_SG": {
+    "message": "सिंगापुर"
+  },
+  "country_AU": {
+    "message": "ऑस्ट्रेलिया"
+  },
+  "country_ID": {
+    "message": "इंडोनेशिया"
+  },
+  "country_PH": {
+    "message": "फ़िलीपींस"
+  },
+  "country_JP": {
+    "message": "जापान"
+  },
+  "payment_card": {
+    "message": "कार्ड"
+  },
+  "payment_bank_transfer": {
+    "message": "बैंक ट्रांसफ़र"
+  },
+  "payment_upi_or_wallet": {
+    "message": "UPI या ई-वॉलेट"
+  },
+  "payment_none": {
+    "message": "भुगतान नहीं किया"
+  },
+  "when_minutes": {
+    "message": "कुछ मिनट पहले"
+  },
+  "when_hours": {
+    "message": "कुछ घंटे पहले"
+  },
+  "when_days": {
+    "message": "कुछ दिन पहले"
+  },
+  "showPlan": {
+    "message": "मुझे बताइए क्या करूँ"
+  },
+  "makingPlan": {
+    "message": "आपकी योजना बन रही है…"
+  },
+  "reassurance": {
+    "message": "घबराइए मत: ऐसा सावधान लोगों के साथ भी होता है। जल्दी कदम उठाने से बहुत मदद मिलती है।"
+  },
+  "planNow": {
+    "message": "अभी (पहले 10 मिनट)"
+  },
+  "planToday": {
+    "message": "आज"
+  },
+  "planNextDays": {
+    "message": "अगले कुछ दिन"
+  },
+  "officialHelp": {
+    "message": "$1 में आधिकारिक मदद"
+  },
+  "callFirst": {
+    "message": "पहले कॉल करें"
+  },
+  "reportOnline": {
+    "message": "ऑनलाइन शिकायत"
+  },
+  "otherHelp": {
+    "message": "अन्य मदद"
+  },
+  "callBankFallback": {
+    "message": "अपने बैंक को कार्ड पर या आधिकारिक ऐप में दिए नंबर पर कॉल करें।"
+  },
+  "draftReport": {
+    "message": "पुलिस / साइबर अपराध शिकायत"
+  },
+  "draftBank": {
+    "message": "बैंक या वॉलेट को संदेश"
+  },
+  "draftTimeline": {
+    "message": "क्रम से क्या हुआ"
+  },
+  "basicPlanOnly": {
+    "message": "सिर्फ़ बुनियादी योजना: व्यक्तिगत योजना अभी उपलब्ध नहीं है।"
+  },
+  "basic_now_1": {
+    "message": "कार्ड पर या आधिकारिक ऐप में दिए नंबर पर बैंक, कार्ड या वॉलेट को कॉल करें। ब्लॉक करने और ट्रांसफ़र रोकने को कहें।"
+  },
+  "basic_now_2": {
+    "message": "नीचे दिए अपने देश के हेल्पलाइन नंबर पर कॉल करें।"
+  },
+  "basic_now_3": {
+    "message": "जो पासवर्ड डाला था उसे बदलें, और कहने पर डाला गया कोई भी ऐप हटा दें।"
+  },
+  "basic_today_1": {
+    "message": "अपने देश की आधिकारिक शिकायत वेबसाइट पर रिपोर्ट करें।"
+  },
+  "basic_today_2": {
+    "message": "दूसरे डिवाइस से साइन आउट करें और टू-स्टेप साइन-इन चालू करें।"
+  },
+  "basic_next_1": {
+    "message": "एक हफ़्ते तक रोज़ बैंक स्टेटमेंट देखें।"
+  },
+  "basic_next_2": {
+    "message": "जो फ़ीस लेकर पैसे वापस दिलाने की बात करे, वह भी ठग है।"
+  },
+  "tagline": {
+    "message": "वे छाँटते हैं। हम समझाते हैं, क्लिक रोकते हैं और उबरने में मदद करते हैं।"
+  },
+  "consentTitle": {
+    "message": "शुरू करने से पहले"
+  },
+  "consent_checked": {
+    "message": "Purrtect आपके ब्राउज़र में ही Gmail और WhatsApp Web में खोले गए संदेश और लिंक जाँचता है।"
+  },
+  "consent_sent": {
+    "message": "सिर्फ़ संदिग्ध चीज़ें ही आगे जाँच के लिए भेजी जाती हैं, नाम, नंबर और कोड छिपाकर।"
+  },
+  "consent_never": {
+    "message": "हमारे सर्वर पर कुछ भी सेव नहीं होता। आपकी सेटिंग इसी ब्राउज़र में रहती हैं।"
+  },
+  "consent_secrets": {
+    "message": "हम कभी आपका OTP, PIN, पासवर्ड या पूरा कार्ड नंबर नहीं माँगते।"
+  },
+  "set_country": {
+    "message": "आपका देश"
+  },
+  "set_language": {
+    "message": "भाषा"
+  },
+  "langName_en": {
+    "message": "English"
+  },
+  "langName_hi": {
+    "message": "हिन्दी"
+  },
+  "langName_ja": {
+    "message": "日本語"
+  },
+  "langName_zh_CN": {
+    "message": "简体中文"
+  },
+  "set_mascot": {
+    "message": "आपका साथी"
   },
   "mascot_cat": {
     "message": "बिल्ली"
@@ -47,151 +404,115 @@
   "mascot_bird": {
     "message": "चिड़िया"
   },
-  "close": {
-    "message": "बंद करें"
+  "set_voice": {
+    "message": "आवाज़"
   },
-  "reason_keyword_urgency": {
-    "message": "जल्दी करने का दबाव डालता है"
+  "voice_on": {
+    "message": "चालू"
   },
-  "reason_keyword_credentials": {
-    "message": "कोड, पासवर्ड या KYC माँगता है"
+  "voice_off": {
+    "message": "बंद"
   },
-  "reason_keyword_money": {
-    "message": "इनाम, रिफंड या भुगतान की बात करता है"
+  "set_mode_gmail": {
+    "message": "Gmail"
   },
-  "reason_keyword_threats": {
-    "message": "पुलिस या जुर्माने की धमकी देता है"
+  "set_mode_whatsapp": {
+    "message": "WhatsApp Web"
   },
-  "reason_keyword_secrecy": {
-    "message": "राज़ रखने को कहता है"
+  "mode_auto": {
+    "message": "ऑटो"
   },
-  "reason_keyword_click_bait": {
-    "message": "क्लिक या इंस्टॉल करने को कहता है"
+  "mode_manual": {
+    "message": "मैनुअल"
   },
-  "reason_keyword_job_scam": {
-    "message": "आसान ऑनलाइन काम के बदले आसान पैसे का वादा"
+  "modeHelp": {
+    "message": "ऑटो हर लिंक और नए भेजने वालों का पूरा संदेश जाँचता है। मैनुअल सिर्फ़ वही जाँचता है जो आप चुनें।"
   },
-  "reason_keyword_impersonation": {
-    "message": "नए नंबर से परिवार या दोस्त होने का दावा"
+  "set_sensitivity": {
+    "message": "कितनी सावधानी?"
   },
-  "reason_keyword_safety_advice": {
-    "message": "सामान्य सुरक्षा सलाह शामिल है"
+  "sensitivity_relaxed": {
+    "message": "कम"
   },
-  "reason_brand_impersonation": {
-    "message": "किसी कंपनी का नाम लेकर कहीं और का लिंक देता है"
+  "sensitivity_normal": {
+    "message": "सामान्य"
   },
-  "reason_risky_domain_ending": {
-    "message": "लिंक का पता असामान्य है"
+  "sensitivity_strict": {
+    "message": "ज़्यादा"
   },
-  "reason_ip_address_link": {
-    "message": "लिंक में नाम नहीं, सिर्फ़ नंबर हैं"
+  "set_data": {
+    "message": "आपका डेटा"
   },
-  "reason_punycode_link": {
-    "message": "लिंक में मिलते-जुलते अक्षर हैं"
+  "dataHelp": {
+    "message": "भरोसेमंद भेजने वाले, \"यह सुरक्षित है\" चुनाव और सेव लिंक जाँच हटाता है।"
   },
-  "reason_url_shortener": {
-    "message": "छोटा किया गया लिंक असली पता छिपाता है"
+  "clearData": {
+    "message": "मेरा डेटा मिटाएँ"
   },
-  "reason_lookalike_domain": {
-    "message": "लिंक किसी जानी-मानी साइट की नकल करता है"
+  "cleared": {
+    "message": "मिटा दिया"
   },
-  "reason_many_links": {
-    "message": "बहुत सारे अलग-अलग लिंक हैं"
+  "startProtecting": {
+    "message": "मेरी सुरक्षा शुरू करें"
   },
-  "clickWarningTitle": {
-    "message": "रुकिए! क्या आपको यकीन है?"
+  "web_title": {
+    "message": "क्या यह धोखा है?"
   },
-  "clickWarningBody": {
-    "message": "यह संदेश जोखिम भरा लगता है। लिंक $1 पर जाता है। असली बैंक और कंपनियाँ ऐसे लिंक से कभी कोड या पासवर्ड नहीं माँगतीं।"
+  "web_tagline": {
+    "message": "संदेश पेस्ट करें, लिंक डालें या स्क्रीनशॉट अपलोड करें। आपका साथी समझाएगा कि क्या मिला।"
   },
-  "goBack": {
-    "message": "मुझे सुरक्षित रखें — न खोलें"
+  "web_tab_text": {
+    "message": "टेक्स्ट पेस्ट करें"
   },
-  "openAnyway": {
-    "message": "फिर भी खोलें"
+  "web_tab_link": {
+    "message": "लिंक डालें"
   },
-  "recoveryTitle": {
-    "message": "चलिए साथ में ठीक करते हैं"
+  "web_tab_image": {
+    "message": "स्क्रीनशॉट अपलोड करें"
   },
-  "reassurance": {
-    "message": "घबराइए मत — ऐसा बहुत से सावधान लोगों के साथ होता है। जल्दी कदम उठाने से बहुत मदद मिलती है।"
+  "web_text_label": {
+    "message": "संदेश"
   },
-  "whatHappened": {
-    "message": "क्या हुआ?"
+  "web_text_placeholder": {
+    "message": "ईमेल, SMS या WhatsApp संदेश यहाँ पेस्ट करें।"
   },
-  "happened_clicked_link": {
-    "message": "मैंने लिंक पर क्लिक किया"
+  "web_link_label": {
+    "message": "लिंक"
   },
-  "happened_entered_password": {
-    "message": "मैंने अपना पासवर्ड डाला"
+  "web_image_label": {
+    "message": "स्क्रीनशॉट (PNG, JPEG या WebP, 4 MB तक)"
   },
-  "happened_shared_otp": {
-    "message": "मैंने OTP / कोड बताया"
+  "web_image_notice": {
+    "message": "स्क्रीनशॉट से पहले नंबर नहीं छिपाए जा सकते। इसे मेमोरी में जाँचकर हटा दिया जाता है, सेव नहीं किया जाता। निजी जानकारी काट दें।"
   },
-  "happened_paid_money": {
-    "message": "मैंने पैसे भेजे"
+  "web_check": {
+    "message": "जाँचें"
   },
-  "happened_installed_app": {
-    "message": "मैंने कोई ऐप इंस्टॉल किया"
+  "web_samples": {
+    "message": "एक नमूना धोखा आज़माएँ"
   },
-  "happened_shared_id": {
-    "message": "मैंने ID या कार्ड की जानकारी दी"
+  "web_get_extension": {
+    "message": "Chrome एक्सटेंशन पाएँ"
   },
-  "yourCountry": {
-    "message": "आपका देश"
+  "web_download": {
+    "message": "ZIP डाउनलोड करें"
   },
-  "country_IN": {
-    "message": "भारत"
+  "web_install_1": {
+    "message": "फ़ाइल डाउनलोड करके अनज़िप करें।"
   },
-  "country_US": {
-    "message": "अमेरिका"
+  "web_install_2": {
+    "message": "chrome://extensions खोलें और Developer mode चालू करें।"
   },
-  "country_GB": {
-    "message": "यूनाइटेड किंगडम"
+  "web_install_3": {
+    "message": "Load unpacked पर क्लिक करके अनज़िप फ़ोल्डर चुनें।"
   },
-  "country_JP": {
-    "message": "जापान"
+  "web_privacy": {
+    "message": "पेस्ट किए टेक्स्ट में नाम, नंबर और कोड जाँच से पहले छिपा दिए जाते हैं। कुछ भी सेव नहीं होता।"
   },
-  "country_CN": {
-    "message": "चीन"
+  "web_error": {
+    "message": "कृपया संदेश पेस्ट करें, लिंक डालें या स्क्रीनशॉट चुनें।"
   },
-  "country_SG": {
-    "message": "सिंगापुर"
-  },
-  "country_AU": {
-    "message": "ऑस्ट्रेलिया"
-  },
-  "detailsPlaceholder": {
-    "message": "थोड़ा और बताइए (वैकल्पिक)। पासवर्ड या कार्ड नंबर न लिखें।"
-  },
-  "getHelp": {
-    "message": "मुझे बताइए क्या करूँ"
-  },
-  "officialHelp": {
-    "message": "$1 में आधिकारिक मदद"
-  },
-  "static_step1_title": {
-    "message": "अभी अपने बैंक को कॉल करें"
-  },
-  "static_step1_detail": {
-    "message": "कार्ड के पीछे लिखे नंबर पर कॉल करें। कार्ड ब्लॉक करने और भुगतान रोकने को कहें।"
-  },
-  "static_step2_title": {
-    "message": "अपने पासवर्ड बदलें"
-  },
-  "static_step2_detail": {
-    "message": "पहले ईमेल और बैंकिंग से शुरू करें। ऐसा नया पासवर्ड रखें जो कहीं और इस्तेमाल न किया हो।"
-  },
-  "static_step3_title": {
-    "message": "अनजान ऐप हटाएँ"
-  },
-  "static_step3_detail": {
-    "message": "संदेश के कहने पर जो भी ऐप इंस्टॉल किया हो, खासकर स्क्रीन-शेयरिंग ऐप, उसे हटा दें।"
-  },
-  "static_step4_title": {
-    "message": "शिकायत दर्ज करें"
-  },
-  "static_step4_detail": {
-    "message": "पुलिस या राष्ट्रीय साइबर हेल्पलाइन पर शिकायत करें। पैसे वापस दिलाने के लिए कोई असली संस्था फीस नहीं माँगती।"
+  "web_image_needs_ai": {
+    "message": "स्क्रीनशॉट के लिए पूरी जाँच चाहिए, जो अभी उपलब्ध नहीं है। एक मिनट बाद फिर कोशिश करें।"
   }
 }

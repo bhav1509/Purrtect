@@ -1,0 +1,518 @@
+{
+  "extName": {
+    "message": "Purrtect"
+  },
+  "extDescription": {
+    "message": "危ないメッセージを説明し、危険なクリックを止め、被害の後も助けてくれる相棒。"
+  },
+  "menuScan": {
+    "message": "Purrtect でチェック"
+  },
+  "checking": {
+    "message": "確認中…"
+  },
+  "level_green": {
+    "message": "安全そうです"
+  },
+  "level_yellow": {
+    "message": "注意してください"
+  },
+  "level_red": {
+    "message": "詐欺の可能性大"
+  },
+  "type_none": {
+    "message": ""
+  },
+  "type_delivery": {
+    "message": "偽の配達連絡"
+  },
+  "type_bank_kyc": {
+    "message": "偽の銀行・本人確認"
+  },
+  "type_otp_theft": {
+    "message": "コードの盗み取り"
+  },
+  "type_job_offer": {
+    "message": "偽の求人・副業"
+  },
+  "type_investment": {
+    "message": "投資詐欺"
+  },
+  "type_lottery_prize": {
+    "message": "偽の当選"
+  },
+  "type_impersonation": {
+    "message": "なりすまし"
+  },
+  "type_romance": {
+    "message": "恋愛詐欺"
+  },
+  "type_tech_support": {
+    "message": "偽のサポート"
+  },
+  "type_other": {
+    "message": "その他の手口"
+  },
+  "readAloud": {
+    "message": "読み上げ"
+  },
+  "close": {
+    "message": "閉じる"
+  },
+  "basicCheckOnly": {
+    "message": "簡易チェックのみ：詳しいチェックは今使えません。"
+  },
+  "headline_green": {
+    "message": "気になる点はありません"
+  },
+  "headline_yellow": {
+    "message": "行動する前に確認を"
+  },
+  "headline_red": {
+    "message": "このリンクは開かないで"
+  },
+  "advice_green": {
+    "message": "それでも不安なら、信頼できる人に相談を。"
+  },
+  "advice_yellow": {
+    "message": "公式アプリやカードの番号から、自分で会社に確認しましょう。"
+  },
+  "advice_red": {
+    "message": "クリック・返信・支払いはしないで。削除しましょう。"
+  },
+  "thisIsSafe": {
+    "message": "これは安全"
+  },
+  "trustSender": {
+    "message": "この送信者を信頼"
+  },
+  "iClicked": {
+    "message": "クリック・支払いをしてしまった"
+  },
+  "copied": {
+    "message": "コピーしました"
+  },
+  "copy": {
+    "message": "コピー"
+  },
+  "hit_ip_link": {
+    "message": "リンクが数字だけ"
+  },
+  "hitwhy_ip_link": {
+    "message": "本物の会社のアドレスには名前があり、数字だけではありません。"
+  },
+  "hit_lookalike": {
+    "message": "そっくりなアドレス"
+  },
+  "hitwhy_lookalike": {
+    "message": "有名な会社に見せかけていますが、本物のサイトではありません。"
+  },
+  "hit_display_name_claim": {
+    "message": "公的機関や銀行を名乗っている"
+  },
+  "hitwhy_display_name_claim": {
+    "message": "銀行・配送・役所を名乗っていますが、本当の送り主ではありません。"
+  },
+  "hit_shortener": {
+    "message": "短縮リンクで行き先が見えない"
+  },
+  "hitwhy_shortener": {
+    "message": "タップする前に本当の行き先が分かりません。"
+  },
+  "hit_plain_http": {
+    "message": "保護されていないリンク"
+  },
+  "hitwhy_plain_http": {
+    "message": "銀行やお店は必ず安全な https を使います。"
+  },
+  "hit_risky_tld": {
+    "message": "アドレスの末尾が怪しい"
+  },
+  "hitwhy_risky_tld": {
+    "message": ".top や .xyz などは詐欺によく使われます。"
+  },
+  "hit_urgency": {
+    "message": "急がせている"
+  },
+  "hitwhy_urgency": {
+    "message": "考える時間を与えないために急がせます。"
+  },
+  "hit_money_secret": {
+    "message": "お金や秘密のコードの話"
+  },
+  "hitwhy_money_secret": {
+    "message": "本物の相手が暗証番号やコード、手数料を求めることはありません。"
+  },
+  "hit_new_sender": {
+    "message": "初めての送信者"
+  },
+  "hitwhy_new_sender": {
+    "message": "これまでやり取りがない相手です。"
+  },
+  "line_cat_thinking": {
+    "message": "ちょっとにおいを確かめるにゃ…"
+  },
+  "line_cat_careful": {
+    "message": "うーん、ここは気をつけて"
+  },
+  "line_cat_stop": {
+    "message": "だめ！クリックしないで！"
+  },
+  "line_cat_happy": {
+    "message": "いい判断にゃ！"
+  },
+  "line_dog_thinking": {
+    "message": "くんくん、調べ中…"
+  },
+  "line_dog_careful": {
+    "message": "ワン、何か変だよ"
+  },
+  "line_dog_stop": {
+    "message": "ストップ！開けないで！"
+  },
+  "line_dog_happy": {
+    "message": "えらいワン！"
+  },
+  "line_bird_thinking": {
+    "message": "よく見てみるね…"
+  },
+  "line_bird_careful": {
+    "message": "ピピッ！気をつけて"
+  },
+  "line_bird_stop": {
+    "message": "ピーッ！押さないで！"
+  },
+  "line_bird_happy": {
+    "message": "よくできました！"
+  },
+  "whyRisky": {
+    "message": "なぜ危ないの？"
+  },
+  "goodChoice": {
+    "message": "いい判断です！"
+  },
+  "enteredAnything": {
+    "message": "何か入力した？ここをタップして相談"
+  },
+  "clickWarningTitle": {
+    "message": "待って！このリンクは危なそう"
+  },
+  "clickWarningBody": {
+    "message": "行き先は $1 です。本物の銀行や会社がこうしたリンクでコードやパスワードを求めることはありません。"
+  },
+  "goBack": {
+    "message": "戻る（おすすめ）"
+  },
+  "openAnyway": {
+    "message": "それでも開く"
+  },
+  "buddyHint": {
+    "message": "文章を選んでからタップするとチェックします。右クリックの「Purrtect でチェック」も使えます。"
+  },
+  "checkThis": {
+    "message": "チェック"
+  },
+  "nothingToScan": {
+    "message": "チェックする内容がありません。文章かリンクを選んで右クリックしてください。"
+  },
+  "recoveryTitle": {
+    "message": "一緒に対処しましょう"
+  },
+  "neverAsk": {
+    "message": "Purrtect が認証コード・暗証番号・パスワード・カード番号を聞くことはありません。"
+  },
+  "q_happened": {
+    "message": "何がありましたか？"
+  },
+  "q_country": {
+    "message": "どこにお住まいですか？"
+  },
+  "q_payment": {
+    "message": "支払い方法は？"
+  },
+  "q_when": {
+    "message": "いつですか？"
+  },
+  "happened_opened_link": {
+    "message": "リンクを開いた"
+  },
+  "happened_typed_password": {
+    "message": "パスワードを入力した"
+  },
+  "happened_shared_otp": {
+    "message": "認証コードを教えた"
+  },
+  "happened_paid": {
+    "message": "お金を払った"
+  },
+  "happened_installed_app": {
+    "message": "アプリを入れた・画面を共有した"
+  },
+  "happened_shared_id": {
+    "message": "身分証を送った"
+  },
+  "country_IN": {
+    "message": "インド"
+  },
+  "country_SG": {
+    "message": "シンガポール"
+  },
+  "country_AU": {
+    "message": "オーストラリア"
+  },
+  "country_ID": {
+    "message": "インドネシア"
+  },
+  "country_PH": {
+    "message": "フィリピン"
+  },
+  "country_JP": {
+    "message": "日本"
+  },
+  "payment_card": {
+    "message": "カード"
+  },
+  "payment_bank_transfer": {
+    "message": "銀行振込"
+  },
+  "payment_upi_or_wallet": {
+    "message": "スマホ決済・電子マネー"
+  },
+  "payment_none": {
+    "message": "払っていない"
+  },
+  "when_minutes": {
+    "message": "数分前"
+  },
+  "when_hours": {
+    "message": "数時間前"
+  },
+  "when_days": {
+    "message": "数日前"
+  },
+  "showPlan": {
+    "message": "やることを見る"
+  },
+  "makingPlan": {
+    "message": "対応プランを作成中…"
+  },
+  "reassurance": {
+    "message": "大丈夫、慎重な人にも起こることです。早く動けば被害を減らせます。"
+  },
+  "planNow": {
+    "message": "今すぐ（最初の10分）"
+  },
+  "planToday": {
+    "message": "今日中に"
+  },
+  "planNextDays": {
+    "message": "この先数日"
+  },
+  "officialHelp": {
+    "message": "$1 の公式窓口"
+  },
+  "callFirst": {
+    "message": "まず電話"
+  },
+  "reportOnline": {
+    "message": "オンラインで届け出"
+  },
+  "otherHelp": {
+    "message": "その他の窓口"
+  },
+  "callBankFallback": {
+    "message": "カードや公式アプリに書かれた番号で銀行に電話しましょう。"
+  },
+  "draftReport": {
+    "message": "警察・サイバー犯罪への届け出"
+  },
+  "draftBank": {
+    "message": "銀行・決済サービスへの連絡文"
+  },
+  "draftTimeline": {
+    "message": "起きたことの時系列"
+  },
+  "basicPlanOnly": {
+    "message": "基本プランのみ：個別プランは今使えません。"
+  },
+  "basic_now_1": {
+    "message": "カードや公式アプリの番号で銀行・カード会社に電話し、停止と送金の差し止めを頼みましょう。"
+  },
+  "basic_now_2": {
+    "message": "下にある国の相談窓口に電話しましょう。"
+  },
+  "basic_now_3": {
+    "message": "入力したパスワードを変え、言われて入れたアプリは削除しましょう。"
+  },
+  "basic_today_1": {
+    "message": "国の公式サイトで届け出ましょう。"
+  },
+  "basic_today_2": {
+    "message": "他の端末からログアウトし、2段階認証を有効にしましょう。"
+  },
+  "basic_next_1": {
+    "message": "1週間は毎日、明細を確認しましょう。"
+  },
+  "basic_next_2": {
+    "message": "「手数料でお金を取り戻す」という人も詐欺です。"
+  },
+  "tagline": {
+    "message": "フィルターの先で、説明し、クリックを止め、立ち直りを助けます。"
+  },
+  "consentTitle": {
+    "message": "はじめに"
+  },
+  "consent_checked": {
+    "message": "Purrtect は Gmail と WhatsApp Web で開いたメッセージとリンクを、ブラウザの中でチェックします。"
+  },
+  "consent_sent": {
+    "message": "怪しいものだけを、番号やコードを隠してから詳しいチェックに送ります。"
+  },
+  "consent_never": {
+    "message": "サーバーには何も保存しません。設定はこのブラウザに残ります。"
+  },
+  "consent_secrets": {
+    "message": "認証コード・暗証番号・パスワード・カード番号を聞くことはありません。"
+  },
+  "set_country": {
+    "message": "お住まいの国"
+  },
+  "set_language": {
+    "message": "言語"
+  },
+  "langName_en": {
+    "message": "English"
+  },
+  "langName_hi": {
+    "message": "हिन्दी"
+  },
+  "langName_ja": {
+    "message": "日本語"
+  },
+  "langName_zh_CN": {
+    "message": "简体中文"
+  },
+  "set_mascot": {
+    "message": "相棒"
+  },
+  "mascot_cat": {
+    "message": "ネコ"
+  },
+  "mascot_dog": {
+    "message": "イヌ"
+  },
+  "mascot_bird": {
+    "message": "トリ"
+  },
+  "set_voice": {
+    "message": "音声"
+  },
+  "voice_on": {
+    "message": "オン"
+  },
+  "voice_off": {
+    "message": "オフ"
+  },
+  "set_mode_gmail": {
+    "message": "Gmail"
+  },
+  "set_mode_whatsapp": {
+    "message": "WhatsApp Web"
+  },
+  "mode_auto": {
+    "message": "自動"
+  },
+  "mode_manual": {
+    "message": "手動"
+  },
+  "modeHelp": {
+    "message": "自動：すべてのリンクと、初めての相手の全文をチェック。手動：選んだものだけをチェック。"
+  },
+  "set_sensitivity": {
+    "message": "注意の強さ"
+  },
+  "sensitivity_relaxed": {
+    "message": "ゆるめ"
+  },
+  "sensitivity_normal": {
+    "message": "ふつう"
+  },
+  "sensitivity_strict": {
+    "message": "きびしめ"
+  },
+  "set_data": {
+    "message": "データ"
+  },
+  "dataHelp": {
+    "message": "信頼した送信者、「これは安全」の記録、リンクの確認結果を消します。"
+  },
+  "clearData": {
+    "message": "データを消去"
+  },
+  "cleared": {
+    "message": "消去しました"
+  },
+  "startProtecting": {
+    "message": "見守りを始める"
+  },
+  "web_title": {
+    "message": "これって詐欺？"
+  },
+  "web_tagline": {
+    "message": "メッセージを貼り付けるか、リンクを入力するか、スクショをアップロード。相棒が説明します。"
+  },
+  "web_tab_text": {
+    "message": "文章を貼る"
+  },
+  "web_tab_link": {
+    "message": "リンクを入力"
+  },
+  "web_tab_image": {
+    "message": "スクショをアップ"
+  },
+  "web_text_label": {
+    "message": "メッセージ"
+  },
+  "web_text_placeholder": {
+    "message": "メール・SMS・WhatsApp のメッセージをここに貼り付け。"
+  },
+  "web_link_label": {
+    "message": "リンク"
+  },
+  "web_image_label": {
+    "message": "スクショ（PNG・JPEG・WebP、4MBまで）"
+  },
+  "web_image_notice": {
+    "message": "スクショは番号を先に隠せません。メモリ上で確認してすぐ破棄し、保存しません。個人情報は切り取ってください。"
+  },
+  "web_check": {
+    "message": "チェックする"
+  },
+  "web_samples": {
+    "message": "サンプルで試す"
+  },
+  "web_get_extension": {
+    "message": "Chrome 拡張機能を入手"
+  },
+  "web_download": {
+    "message": "ZIP をダウンロード"
+  },
+  "web_install_1": {
+    "message": "ファイルをダウンロードして解凍します。"
+  },
+  "web_install_2": {
+    "message": "chrome://extensions を開き、デベロッパーモードをオンにします。"
+  },
+  "web_install_3": {
+    "message": "「パッケージ化されていない拡張機能を読み込む」で解凍したフォルダを選びます。"
+  },
+  "web_privacy": {
+    "message": "貼り付けた文章の番号やコードは確認前に隠します。何も保存しません。"
+  },
+  "web_error": {
+    "message": "メッセージ・リンク・スクショのどれかを入れてください。"
+  },
+  "web_image_needs_ai": {
+    "message": "スクショには詳しいチェックが必要ですが、今は使えません。少し待ってもう一度お試しください。"
+  }
+}

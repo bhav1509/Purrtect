@@ -1,155 +1,244 @@
-"""Purrtect API.
+"""Purrtect API: masks personal data, asks Gemini, returns verdicts and recovery plans.
+Stores nothing; logs only time, endpoint, verdict and latency.
 
-  GET  /health        liveness + whether the model is configured
-  POST /api/scan      rule pre-check + Claude verdict for one message
-  POST /api/recover   step-by-step help after someone clicked, paid or shared a code
-
-Run:  uvicorn main:app --reload --port 8000   (from backend/)
+  GET  /health
+  POST /api/scan
+  POST /api/recover
 """
 from __future__ import annotations
 
+import asyncio
+import base64
+import binascii
 import json
 import logging
 import os
-from pathlib import Path
+import time
+from collections import defaultdict, deque
 from typing import List, Literal, Optional
 
-import anthropic
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from google import genai
+from google.genai import errors, types
 from pydantic import BaseModel, Field
 
 import prompts
+from contacts import COUNTRIES, strip_unverified
 from masking import mask
-from scoring import load_rules, score
 
+PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "global")
+MODELS = [os.environ.get("PURRTECT_MODEL", "gemini-3.5-flash"),
+          os.environ.get("PURRTECT_FALLBACK_MODEL", "gemini-3.1-flash-lite")]
+AI_TIMEOUT_S = 8.0  # scans: the client shows "Basic check only" after this
+RECOVER_TIMEOUT_S = 20.0  # recovery plans are long (steps + 3 drafts); the person is waiting on this screen
+# Start the fallback model if the primary hasn't answered by then. Healthy gemini-3.5-flash
+# answers take ~1.5-3 s; stalled ones never return, so waiting longer only adds latency.
+HEDGE_AFTER_S = float(os.environ.get("PURRTECT_HEDGE_AFTER_S", "2.0"))
+RATE_LIMIT_PER_MIN = int(os.environ.get("PURRTECT_RATE_LIMIT", "30"))
+MAX_IMAGE_BYTES = 4 * 1024 * 1024
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger("purrtect")
+logging.getLogger("httpx").setLevel(logging.WARNING)  # request lines only; keep logs minimal
 
-MODEL = os.environ.get("PURRTECT_MODEL", "claude-opus-5-5")
-MAX_CHARS = 8000
+client: Optional[genai.Client] = None
+if PROJECT:
+    # Gemini Enterprise Agent Platform (formerly Vertex AI). Auth: Application Default
+    # Credentials locally, the Cloud Run service account when deployed. No API key.
+    client = genai.Client(enterprise=True, project=PROJECT, location=LOCATION,
+                          http_options=types.HttpOptions(timeout=int(AI_TIMEOUT_S * 1000)))
 
-RULES = load_rules()
-COUNTRIES = json.loads((Path(__file__).parent / "countries.json").read_text(encoding="utf-8"))
-
-# Zero-arg client resolves ANTHROPIC_API_KEY or an `ant auth login` profile.
-try:
-    client: Optional[anthropic.AsyncAnthropic] = anthropic.AsyncAnthropic()
-except Exception:  # no credentials: serve rule-only verdicts
-    client = None
+ORIGINS = [o for o in os.environ.get("PURRTECT_ALLOWED_ORIGINS", "").split(",") if o]
+if PROJECT:
+    ORIGINS += [f"https://{PROJECT}.web.app", f"https://{PROJECT}.firebaseapp.com"]
+ORIGINS += ["http://localhost:5000", "http://localhost:5500", "http://127.0.0.1:5500"]
 
 app = FastAPI(title="Purrtect API")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=os.environ.get("PURRTECT_CORS_ORIGINS", "*").split(","),
-    allow_origin_regex=r"chrome-extension://.*",
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
-)
+# The extension calls through its host permission, and Firebase Hosting rewrites /api to
+# this service, so CORS only matters for the web checker on its own origin and local dev.
+app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["GET", "POST"],
+                   allow_headers=["Content-Type"])
 
-Lang = Literal["en", "hi", "ja", "zh_CN"]
+Country = Literal["IN", "SG", "AU", "ID", "PH", "JP"]
 
 
 class ScanRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=50_000)
-    source: Literal["gmail", "whatsapp", "selection", "web"] = "web"
-    lang: Lang = "en"
+    text: str = Field("", max_length=20_000)
+    links: List[str] = Field(default_factory=list, max_length=50)
+    image_base64: Optional[str] = Field(None, max_length=6_000_000)
+    sender: Literal["new", "known"] = "new"
+    source: Literal["gmail", "whatsapp", "web"] = "web"
+    local_score: int = Field(0, ge=0, le=100)
+    local_hits: List[str] = Field(default_factory=list, max_length=20)
+    ui_lang: Literal["en", "hi", "ja", "zh"] = "en"
+    country: Country = "IN"
 
 
 class RecoverRequest(BaseModel):
-    what_happened: List[
-        Literal["clicked_link", "entered_password", "shared_otp", "paid_money", "installed_app", "shared_id"]
-    ] = []
-    details: str = Field("", max_length=4000)
-    country: str = "IN"
-    lang: Lang = "en"
+    what_happened: List[Literal["opened_link", "typed_password", "shared_otp", "paid", "installed_app", "shared_id"]] = []
+    payment_method: Literal["card", "bank_transfer", "upi_or_wallet", "none"] = "none"
+    when: Literal["minutes", "hours", "days"] = "minutes"
+    country: Country = "IN"
+    lang: Literal["en", "hi", "ja", "zh"] = "en"
 
 
-async def ask_claude(system: str, user: str, schema: dict, effort: str) -> Optional[dict]:
-    """One structured-output call. Returns None when the model is unavailable or declines,
-    so callers can fall back to rule-only results."""
+class AIUnavailable(Exception):
+    pass
+
+
+# --- simple per-IP rate limit (per instance) ---------------------------------------------
+_hits: dict[str, deque] = defaultdict(deque)
+
+
+@app.middleware("http")
+async def rate_limit(request: Request, call_next):
+    if request.url.path.startswith("/api/"):
+        forwarded = request.headers.get("x-forwarded-for", "")
+        ip = forwarded.split(",")[0].strip() or (request.client.host if request.client else "?")
+        now = time.monotonic()
+        q = _hits[ip]
+        while q and now - q[0] > 60:
+            q.popleft()
+        if len(q) >= RATE_LIMIT_PER_MIN:
+            return JSONResponse({"error": "rate_limited"}, status_code=429)
+        q.append(now)
+    return await call_next(request)
+
+
+def log_event(endpoint: str, verdict: str, started: float, model: str = "") -> None:
+    log.info(json.dumps({"ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "endpoint": endpoint,
+                         "verdict": verdict, "model": model,
+                         "latency_ms": round((time.monotonic() - started) * 1000)}))
+
+
+async def _generate(model: str, contents: list, config: types.GenerateContentConfig,
+                    schema: type[BaseModel]) -> BaseModel:
+    resp = await client.aio.models.generate_content(model=model, contents=contents, config=config)
+    if isinstance(resp.parsed, schema):
+        return resp.parsed
+    if resp.text:
+        return schema.model_validate_json(resp.text)  # raises ValueError if unparsable
+    raise ValueError("empty response")
+
+
+async def ask_gemini(system: str, contents: list, schema: type[BaseModel],
+                     budget_s: float = AI_TIMEOUT_S) -> tuple[BaseModel, str]:
+    """Structured call within one time budget. The primary model usually answers in ~2 s but
+    sometimes stalls, so if it hasn't answered after HEDGE_AFTER_S (or fails), the fallback model
+    starts too and the first valid answer wins."""
     if client is None:
-        return None
+        raise AIUnavailable("GOOGLE_CLOUD_PROJECT is not set")
+    config = types.GenerateContentConfig(
+        system_instruction=system,
+        response_mime_type="application/json",
+        response_schema=schema,
+        temperature=0.2,
+        thinking_config=types.ThinkingConfig(thinking_level="LOW"),
+        http_options=types.HttpOptions(timeout=int(budget_s * 1000)),
+    )
+    loop = asyncio.get_running_loop()
+    start = loop.time()
+    deadline = start + budget_s
+    pending = {asyncio.create_task(_generate(MODELS[0], contents, config, schema)): MODELS[0]}
+    hedged = False
     try:
-        response = await client.beta.messages.create(
-            model=MODEL,
-            max_tokens=8000,
-            system=system,
-            messages=[{"role": "user", "content": user}],
-            output_config={"effort": effort, "format": {"type": "json_schema", "schema": schema}},
-            # On a safety decline, the API retries on a fallback model within the same call.
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
-        )
-    except anthropic.APIConnectionError as e:
-        log.warning("Claude unreachable: %s", e)
-        return None
-    except anthropic.RateLimitError:
-        log.warning("Claude rate limited")
-        return None
-    except anthropic.APIStatusError as e:
-        log.error("Claude error %s: %s", e.status_code, e.message)
-        return None
-    except (anthropic.AnthropicError, TypeError) as e:  # TypeError: no credentials could be resolved
-        log.error("Claude unavailable: %s", e)
-        return None
-
-    if response.stop_reason != "end_turn":
-        log.warning("Claude stopped with %s", response.stop_reason)
-        return None
-    text = next((b.text for b in response.content if b.type == "text"), None)
-    return json.loads(text) if text else None
+        while pending:
+            wait_until = deadline if hedged else min(deadline, start + HEDGE_AFTER_S)
+            done, _ = await asyncio.wait(pending, timeout=max(0.0, wait_until - loop.time()),
+                                         return_when=asyncio.FIRST_COMPLETED)
+            for task in done:
+                model = pending.pop(task)
+                try:
+                    return task.result(), model
+                except errors.APIError as e:
+                    log.warning(json.dumps({"event": "gemini_error", "model": model, "code": e.code, "status": e.status}))
+                except Exception as e:  # unparsable reply, network error
+                    log.warning(json.dumps({"event": "gemini_failed", "model": model, "error": type(e).__name__}))
+            if loop.time() >= deadline:
+                break
+            if not hedged and (not pending or loop.time() >= start + HEDGE_AFTER_S):
+                hedged = True
+                pending[asyncio.create_task(_generate(MODELS[1], contents, config, schema))] = MODELS[1]
+    finally:
+        for task in pending:
+            task.cancel()
+    raise AIUnavailable("model unavailable or too slow")
 
 
-def combine(rule: dict, ai: Optional[dict]) -> dict:
-    """The model's judgment leads; rules can raise but not erase a strong signal."""
-    if ai is None:
-        return {"verdict": rule["verdict"], "score": rule["score"], "source": "rules"}
-    final = round(0.7 * ai["score"] + 0.3 * rule["score"])
-    if rule["verdict"] == "dangerous":
-        final = max(final, RULES["thresholds"]["suspicious"])
-    t = RULES["thresholds"]
-    verdict = "dangerous" if final >= t["dangerous"] else "suspicious" if final >= t["suspicious"] else "safe"
-    return {"verdict": verdict, "score": final, "source": "rules+ai"}
+def decode_image(b64: str) -> types.Part:
+    if "," in b64[:100]:  # data:image/png;base64,....
+        b64 = b64.split(",", 1)[1]
+    try:
+        data = base64.b64decode(b64, validate=True)
+    except (binascii.Error, ValueError):
+        raise HTTPException(400, "image_base64 is not valid base64")
+    if len(data) > MAX_IMAGE_BYTES:
+        raise HTTPException(413, "image is larger than 4 MB")
+    if data.startswith(b"\x89PNG"):
+        mime = "image/png"
+    elif data.startswith(b"\xff\xd8"):
+        mime = "image/jpeg"
+    elif data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        mime = "image/webp"
+    else:
+        raise HTTPException(415, "use a PNG, JPEG or WebP screenshot")
+    return types.Part.from_bytes(data=data, mime_type=mime)
 
 
 @app.get("/health")
 async def health():
-    return {"ok": True, "model": MODEL if client else None, "rules_version": RULES["version"]}
+    return {"ok": True, "model": MODELS[0], "ai_configured": client is not None}
 
 
 @app.post("/api/scan")
 async def scan(req: ScanRequest):
-    text = req.text[:MAX_CHARS]
-    rule = score(text, RULES)  # links and brands are scored before masking hides anything
-    masked = mask(text)
-    ai = await ask_claude(
-        prompts.SCAN_SYSTEM.format(language=prompts.language_name(req.lang)),
-        prompts.scan_user_message(masked, req.source, rule),
-        prompts.SCAN_SCHEMA,
-        effort="low",
-    )
-    return {
-        **combine(rule, ai),
-        "rules": rule,
-        "scam_type": ai["scam_type"] if ai else None,
-        "summary": ai["summary"] if ai else None,
-        "red_flags": ai["red_flags"] if ai else [],
-        "what_to_do": ai["what_to_do"] if ai else [],
-    }
+    started = time.monotonic()
+    if not req.text.strip() and not req.links and not req.image_base64:
+        raise HTTPException(400, "send text, links or an image")
+    contents: list = [prompts.scan_contents(
+        mask(req.text), [mask(link) for link in req.links], req.sender, req.source,
+        req.local_score, req.local_hits, req.ui_lang)]
+    if req.image_base64:
+        contents.append(decode_image(req.image_base64))  # processed in memory, never stored
+    try:
+        result, model = await ask_gemini(prompts.SCAN_PROMPT, contents, prompts.ScanResult)
+    except AIUnavailable:
+        log_event("scan", "ai_unavailable", started)
+        return JSONResponse({"error": "ai_unavailable"}, status_code=503)
+
+    row = COUNTRIES[req.country]
+    out = result.model_dump()
+    out["risk_score"] = max(0, min(100, out["risk_score"]))
+    out["red_flags"] = [{"flag": strip_unverified(f["flag"], row), "why": strip_unverified(f["why"], row)}
+                        for f in out["red_flags"][:3]]
+    out["headline"] = strip_unverified(out["headline"], row)
+    out["advice"] = strip_unverified(out["advice"], row)
+    log_event("scan", out["verdict"], started, model)
+    return out
 
 
 @app.post("/api/recover")
 async def recover(req: RecoverRequest):
-    country = COUNTRIES.get(req.country.upper())
-    ai = await ask_claude(
-        prompts.RECOVER_SYSTEM.format(language=prompts.language_name(req.lang)),
-        prompts.recover_user_message(req.what_happened, mask(req.details), country),
-        prompts.RECOVER_SCHEMA,
-        effort="medium",
-    )
-    return {
-        "country": country,
-        "reassurance": ai["reassurance"] if ai else None,
-        "steps": ai["steps"] if ai else [],
-        "source": "ai" if ai else "static",
-    }
+    started = time.monotonic()
+    row = COUNTRIES[req.country]
+    contents = [prompts.recover_contents(req.what_happened, req.payment_method, req.when, row)]
+    system = prompts.RECOVER_PROMPT.format(language=prompts.LANGUAGES[req.lang])
+    try:
+        plan, model = await ask_gemini(system, contents, prompts.RecoveryPlan, RECOVER_TIMEOUT_S)
+    except AIUnavailable:
+        log_event("recover", "ai_unavailable", started)
+        # The client shows its built-in basic steps next to these verified contacts.
+        return JSONResponse({"error": "ai_unavailable", "country": req.country, "contacts": row}, status_code=503)
+
+    out = plan.model_dump()
+    for key in ("now", "today", "next_days"):
+        out[key] = [strip_unverified(step, row) for step in out[key]]
+    for key in ("report_draft", "bank_message_draft", "timeline"):
+        out[key] = strip_unverified(out[key], row)
+    out["country"] = req.country
+    out["contacts"] = row  # copied verbatim from countries.json
+    log_event("recover", "plan", started, model)
+    return out
