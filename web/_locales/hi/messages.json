@@ -53,6 +53,24 @@
   "type_other": {
     "message": "अन्य धोखा"
   },
+  "listen": {
+    "message": "सुनें"
+  },
+  "pause": {
+    "message": "रोकें"
+  },
+  "resume": {
+    "message": "फिर शुरू करें"
+  },
+  "noVoice": {
+    "message": "इस डिवाइस पर इस भाषा की आवाज़ इंस्टॉल नहीं है।"
+  },
+  "localCheckOnly": {
+    "message": "आपके ब्राउज़र में जाँचा गया। कुछ भी कहीं नहीं भेजा गया।"
+  },
+  "checkWithPurrtect": {
+    "message": "Purrtect से जाँचें"
+  },
   "readAloud": {
     "message": "पढ़कर सुनाएँ"
   },
@@ -508,6 +526,21 @@
   },
   "web_privacy": {
     "message": "पेस्ट किए टेक्स्ट में नाम, नंबर और कोड जाँच से पहले छिपा दिए जाते हैं। कुछ भी सेव नहीं होता।"
+  },
+  "web_download_ext": {
+    "message": "एक्सटेंशन डाउनलोड करें"
+  },
+  "web_how_install": {
+    "message": "कैसे इंस्टॉल करें"
+  },
+  "web_result_empty": {
+    "message": "कोई संदेश पेस्ट करें या एक नमूना धोखा चुनें। नतीजा यहाँ दिखेगा।"
+  },
+  "web_sample_testing": {
+    "message": "नमूना जाँच: $1"
+  },
+  "web_back": {
+    "message": "नतीजे पर वापस"
   },
   "web_error": {
     "message": "कृपया संदेश पेस्ट करें, लिंक डालें या स्क्रीनशॉट चुनें।"

@@ -6,7 +6,7 @@
   if (UI.guardLinks) return;
   const { el, t } = UI;
 
-  function warn(href, result, handlers) {
+  function warn(href, result, handlers, link) {
     let host = href;
     try { host = new URL(href).hostname; } catch (_) { /* keep raw */ }
     const done = () => overlay.remove();
@@ -24,7 +24,7 @@
           "div",
           { class: "purr-actions purr-actions-stack" },
           el("button", { type: "button", class: "purr-btn purr-btn-safe", onclick: () => { done(); handlers.onBack(); } }, t("goBack")),
-          el("button", { type: "button", class: "purr-btn", onclick: () => { done(); handlers.onWhy(); } }, t("whyRisky")),
+          el("button", { type: "button", class: "purr-btn", onclick: () => { done(); handlers.onWhy(link); } }, t("whyRisky")),
           el("button", { type: "button", class: "purr-btn purr-btn-quiet", onclick: () => { done(); handlers.onOpen(href); } }, t("openAnyway"))
         )
       )
@@ -45,7 +45,7 @@
         if (!a || !result || result.level !== "red" || a.dataset.purrAllowed) return;
         e.preventDefault();
         e.stopImmediatePropagation();
-        warn(a.href, result, handlers);
+        warn(a.href, result, handlers, a);
       },
       true
     );

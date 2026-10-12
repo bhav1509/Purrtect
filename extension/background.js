@@ -3,7 +3,6 @@ importScripts("config.js");
 
 const MENU_ID = "purrtect-scan";
 const API_TIMEOUT_MS = 25000; // backend caps scans at 8 s and recovery plans at 20 s; allow for the network
-const CONTENT_SITES = [/^https:\/\/mail\.google\.com\//, /^https:\/\/web\.whatsapp\.com\//];
 
 let rulesPromise = null;
 const localeCache = {};
@@ -51,19 +50,38 @@ chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
   return true; // reply asynchronously
 });
 
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+// Files injected into a page the first time "Scan with Purrtect" is used there
+// (Gmail and WhatsApp already have them as content scripts).
+const INJECT_JS = ["rules.js", "lib/store.js", "ui/core.js", "ui/verdict-card.js", "ui/recovery-panel.js",
+  "ui/badge.js", "ui/click-warning.js", "content/site.js"];
+
+async function ensureInPage(tabId) {
+  try {
+    if (await chrome.tabs.sendMessage(tabId, { type: "ping" })) return true;
+  } catch (_) { /* not injected yet */ }
+  try {
+    await chrome.scripting.insertCSS({ target: { tabId }, files: ["ui/ui.css"] });
+    await chrome.scripting.executeScript({ target: { tabId }, files: INJECT_JS });
+    return true;
+  } catch (_) {
+    return false; // chrome:// pages, the Web Store, PDFs: Chrome doesn't allow scripts there
+  }
+}
+
+// Shows the result as a popup on the same page, next to the selection or the link.
+async function handleMenuClick(info, tab) {
   if (info.menuItemId !== MENU_ID) return;
   const text = info.selectionText || "";
   const links = info.linkUrl ? [info.linkUrl] : [];
   if (!text.trim() && !links.length) return;
 
-  // On Gmail and WhatsApp the card opens in the page; anywhere else, in a small window.
-  if (tab && tab.id && CONTENT_SITES.some((re) => re.test(tab.url || ""))) {
-    try {
-      await chrome.tabs.sendMessage(tab.id, { type: "manualScan", text, links });
-      return;
-    } catch (_) { /* content script not ready; fall through */ }
+  if (tab && tab.id && await ensureInPage(tab.id)) {
+    await chrome.tabs.sendMessage(tab.id, { type: "manualScan", text, links });
+    return;
   }
+  // Pages where Chrome blocks extensions: fall back to a small result window.
   await chrome.storage.session.set({ pendingScan: { text, links } });
   chrome.windows.create({ url: chrome.runtime.getURL("ui/scan.html"), type: "popup", width: 460, height: 720 });
-});
+}
+chrome.contextMenus.onClicked.addListener(handleMenuClick);
+self.purrHandleMenuClick = handleMenuClick; // used by the end-to-end test

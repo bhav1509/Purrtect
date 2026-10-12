@@ -30,7 +30,8 @@
       clear.textContent = t("cleared");
     });
 
-    app.replaceChildren(
+    // replaceChildren() would print a null child as the text "null", so pass the parts through el().
+    app.replaceChildren(...PurrUI.el("div", {},
       el("header", { class: "purr-page-head" },
         el("img", { src: chrome.runtime.getURL(`mascots/${s.mascot}/${welcome ? "happy" : "idle"}.png`), alt: "", width: 64, height: 64, class: "purr-mascot" }),
         el("div", {}, el("h1", {}, "Purrtect"), el("p", { class: "purr-note" }, t("tagline")))),
@@ -57,7 +58,7 @@
       clear,
       welcome ? el("button", { type: "button", class: "purr-btn purr-btn-primary purr-wide",
         onclick: async () => { await set({ onboarded: true }); window.close(); } }, t("startProtecting")) : null
-    );
+    ).childNodes);
   }
 
   PurrPage.onChange = render;

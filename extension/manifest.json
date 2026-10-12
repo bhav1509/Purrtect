@@ -17,7 +17,12 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["storage", "contextMenus"],
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "scripting"
+  ],
   "host_permissions": [
     "https://mail.google.com/*",
     "https://web.whatsapp.com/*",
@@ -25,28 +30,54 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://mail.google.com/*"],
-      "js": [
-        "rules.js", "lib/store.js", "ui/core.js", "ui/verdict-card.js", "ui/recovery-panel.js",
-        "ui/badge.js", "ui/click-warning.js", "content/site.js", "content/gmail.js"
+      "matches": [
+        "https://mail.google.com/*"
       ],
-      "css": ["ui/ui.css"],
+      "js": [
+        "rules.js",
+        "lib/store.js",
+        "ui/core.js",
+        "ui/verdict-card.js",
+        "ui/recovery-panel.js",
+        "ui/badge.js",
+        "ui/click-warning.js",
+        "content/site.js",
+        "content/gmail.js"
+      ],
+      "css": [
+        "ui/ui.css"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://web.whatsapp.com/*"],
-      "js": [
-        "rules.js", "lib/store.js", "ui/core.js", "ui/verdict-card.js", "ui/recovery-panel.js",
-        "ui/badge.js", "ui/click-warning.js", "content/site.js", "content/whatsapp.js"
+      "matches": [
+        "https://web.whatsapp.com/*"
       ],
-      "css": ["ui/ui.css"],
+      "js": [
+        "rules.js",
+        "lib/store.js",
+        "ui/core.js",
+        "ui/verdict-card.js",
+        "ui/recovery-panel.js",
+        "ui/badge.js",
+        "ui/click-warning.js",
+        "content/site.js",
+        "content/whatsapp.js"
+      ],
+      "css": [
+        "ui/ui.css"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["mascots/*/*.png"],
-      "matches": ["https://mail.google.com/*", "https://web.whatsapp.com/*"]
+      "resources": [
+        "mascots/*/*.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

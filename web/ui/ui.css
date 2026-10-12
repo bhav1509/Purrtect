@@ -1,6 +1,6 @@
 /* Purrtect UI. Every selector is prefixed purr- so Gmail and WhatsApp are not affected.
    Used by the extension and the web checker. */
-.purr-card, .purr-badge-wrap, .purr-alert, .purr-overlay, .purr-toast, .purr-banner, .purr-buddy, .purr-select-btn {
+.purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-buddy, .purr-select-btn {
   --purr-green: #1f7a45;
   --purr-green-bg: #e3f4ea;
   --purr-yellow: #8a5300;
@@ -23,7 +23,7 @@
   text-align: left;
 }
 @media (prefers-color-scheme: dark) {
-  .purr-card, .purr-badge-wrap, .purr-alert, .purr-overlay, .purr-toast, .purr-banner, .purr-buddy, .purr-select-btn {
+  .purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-buddy, .purr-select-btn {
     --purr-green: #74d39c;
     --purr-green-bg: #173826;
     --purr-yellow: #f5b94f;
@@ -39,7 +39,7 @@
     --purr-shadow: 0 12px 40px rgba(0, 0, 0, .6);
   }
 }
-.purr-card *, .purr-overlay *, .purr-alert * { box-sizing: border-box; }
+.purr-card *, .purr-overlay * { box-sizing: border-box; }
 .purr-mascot { image-rendering: pixelated; flex: none; }
 
 /* buttons: at least 44 px tall */
@@ -115,33 +115,46 @@
 .purr-draft pre { white-space: pre-wrap; word-break: break-word; font: inherit; font-size: 15px; margin: 8px 0 0; }
 .purr-copy { min-width: 88px; }
 
-/* yellow badge with hover preview */
-.purr-badge-wrap { position: relative; display: inline-block; margin: 4px 0; vertical-align: middle; }
-.purr-badge {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 12px 4px 4px;
-  border: 2px solid currentColor; border-radius: 999px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+/* widget next to each checked message: colour + symbol + words */
+.purr-widget-wrap { position: relative; display: inline-block; margin: 2px 6px 2px 0; vertical-align: middle; }
+.purr-widget {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 2px 10px 2px 3px;
+  border: 1.5px solid currentColor; border-radius: 999px; background: var(--purr-surface);
+  font: inherit; font-size: 13px; font-weight: 700; line-height: 1; cursor: pointer;
 }
-.purr-badge.purr-yellow { color: var(--purr-yellow); background: var(--purr-yellow-bg); }
-.purr-badge.purr-red { color: var(--purr-red); background: var(--purr-red-bg); }
-.purr-badge.purr-green { color: var(--purr-green); background: var(--purr-green-bg); }
-.purr-badge.purr-thinking { color: var(--purr-muted); background: var(--purr-surface); }
+.purr-widget-icon {
+  display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+  border-radius: 50%; font-size: 14px; font-weight: 900; color: var(--purr-surface);
+}
+.purr-w-green { color: var(--purr-green); background: var(--purr-green-bg); }
+.purr-w-yellow { color: var(--purr-yellow); background: var(--purr-yellow-bg); }
+.purr-w-red { color: var(--purr-red); background: var(--purr-red-bg); }
+.purr-w-pending { color: var(--purr-muted); }
+.purr-w-green .purr-widget-icon { background: var(--purr-green); }
+.purr-w-yellow .purr-widget-icon { background: var(--purr-yellow); }
+.purr-w-red .purr-widget-icon { background: var(--purr-red); }
+.purr-w-pending .purr-widget-icon { background: var(--purr-muted); }
 .purr-preview {
   display: none; position: absolute; left: 0; top: calc(100% + 6px); z-index: 2147483645;
   width: max-content; max-width: 280px; padding: 8px 12px; border-radius: 10px;
-  background: var(--purr-surface); border: 2px solid var(--purr-line); box-shadow: var(--purr-shadow); font-weight: 700;
+  background: var(--purr-surface); color: var(--purr-ink); border: 2px solid var(--purr-line); box-shadow: var(--purr-shadow); font-weight: 700;
 }
-.purr-badge-wrap:hover .purr-preview, .purr-badge-wrap:focus-within .purr-preview { display: block; }
+.purr-widget-wrap:hover .purr-preview, .purr-widget-wrap:focus-within .purr-preview { display: block; }
 
-/* red docked alert */
-.purr-alert {
-  position: fixed; right: 16px; top: 72px; z-index: 2147483646;
-  width: min(380px, calc(100vw - 32px)); display: flex; gap: 12px; align-items: flex-start;
-  padding: 14px; border-radius: 18px; border: 3px solid var(--purr-red); background: var(--purr-surface); box-shadow: var(--purr-shadow);
+/* popups placed next to what opened them (see PurrUI.placeNear) */
+.purr-docked.purr-floating { top: 72px; right: 16px; }
+
+/* read aloud: Listen / Pause / Resume */
+.purr-voice-wrap { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.purr-voice {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 14px;
+  border: 2px solid var(--purr-line); border-radius: 999px; background: var(--purr-surface);
+  color: var(--purr-ink); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
 }
-.purr-alert-text { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.purr-alert-line { font-weight: 800; color: var(--purr-red); font-size: 18px; }
+.purr-voice[data-state="playing"], .purr-voice[data-state="paused"] { border-color: var(--purr-blue); color: var(--purr-blue); }
 
 /* click warning */
+.purr-alert-line { font-weight: 800; color: var(--purr-red); font-size: 18px; }
 .purr-overlay {
   position: fixed; inset: 0; z-index: 2147483647; display: flex; align-items: center; justify-content: center;
   padding: 16px; background: rgba(0, 0, 0, .6);

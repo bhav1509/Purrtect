@@ -59,15 +59,88 @@
     return node;
   }
 
-  const SPEECH_LANG = { en: "en-US", hi: "hi-IN", ja: "ja-JP", zh: "zh-CN", ta: "ta-IN", id: "id-ID", ms: "ms-MY", tl: "fil-PH" };
+  // ----- read aloud: one button that cycles Listen -> Pause -> Resume, in the UI language -----
+  const SPEECH_LANG = { en: "en-US", hi: "hi-IN", ja: "ja-JP", zh: "zh-CN" };
+  let speechButton = null;
 
-  function speak(text, lang) {
-    if (!("speechSynthesis" in self) || !text) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = SPEECH_LANG[lang] || lang || "en-US";
-    u.rate = 0.95;
-    speechSynthesis.speak(u);
+  function voices() {
+    const list = speechSynthesis.getVoices();
+    if (list.length) return Promise.resolve(list);
+    return new Promise((resolve) => {
+      const done = () => resolve(speechSynthesis.getVoices());
+      speechSynthesis.addEventListener("voiceschanged", done, { once: true });
+      setTimeout(done, 1000);
+    });
+  }
+
+  function setSpeechLabel(button, state) {
+    if (!button) return;
+    const [icon, key] = { idle: ["▶", "listen"], playing: ["⏸", "pause"], paused: ["▶", "resume"] }[state];
+    button.dataset.state = state;
+    button.replaceChildren(el("span", { "aria-hidden": "true" }, icon), " ", t(key));
+  }
+
+  function stopSpeech() {
+    if ("speechSynthesis" in self) speechSynthesis.cancel();
+    setSpeechLabel(speechButton, "idle");
+    speechButton = null;
+  }
+
+  // Returns the button; text() is read when it is first pressed.
+  function speechControl(text) {
+    if (!("speechSynthesis" in self)) return null;
+    const button = el("button", { type: "button", class: "purr-voice", "data-state": "idle" });
+    const note = el("span", { class: "purr-note purr-voice-note", hidden: true }, t("noVoice"));
+    button.addEventListener("click", async () => {
+      const state = button.dataset.state;
+      if (speechButton === button && state === "playing") { speechSynthesis.pause(); setSpeechLabel(button, "paused"); return; }
+      if (speechButton === button && state === "paused") { speechSynthesis.resume(); setSpeechLabel(button, "playing"); return; }
+      stopSpeech();
+      const lang = SPEECH_LANG[apiLang()] || "en-US";
+      const voice = (await voices()).find((v) => v.lang.replace("_", "-").toLowerCase().startsWith(lang.slice(0, 2).toLowerCase()));
+      if (!voice) { note.hidden = false; return; }  // never read Hindi/Japanese/Chinese in an English voice
+      const u = new SpeechSynthesisUtterance(text());
+      u.lang = lang;
+      u.voice = voice;
+      u.rate = 0.95;
+      u.onend = () => { if (speechButton === button) { setSpeechLabel(button, "idle"); speechButton = null; } };
+      speechButton = button;
+      setSpeechLabel(button, "playing");
+      speechSynthesis.speak(u);
+    });
+    setSpeechLabel(button, "idle");
+    return el("span", { class: "purr-voice-wrap" }, button, note);
+  }
+
+  // ----- popups open next to whatever opened them (a widget, the selection, a link) -----
+  // anchor: an Element (followed on scroll) or a DOMRect. Without one, the popup docks top-right.
+  function placeNear(node, anchor) {
+    node.classList.add("purr-floating");
+    const place = () => {
+      if (!node.isConnected) { cleanup(); return; }
+      const r = anchor instanceof Element ? anchor.getBoundingClientRect() : anchor;
+      if (!r) return;
+      const gap = 8;
+      const w = node.offsetWidth;
+      const h = node.offsetHeight;
+      const below = innerHeight - r.bottom - gap;
+      let top = below >= Math.min(h, 260) ? r.bottom + gap : r.top - gap - h;
+      top = Math.max(8, Math.min(top, innerHeight - h - 8));
+      let left = Math.min(Math.max(8, r.left), innerWidth - w - 8);
+      node.style.top = `${Math.round(top)}px`;
+      node.style.left = `${Math.round(left)}px`;
+    };
+    const cleanup = () => {
+      removeEventListener("scroll", place, true);
+      removeEventListener("resize", place);
+    };
+    if (anchor) {
+      node.style.right = "auto";
+      requestAnimationFrame(place);
+      addEventListener("scroll", place, true);
+      addEventListener("resize", place);
+    }
+    return cleanup;
   }
 
   async function copyText(text, button) {
@@ -90,26 +163,26 @@
       scamType: data.scam_type,
       redFlags: data.red_flags || [],
       advice: data.advice,
-      language: data.message_language,
       local,
     };
   }
 
+  // basic=true: the backend was unavailable. basic=false: green, judged in the browser only.
   function resultFromLocal(local, basic) {
     return {
       level: local.level,
       basic: basic !== false,
+      localOnly: basic === false,
       headline: t("headline_" + local.level),
       scamType: null,
-      redFlags: local.hits.slice(0, 3).map((h) => ({ flag: t("hit_" + h), why: t("hitwhy_" + h) })),
+      redFlags: local.level === "green" ? [] : local.hits.slice(0, 3).map((h) => ({ flag: t("hit_" + h), why: t("hitwhy_" + h) })),
       advice: t("advice_" + local.level),
-      language: apiLang(),
       local,
     };
   }
 
   self.PurrUI = {
-    configure, t, apiLang, el, mascotImg, mascotUrl, mascotLine, speak, copyText,
+    configure, t, apiLang, el, mascotImg, mascotUrl, mascotLine, speechControl, stopSpeech, placeNear, copyText,
     resultFromApi, resultFromLocal,
     get env() { return env; },
   };

@@ -10,78 +10,100 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main>
-    <header class="top">
-      <img id="mascot" class="purr-mascot" src="mascots/cat/idle.png" alt="" width="96" height="96">
-      <div>
-        <h1 data-i18n="web_title">Is this a scam?</h1>
-        <p class="tagline" data-i18n="web_tagline"></p>
-      </div>
-    </header>
-
-    <section class="prefs" aria-label="Preferences">
-      <label><span data-i18n="set_language">Language</span>
-        <select id="lang">
+  <header class="bar">
+    <a class="brand" href="./">
+      <img class="purr-mascot" src="mascots/cat/happy.png" alt="" width="40" height="40">
+      <span class="brand-name">Purrtect</span>
+    </a>
+    <p class="brand-tagline" data-i18n="tagline"></p>
+    <div class="bar-actions">
+      <label class="pick">
+        <span class="sr-only" data-i18n="set_language">Language</span>
+        <select id="lang" aria-label="Language">
           <option value="en">English</option>
           <option value="hi">हिन्दी</option>
           <option value="ja">日本語</option>
           <option value="zh_CN">简体中文</option>
         </select>
       </label>
-      <label><span data-i18n="set_country">Your country</span>
-        <select id="country"></select>
+      <label class="pick">
+        <span class="sr-only" data-i18n="set_country">Your country</span>
+        <select id="country" aria-label="Country"></select>
       </label>
-      <div class="pet-picker" role="radiogroup" aria-label="Mascot">
-        <span data-i18n="set_mascot">Your buddy</span>
-        <div id="pets"></div>
-      </div>
-    </section>
+      <a id="download" class="download"
+         href="https://github.com/bhav1509/Purrtect/releases/latest/download/purrtect-extension.zip">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v9.59l3.3-3.3a1 1 0 1 1 1.4 1.42l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 1 1 1.4-1.42l3.3 3.3V4a1 1 0 0 1 1-1Zm-7 15a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1Z"/></svg>
+        <span data-i18n="web_download_ext">Download extension</span>
+        <span class="download-ext">.zip</span>
+      </a>
+      <button id="howInstall" class="link-btn" type="button" data-i18n="web_how_install">How to install</button>
+    </div>
+  </header>
 
-    <section class="checker">
+  <main class="stage">
+    <section class="panel checker" aria-labelledby="title">
+      <h1 id="title" data-i18n="web_title">Is this a scam?</h1>
+      <p class="sub" data-i18n="web_tagline"></p>
+
       <div class="tabs" role="tablist">
         <button type="button" role="tab" data-tab="text" aria-selected="true" data-i18n="web_tab_text"></button>
         <button type="button" role="tab" data-tab="link" aria-selected="false" data-i18n="web_tab_link"></button>
         <button type="button" role="tab" data-tab="image" aria-selected="false" data-i18n="web_tab_image"></button>
       </div>
 
-      <form id="form" novalidate>
-        <div class="panel" data-panel="text">
-          <label for="text" data-i18n="web_text_label"></label>
-          <textarea id="text" rows="7"></textarea>
+      <form id="form" class="form" novalidate>
+        <div class="input" data-panel="text">
+          <p id="sampleTag" class="sample-tag" hidden></p>
+          <textarea id="text" aria-label="Message"></textarea>
           <p class="hint" data-i18n="web_privacy"></p>
         </div>
-        <div class="panel" data-panel="link" hidden>
-          <label for="link" data-i18n="web_link_label"></label>
-          <input id="link" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://">
+        <div class="input" data-panel="link" hidden>
+          <input id="link" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://" aria-label="Link">
         </div>
-        <div class="panel" data-panel="image" hidden>
-          <label for="image" data-i18n="web_image_label"></label>
-          <input id="image" type="file" accept="image/png,image/jpeg,image/webp">
+        <div class="input" data-panel="image" hidden>
+          <input id="image" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Screenshot">
           <p class="hint warn" data-i18n="web_image_notice"></p>
         </div>
         <p id="formError" class="error" hidden></p>
-        <button id="submit" class="purr-btn purr-btn-primary" type="submit" data-i18n="web_check"></button>
+        <button id="submit" class="purr-btn purr-btn-primary check-btn" type="submit" data-i18n="web_check"></button>
       </form>
 
-      <h2 data-i18n="web_samples"></h2>
-      <div id="samples" class="samples"></div>
+      <div class="samples-wrap">
+        <h2 data-i18n="web_samples"></h2>
+        <div id="samples" class="samples"></div>
+      </div>
     </section>
 
-    <div id="result" aria-live="polite"></div>
-    <div id="recovery"></div>
-
-    <section class="get-ext">
-      <h2 data-i18n="web_get_extension"></h2>
-      <ol>
-        <li data-i18n="web_install_1"></li>
-        <li data-i18n="web_install_2"></li>
-        <li data-i18n="web_install_3"></li>
-      </ol>
-      <a id="download" class="purr-btn" href="https://github.com/bhav1509/Purrtect/releases/latest" target="_blank" rel="noopener" data-i18n="web_download"></a>
+    <section class="panel result" aria-live="polite">
+      <div id="empty" class="empty">
+        <img class="purr-mascot" src="mascots/cat/idle.png" alt="" width="112" height="112">
+        <p data-i18n="web_result_empty"></p>
+      </div>
+      <div id="result"></div>
     </section>
-
-    <footer data-i18n="tagline"></footer>
   </main>
+
+  <dialog id="recoveryDialog" class="recovery-dialog" aria-labelledby="recoveryTitle">
+    <form method="dialog" class="dialog-close"><button class="close-x" aria-label="Close" data-i18n-aria="close">×</button></form>
+    <div id="recovery"></div>
+  </dialog>
+
+  <dialog id="installDialog" class="install">
+    <h2 data-i18n="web_get_extension"></h2>
+    <ol>
+      <li data-i18n="web_install_1"></li>
+      <li data-i18n="web_install_2"></li>
+      <li data-i18n="web_install_3"></li>
+    </ol>
+    <div class="install-actions">
+      <a class="download" id="download2"
+         href="https://github.com/bhav1509/Purrtect/releases/latest/download/purrtect-extension.zip">
+        <span data-i18n="web_download_ext">Download extension</span>
+        <span class="download-ext">.zip</span>
+      </a>
+      <form method="dialog"><button class="purr-btn" data-i18n="close">Close</button></form>
+    </div>
+  </dialog>
 
   <script src="rules.js"></script>
   <script src="ui/core.js"></script>

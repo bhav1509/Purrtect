@@ -53,6 +53,24 @@
   "type_other": {
     "message": "其他骗局"
   },
+  "listen": {
+    "message": "朗读"
+  },
+  "pause": {
+    "message": "暂停"
+  },
+  "resume": {
+    "message": "继续"
+  },
+  "noVoice": {
+    "message": "此设备未安装该语言的语音。"
+  },
+  "localCheckOnly": {
+    "message": "已在浏览器中检查，没有发送任何内容。"
+  },
+  "checkWithPurrtect": {
+    "message": "用 Purrtect 检查"
+  },
   "readAloud": {
     "message": "朗读"
   },
@@ -508,6 +526,21 @@
   },
   "web_privacy": {
     "message": "粘贴文字里的号码和验证码会在检查前隐藏，不保存任何内容。"
+  },
+  "web_download_ext": {
+    "message": "下载扩展"
+  },
+  "web_how_install": {
+    "message": "如何安装"
+  },
+  "web_result_empty": {
+    "message": "粘贴一条消息或选择一个示例诈骗，结果会显示在这里。"
+  },
+  "web_sample_testing": {
+    "message": "正在测试示例：$1"
+  },
+  "web_back": {
+    "message": "返回结果"
   },
   "web_error": {
     "message": "请粘贴消息、输入链接或选择截图。"

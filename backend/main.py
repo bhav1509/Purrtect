@@ -204,7 +204,8 @@ async def scan(req: ScanRequest):
     if req.image_base64:
         contents.append(decode_image(req.image_base64))  # processed in memory, never stored
     try:
-        result, model = await ask_gemini(prompts.SCAN_PROMPT, contents, prompts.ScanResult)
+        system = prompts.SCAN_PROMPT.format(language=prompts.LANGUAGES[req.ui_lang])
+        result, model = await ask_gemini(system, contents, prompts.ScanResult)
     except AIUnavailable:
         log_event("scan", "ai_unavailable", started)
         return JSONResponse({"error": "ai_unavailable"}, status_code=503)

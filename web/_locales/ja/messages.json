@@ -53,6 +53,24 @@
   "type_other": {
     "message": "その他の手口"
   },
+  "listen": {
+    "message": "読み上げ"
+  },
+  "pause": {
+    "message": "一時停止"
+  },
+  "resume": {
+    "message": "再開"
+  },
+  "noVoice": {
+    "message": "この端末にはこの言語の音声がありません。"
+  },
+  "localCheckOnly": {
+    "message": "ブラウザ内で確認しました。何も送信していません。"
+  },
+  "checkWithPurrtect": {
+    "message": "Purrtect でチェック"
+  },
   "readAloud": {
     "message": "読み上げ"
   },
@@ -508,6 +526,21 @@
   },
   "web_privacy": {
     "message": "貼り付けた文章の番号やコードは確認前に隠します。何も保存しません。"
+  },
+  "web_download_ext": {
+    "message": "拡張機能をダウンロード"
+  },
+  "web_how_install": {
+    "message": "インストール方法"
+  },
+  "web_result_empty": {
+    "message": "メッセージを貼り付けるか、サンプルを選んでください。結果はここに表示されます。"
+  },
+  "web_sample_testing": {
+    "message": "サンプルを確認中：$1"
+  },
+  "web_back": {
+    "message": "結果に戻る"
   },
   "web_error": {
     "message": "メッセージ・リンク・スクショのどれかを入れてください。"

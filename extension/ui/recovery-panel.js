@@ -9,7 +9,15 @@
   const COUNTRIES = ["IN", "SG", "AU", "ID", "PH", "JP"];
   const PAYMENT = ["card", "bank_transfer", "upi_or_wallet", "none"];
   const WHEN = ["minutes", "hours", "days"];
-  let docked = null;
+  let floating = null;
+  let unplace = null;
+
+  function closeFloating() {
+    if (unplace) unplace();
+    if (floating) floating.remove();
+    floating = null;
+    unplace = null;
+  }
 
   function choiceGroup(name, values, multi, selected) {
     const { el, t } = UI;
@@ -87,11 +95,12 @@
     };
   }
 
-  // opts.container: render inline (web checker); otherwise a docked side panel.
+  // opts.container: render inline (web checker); otherwise a popup next to opts.anchor
+  // (an Element or DOMRect), or docked top-right without one.
   UI.recoveryPanel = function recoveryPanel(opts) {
     opts = opts || {};
     const { el, t } = UI;
-    if (!opts.container && docked) docked.remove();
+    if (!opts.container) closeFloating();
 
     const settings = UI.env.settings;
     const qHappened = choiceGroup("happened", HAPPENED, true, []);
@@ -116,11 +125,11 @@
       submit.disabled = false;
       if (res.ok) output.replaceChildren(planView(res.data, res.data.contacts, false));
       else output.replaceChildren(planView(basicPlan(), res.data && res.data.contacts, true));
-      output.scrollIntoView({ behavior: "smooth", block: "start" });
+      output.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
 
     const close = opts.container ? null : el("button", { class: "purr-icon-btn", type: "button", "aria-label": t("close"),
-      onclick: () => { panel.remove(); docked = null; } }, "×");
+      onclick: closeFloating }, "×");
 
     const panel = el(
       "section",
@@ -138,7 +147,7 @@
     );
 
     if (opts.container) opts.container.replaceChildren(panel);
-    else { docked = panel; document.body.append(panel); }
+    else { floating = panel; document.body.append(panel); unplace = UI.placeNear(panel, opts.anchor); }
     return panel;
   };
 })();

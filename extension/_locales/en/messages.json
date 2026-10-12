@@ -53,6 +53,24 @@
   "type_other": {
     "message": "Other trick"
   },
+  "listen": {
+    "message": "Listen"
+  },
+  "pause": {
+    "message": "Pause"
+  },
+  "resume": {
+    "message": "Resume"
+  },
+  "noVoice": {
+    "message": "No voice for this language is installed on this device."
+  },
+  "localCheckOnly": {
+    "message": "Checked in your browser. Nothing was sent anywhere."
+  },
+  "checkWithPurrtect": {
+    "message": "Check with Purrtect"
+  },
   "readAloud": {
     "message": "Read aloud"
   },
@@ -508,6 +526,21 @@
   },
   "web_privacy": {
     "message": "Names, numbers and codes in pasted text are hidden before checking. Nothing is stored."
+  },
+  "web_download_ext": {
+    "message": "Download extension"
+  },
+  "web_how_install": {
+    "message": "How to install"
+  },
+  "web_result_empty": {
+    "message": "Paste a message or pick a sample scam. Your result shows up here."
+  },
+  "web_sample_testing": {
+    "message": "Testing sample: $1"
+  },
+  "web_back": {
+    "message": "Back to result"
   },
   "web_error": {
     "message": "Please paste a message, enter a link or choose a screenshot."

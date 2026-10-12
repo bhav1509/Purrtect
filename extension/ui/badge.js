@@ -1,9 +1,9 @@
-// Extension-only mascot surfaces: the corner buddy, the yellow badge with hover preview,
-// the docked red alert, the "Good choice!" toast and the 10-minute "Entered anything?" banner.
+// Extension-only surfaces: the corner buddy, the widget next to each checked message,
+// the "Good choice!" toast and the 10-minute "Entered anything?" banner.
 (function () {
   "use strict";
   const UI = self.PurrUI;
-  if (UI.badge) return;
+  if (UI.widget) return;
   const { el, t } = UI;
 
   // --- corner buddy: idle when nothing is found, thinking while checking ---
@@ -27,41 +27,24 @@
     UI.buddyState(busy ? "thinking" : "idle");
   };
 
-  // --- yellow badge next to a message; hover shows the headline ---
-  UI.badge = function badge(result, onOpen) {
-    const node = el("span", { class: "purr-badge-wrap" });
+  // --- widget next to each checked message: ✓ green, ! yellow, ⚠ red; click for details ---
+  const ICON = { green: "✓", yellow: "!", red: "⚠", pending: "…" };
+  UI.widget = function widget(result, onOpen) {
+    const node = el("span", { class: "purr-widget-wrap" });
     const render = (r) => {
-      const state = r.pending ? "thinking" : r.level === "red" ? "stop" : "careful";
-      const label = r.pending ? (UI.mascotLine("thinking") || t("checking")) : t("level_" + r.level);
-      node.replaceChildren(
-        el("button", { type: "button", class: `purr-badge purr-${r.pending ? "thinking" : r.level}`,
-          onclick: (e) => { e.preventDefault(); e.stopPropagation(); onOpen(); } },
-          UI.mascotImg(state, 24), el("span", {}, label)),
-        r.pending ? null : el("span", { class: "purr-preview", role: "tooltip" }, r.headline)
-      );
+      const level = r.pending ? "pending" : r.level;
+      const label = r.pending ? t("checking") : t("level_" + r.level);
+      const button = el("button", { type: "button", class: `purr-widget purr-w-${level}`, title: label, "aria-label": `Purrtect: ${label}`,
+        onclick: (e) => { e.preventDefault(); e.stopPropagation(); onOpen(button); } },
+        el("span", { class: "purr-widget-icon", "aria-hidden": "true" }, ICON[level]),
+        el("span", { class: "purr-widget-label" }, label));
+      node.replaceChildren(button);
+      if (!r.pending && r.headline) node.append(el("span", { class: "purr-preview", role: "tooltip" }, r.headline));
     };
     render(result);
     node.update = render;
+    node.button = () => node.querySelector(".purr-widget");
     return node;
-  };
-
-  // --- red: larger docked mascot with a short warning ---
-  let alertNode = null;
-  UI.dockAlert = function dockAlert(result, onOpen) {
-    if (alertNode) alertNode.remove();
-    alertNode = el(
-      "div",
-      { class: "purr-alert", role: "alert" },
-      UI.mascotImg("stop", 88),
-      el("div", { class: "purr-alert-text" },
-        el("div", { class: "purr-alert-line" }, UI.mascotLine("stop") || t("level_red")),
-        el("div", { class: "purr-headline" }, result.headline),
-        el("button", { type: "button", class: "purr-btn purr-btn-primary",
-          onclick: () => { alertNode.remove(); alertNode = null; onOpen(); } }, t("whyRisky"))),
-      el("button", { class: "purr-icon-btn", type: "button", "aria-label": t("close"),
-        onclick: () => { alertNode.remove(); alertNode = null; } }, "×")
-    );
-    document.body.append(alertNode);
   };
 
   // --- short toast: "Good choice!" after Go back or "This is safe", and hints ---

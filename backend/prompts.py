@@ -59,8 +59,8 @@ share" warning, an order update or a normal chat, is usually safe.
 - If you are unsure, choose "suspicious", not "safe".
 
 How to write:
-- Write headline, red_flags and advice in the message's own language. If there is no text \
-to judge, use the user's interface language.
+- Write headline, red_flags and advice in {language}, the language the person chose, \
+whatever language the message itself is in.
 - Use simple words a 12-year-old understands. Never use the words "phishing", "domain" or \
 "malware"; describe what is happening instead.
 - headline: 3 to 6 words, for example "Don't click this link".
