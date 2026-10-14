@@ -116,6 +116,7 @@ gcloud projects add-iam-policy-binding project-1e762a2b-4a0e-4e91-981 \
 
 # Web checker → Firebase Hosting (/api/** is rewritten to the Cloud Run service)
 cd ../web && firebase deploy --only hosting
+# (or automatically: Cloud Build trigger "purrtect-web" runs web/cloudbuild.yaml on pushes to main)
 
 # Extension ZIP for judges
 ./scripts/package-extension.sh     # → dist/purrtect-extension.zip

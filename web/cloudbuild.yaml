@@ -1,0 +1,11 @@
+# Deploys the web checker to Firebase Hosting when web/** changes on main (Cloud Build trigger
+# "purrtect-web"). No keys: firebase-tools signs in as the trigger's service account, which needs
+# Firebase Hosting Admin and Cloud Run Viewer (for the /api rewrite). See README → Deploy.
+steps:
+  - name: node:22
+    dir: web
+    entrypoint: npx
+    args: ["--yes", "firebase-tools@14", "deploy", "--only", "hosting", "--project", "$PROJECT_ID", "--non-interactive"]
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 600s
