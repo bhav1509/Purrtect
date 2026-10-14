@@ -206,9 +206,6 @@
   "pauseSite": {
     "message": "Pause on this site"
   },
-  "info_pause": {
-    "message": "Stops automatic checks and hides the signs on this site until you turn it back on. Selecting text to check still works."
-  },
   "recentTitle": {
     "message": "Recent warnings"
   },
@@ -262,9 +259,6 @@
   },
   "footer_feedback": {
     "message": "Feedback"
-  },
-  "pauseOn": {
-    "message": "Pause on $1"
   },
   "set_cursorCat": {
     "message": "Cursor cat"
@@ -844,5 +838,26 @@
   },
   "refresh": {
     "message": "Refresh"
+  },
+  "powerLabel": {
+    "message": "Purrtect on or off"
+  },
+  "powerOn": {
+    "message": "On"
+  },
+  "powerOff": {
+    "message": "Off"
+  },
+  "offNote": {
+    "message": "Purrtect is off. Nothing is checked or sent."
+  },
+  "turnOn": {
+    "message": "Turn on"
+  },
+  "turnedOn": {
+    "message": "Purrtect is on"
+  },
+  "turnedOff": {
+    "message": "Purrtect is off"
   }
 }

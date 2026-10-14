@@ -206,9 +206,6 @@
   "pauseSite": {
     "message": "このサイトで一時停止"
   },
-  "info_pause": {
-    "message": "オンに戻すまで、このサイトでの自動チェックとマーク表示を止めます。文章を選んでのチェックは使えます。"
-  },
   "recentTitle": {
     "message": "最近の警告"
   },
@@ -262,9 +259,6 @@
   },
   "footer_feedback": {
     "message": "フィードバック"
-  },
-  "pauseOn": {
-    "message": "$1 で一時停止"
   },
   "set_cursorCat": {
     "message": "カーソル猫"
@@ -844,5 +838,26 @@
   },
   "refresh": {
     "message": "再読み込み"
+  },
+  "powerLabel": {
+    "message": "Purrtect のオン・オフ"
+  },
+  "powerOn": {
+    "message": "オン"
+  },
+  "powerOff": {
+    "message": "オフ"
+  },
+  "offNote": {
+    "message": "Purrtect はオフです。何も確認・送信しません。"
+  },
+  "turnOn": {
+    "message": "オンにする"
+  },
+  "turnedOn": {
+    "message": "Purrtect はオンです"
+  },
+  "turnedOff": {
+    "message": "Purrtect はオフです"
   }
 }

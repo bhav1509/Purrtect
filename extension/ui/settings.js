@@ -118,16 +118,6 @@
   }
 
   // ---------- settings ----------
-  function pauseRow() {
-    const p = page || { site: "other" };
-    if (p.site === "other") return null;
-    const label = t("pauseOn", [t("source_" + p.site)]);
-    return row(label, toggle(label, PurrStore.isPaused(p.host), async (on) => {
-      pendingToast = t("saved");
-      await PurrStore.setPaused(p.host, on);
-    }), t("info_pause"));
-  }
-
   // "On all websites" needs Chrome's all-sites permission: asked for here (it must come straight
   // from the click), given back when switched off. background.js loads the cat on the sites.
   const ALL_SITES = ["https://*/*", "http://*/*"];
@@ -149,7 +139,6 @@
         row(t("set_cursorCat"), toggle(t("set_cursorCat"), s.cursorCat === true, (on) => save({ cursorCat: on })), t("info_cursorCat")),
         s.cursorCat === true ? row(t("set_catEverywhere"), toggle(t("set_catEverywhere"), s.catEverywhere === true, setEverywhere), t("info_catEverywhere")) : null),
       section(t("sec_where"),
-        pauseRow(),
         row(t("set_mode_gmail"), segmented(t("set_mode_gmail"), ["auto", "manual"], s.modes.gmail, (v) => t("mode_" + v), (v) => save({ modes: { ...s.modes, gmail: v } })), t("modeHelp")),
         row(t("set_mode_whatsapp"), segmented(t("set_mode_whatsapp"), ["auto", "manual"], s.modes.whatsapp, (v) => t("mode_" + v), (v) => save({ modes: { ...s.modes, whatsapp: v } })), t("modeHelp")),
         row(t("set_sensitivity"), segmented(t("set_sensitivity"), ["relaxed", "normal", "strict"], s.sensitivity, (v) => t("sensitivity_" + v), (v) => save({ sensitivity: v })), t("info_careful"), true)),
@@ -164,12 +153,21 @@
   }
 
   // ---------- frame: header, content, pinned footer ----------
+  // The overall On / Off switch: Off = Purrtect does nothing anywhere, and nothing is sent.
+  function onOffSwitch() {
+    const on = PurrStore.enabled;
+    return el("button", { type: "button", role: "switch", class: "set-power", "aria-checked": String(on),
+      "aria-label": t("powerLabel"), title: t("powerLabel"),
+      onclick: async () => { pendingToast = t(on ? "turnedOff" : "turnedOn"); await PurrStore.setEnabled(!on); } },
+      el("span", { class: "set-knob" }), el("span", { class: "set-power-text" }, t(on ? "powerOn" : "powerOff")));
+  }
+
   function header() {
     const brand = el("a", { class: "set-brand", href: WEBSITE, target: "_blank", rel: "noopener", title: t("openWebsite") },
       el("img", { src: chrome.runtime.getURL("brand/logo.png"), alt: "", width: 44, height: 44 }),
       el("span", { class: "brand-text" }, el("span", { class: "brand-name" }, "Purrtect"), el("span", { class: "set-tagline" }, t("tagline"))));
     if (welcome) return el("header", { class: "bar" }, brand);
-    if (view === "settings") return el("header", { class: "bar" }, brand);
+    if (view === "settings") return el("header", { class: "bar" }, brand, onOffSwitch());
     return el("header", { class: "bar bar-sub" },
       svgButton("back", t("back"), () => go("settings")),
       el("h1", { class: "bar-title" }, t("privacyTitle")));
@@ -194,7 +192,11 @@
           settingsView(),
           el("button", { type: "button", class: "purr-btn purr-btn-primary purr-wide",
             onclick: async () => { await PurrStore.saveSettings({ onboarded: true }); window.close(); } }, t("startProtecting")))
-      : el("main", { class: "content" }, view === "settings" ? settingsView() : privacyView());
+      : el("main", { class: "content" + (PurrStore.enabled ? "" : " is-off") },
+          !PurrStore.enabled && view === "settings" ? el("div", { class: "off-note", role: "status" },
+            el("span", {}, t("offNote")),
+            el("button", { type: "button", class: "set-small-btn", onclick: () => { pendingToast = t("turnedOn"); PurrStore.setEnabled(true); } }, t("turnOn"))) : null,
+          view === "settings" ? settingsView() : privacyView());
     const toast = el("div", { class: "saved", id: "saved", role: "status", "aria-live": "polite" });
     // replaceChildren() would print a null child as the text "null", so pass the parts through el().
     app.replaceChildren(...el("div", {}, header(), content, welcome ? null : footer(), toast).childNodes);

@@ -78,6 +78,8 @@ async function ensureInPage(tabId) {
 // Shows the result as a popup on the same page, next to the selection or the link.
 async function handleMenuClick(info, tab) {
   if (info.menuItemId !== MENU_ID) return;
+  const { settings } = await chrome.storage.local.get("settings");
+  if (settings && settings.enabled === false) return;   // switched off (the menu is hidden too)
   const text = info.selectionText || "";
   const links = info.linkUrl ? [info.linkUrl] : [];
   if (!text.trim() && !links.length) return;
@@ -153,3 +155,18 @@ chrome.runtime.onMessageExternal.addListener((msg, _sender, reply) => {
   })();
   return true; // reply comes after the storage read
 });
+
+// The overall On / Off switch (side panel): when off, hide the right-click menu and show a grey
+// "OFF" badge on the toolbar icon, so it's clear Purrtect isn't checking anything.
+async function showOnOff() {
+  try {
+    const { settings } = await chrome.storage.local.get("settings");
+    const on = !settings || settings.enabled !== false;
+    await chrome.action.setBadgeText({ text: on ? "" : "OFF" });
+    await chrome.action.setBadgeBackgroundColor({ color: "#7a726a" });
+    chrome.contextMenus.update(MENU_ID, { visible: on }, () => void chrome.runtime.lastError);
+  } catch (_) { /* tried again on the next change */ }
+}
+showOnOff();
+chrome.runtime.onInstalled.addListener(() => setTimeout(showOnOff, 500));
+chrome.storage.onChanged.addListener((changes, area) => { if (area === "local" && changes.settings) showOnOff(); });

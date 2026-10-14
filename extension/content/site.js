@@ -14,7 +14,7 @@
   const SITE = HOST === "web.whatsapp.com" ? "whatsapp" : HOST === "mail.google.com" ? "gmail" : "other";
   const UI = self.PurrUI;
   const stats = { checked: 0, warnings: 0 }; // this page only; shown on the side panel's Home view
-  const paused = () => PurrStore.isPaused(HOST);
+  const paused = () => !PurrStore.enabled;   // the overall switch is Off: Purrtect does nothing
 
   // After Purrtect is updated or reloaded, this page still runs the old copy until it's refreshed;
   // the old copy can't talk to Chrome any more. Instead of buttons quietly doing nothing, say so.
@@ -270,6 +270,7 @@
   async function manualScan(text, links, anchor) {
     hideSelectBtn();                                     // one box at a time: the scan replaces the button
     if (!alive()) { showUpdated(); return; }
+    if (paused()) return;                                // Purrtect is switched off: nothing is checked or sent
     await ready;
     const local = PurrRules.scoreMessage({ text, links, scanText: true, sender: { isNew: true } }, rules, PurrStore.settings.sensitivity);
     const result = await askBackend(text, local.links.map((l) => l.url), local, true, anchor,
@@ -309,7 +310,7 @@
       setTimeout(() => {
         const sel = getSelection();
         const text = String(sel || "").trim();
-        if (!UI.env || text.length < 8 || !sel.rangeCount || linkCardOpen) return;
+        if (!UI.env || text.length < 8 || !sel.rangeCount || linkCardOpen || paused()) return;
         const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         const links = [...range.cloneContents().querySelectorAll("a[href]")].map((a) => a.href);

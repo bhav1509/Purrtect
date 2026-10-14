@@ -42,7 +42,7 @@
     cursorCat: false, // off by default: a small cat that follows the cursor on Gmail and WhatsApp Web
     catEverywhere: false, // ...and on all other websites, in manual mode (asks for Chrome's permission)
     modes: { gmail: "manual", whatsapp: "manual" },   // quiet by default: checks only what you pick; switch to Auto in Settings
-    pausedSites: [], // hostnames where automatic checks are paused ("Pause on this site")
+    enabled: true, // the overall On / Off switch (side panel header): off = Purrtect does nothing anywhere
   };
   const DEFAULT_DATA = { knownSenders: [], greenCounts: {}, safeLinks: [], safeSenders: [], linkCache: {}, riskyOpenedAt: 0 };
 
@@ -118,11 +118,8 @@
     get riskyOpenedAt() { return state.riskyOpenedAt; },
     setRiskyOpened() { return save({ riskyOpenedAt: Date.now() }); },
 
-    isPaused: (host) => (state.settings.pausedSites || []).includes(host),
-    setPaused(host, paused) {
-      const list = (state.settings.pausedSites || []).filter((h) => h !== host);
-      return save({ settings: { ...state.settings, pausedSites: paused ? [...list, host] : list } });
-    },
+    get enabled() { return !state || state.settings.enabled !== false; },
+    setEnabled(on) { return save({ settings: { ...state.settings, enabled: !!on } }); },
 
     clearData() { return save({ ...DEFAULT_DATA }); },
     // Keeps onboarding done and the chosen language; everything else back to the defaults.

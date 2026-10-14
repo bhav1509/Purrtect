@@ -219,6 +219,7 @@
 .purr-ccat-bubble.danger { background: #b8321f; }
 .purr-ccat-bubble.love { background: #e8607c; }
 .purr-paused .purr-ccat { display: none !important; }
+.purr-paused .purr-select-btn, .purr-paused .purr-linkcard { display: none !important; }   /* switched off */
 .purr-manual .purr-widget-wrap, .purr-manual .purr-ccat, .purr-manual .purr-linkcard { display: none !important; }   /* Manual mode: quiet */
 @media (prefers-reduced-motion: reduce) { .purr-ccat-sprite { animation: none !important; } .purr-ccat-bubble { transition: none; } }
 

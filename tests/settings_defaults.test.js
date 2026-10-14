@@ -72,8 +72,8 @@ async function loadStore({ zone = "UTC", langs = ["en-US"], saved = {} } = {}) {
     const { store } = await loadStore();
     const s = store.settings;
     check(s.voice === true && s.sensitivity === "normal" && s.askBeforeSend === true && s.cursorCat === false &&
-      s.catEverywhere === false && s.modes.gmail === "manual" && s.modes.whatsapp === "manual" && s.pausedSites.length === 0 && s.onboarded === false,
-      "fresh install: voice on, Normal, ask before sending, cursor cat off, Manual on Gmail and WhatsApp, nothing paused");
+      s.catEverywhere === false && s.modes.gmail === "manual" && s.modes.whatsapp === "manual" && s.enabled === true && s.onboarded === false,
+      "fresh install: on, voice on, Normal, ask before sending, cursor cat off, Manual on Gmail and WhatsApp");
   }
 
   // --- 2. saved choices win over the defaults ------------------------------------------------------
@@ -86,7 +86,7 @@ async function loadStore({ zone = "UTC", langs = ["en-US"], saved = {} } = {}) {
   {
     const custom = {
       onboarded: true, uiLang: "hi", country: "JP", voice: false, sensitivity: "strict", askBeforeSend: false,
-      cursorCat: true, catEverywhere: true, modes: { gmail: "auto", whatsapp: "auto" }, pausedSites: ["mail.google.com"],
+      cursorCat: true, catEverywhere: true, modes: { gmail: "auto", whatsapp: "auto" }, enabled: false,
     };
     const yourData = { safeLinks: ["a1"], safeSenders: ["s1"], knownSenders: ["k1"], greenCounts: { k1: 2 }, linkCache: { a1: { ts: 1 } } };
     const { store, data } = await loadStore({ zone: "Asia/Singapore", saved: { settings: custom, ...yourData } });
@@ -97,7 +97,7 @@ async function loadStore({ zone = "UTC", langs = ["en-US"], saved = {} } = {}) {
     check(s.askBeforeSend === true, "reset: Ask before sending back on");
     check(s.cursorCat === false && s.catEverywhere === false, "reset: Cursor cat and On all websites off");
     check(s.modes.gmail === "manual" && s.modes.whatsapp === "manual", "reset: Gmail and WhatsApp back to Manual");
-    check(Array.isArray(s.pausedSites) && s.pausedSites.length === 0, "reset: no site paused");
+    check(s.enabled === true, "reset: Purrtect switched back on");
     check(s.country === "SG", `reset: country back to the detected one (Singapore here, got ${s.country})`);
     check(s.uiLang === "hi", "reset: keeps the chosen language");
     check(s.onboarded === true, "reset: welcome page stays done");
@@ -108,7 +108,19 @@ async function loadStore({ zone = "UTC", langs = ["en-US"], saved = {} } = {}) {
     check(store.settings.voice === true && store.settings.uiLang === "hi", "reset: the open panel sees the new settings straight away");
   }
 
-  // --- 4. website and extension guess the country the same way -----------------------------------
+  // --- 4. the overall On / Off switch -----------------------------------------------------------
+  {
+    const { store, data } = await loadStore();
+    check(store.enabled === true, "switch: on by default");
+    await store.setEnabled(false);
+    check(store.enabled === false && data().settings.enabled === false, "switch: turning it off is saved");
+    await store.setEnabled(true);
+    check(store.enabled === true && data().settings.enabled === true, "switch: turning it back on is saved");
+    const old = await loadStore({ saved: { settings: { pausedSites: ["mail.google.com"] } } });
+    check(old.store.enabled === true, "switch: an older install (per-site pause) starts switched on");
+  }
+
+  // --- 5. website and extension guess the country the same way -----------------------------------
   const block = (file) => {
     const src = fs.readFileSync(path.join(ROOT, file), "utf8");
     const m = src.match(/\/\/ --- detectCountry:[\s\S]*?\/\/ --- end detectCountry ---/);

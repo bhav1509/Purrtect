@@ -206,9 +206,6 @@
   "pauseSite": {
     "message": "इस साइट पर रोकें"
   },
-  "info_pause": {
-    "message": "इस साइट पर अपने-आप जाँच बंद करता है और निशान छिपाता है, जब तक आप इसे वापस चालू न करें। टेक्स्ट चुनकर जाँच फिर भी काम करती है।"
-  },
   "recentTitle": {
     "message": "हाल की चेतावनियाँ"
   },
@@ -262,9 +259,6 @@
   },
   "footer_feedback": {
     "message": "सुझाव"
-  },
-  "pauseOn": {
-    "message": "$1 पर रोकें"
   },
   "set_cursorCat": {
     "message": "कर्सर बिल्ली"
@@ -844,5 +838,26 @@
   },
   "refresh": {
     "message": "रीफ़्रेश करें"
+  },
+  "powerLabel": {
+    "message": "Purrtect चालू या बंद"
+  },
+  "powerOn": {
+    "message": "चालू"
+  },
+  "powerOff": {
+    "message": "बंद"
+  },
+  "offNote": {
+    "message": "Purrtect बंद है। कुछ भी जाँचा या भेजा नहीं जा रहा।"
+  },
+  "turnOn": {
+    "message": "चालू करें"
+  },
+  "turnedOn": {
+    "message": "Purrtect चालू है"
+  },
+  "turnedOff": {
+    "message": "Purrtect बंद है"
   }
 }
