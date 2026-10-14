@@ -86,13 +86,12 @@ body.purr-panel .content { flex: 1; min-height: 0; overflow-y: auto; scrollbar-g
 
 /* controls */
 .set-select-wrap { position: relative; display: inline-block; }
+/* Pickers: same size, spacing, text and chevron as the website's language / country pickers. */
 .set-select {
-  appearance: none; -webkit-appearance: none; height: 40px; min-width: 120px; padding: 0 36px 0 16px;
-  border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer;
-}
-.set-select-wrap::after {
-  content: ""; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; margin-top: -5px;
-  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); pointer-events: none;
+  appearance: none; -webkit-appearance: none; height: 40px; padding: 0 34px 0 14px;   /* standard: 14px in, 12px chevron + 8px gap + 14px edge */
+  field-sizing: content;   /* as wide as the chosen option, not the longest one */
+  border: 1px solid var(--line); border-radius: 999px; color: var(--ink); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%23968c82' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center / 12px 8px;
 }
 .set-seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 2px; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
 .set-seg button { height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
