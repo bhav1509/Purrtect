@@ -38,6 +38,19 @@
     btn.removeAttribute("title");
     btn.setAttribute("aria-expanded", "false");
     const wrap = el("span", { class: "set-info-wrap" }, btn, tip);
+    // Place the bubble under its row (or above it when there's no room below), across the row's width.
+    const place = () => {
+      const row = (wrap.closest(".set-row") || wrap).getBoundingClientRect();
+      tip.style.left = `${Math.round(row.left)}px`;
+      tip.style.width = `${Math.round(row.width)}px`;
+      const h = tip.offsetHeight;
+      const below = row.bottom - 4;
+      tip.style.top = `${Math.round(below + h <= innerHeight - 8 ? below : Math.max(8, row.top - h + 4))}px`;
+    };
+    wrap.addEventListener("mouseenter", () => requestAnimationFrame(place));
+    addEventListener("scroll", () => { if (wrap.matches(":hover, :focus-within, .open")) place(); }, true);   // follow its row
+    wrap.addEventListener("focusin", () => requestAnimationFrame(place));
+    btn.addEventListener("click", () => requestAnimationFrame(place));
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       const open = !wrap.classList.contains("open");
