@@ -6,7 +6,10 @@
   python3 tests/run_tests.py --api https://purrtect-api-....run.app
 
 Offline: local rules on the 30 samples (as Auto mode would score them), masking (Python and
-JavaScript must agree), helpline filtering, and that shared files are synced.
+JavaScript must agree), helpline filtering, that shared files are synced, and that the website and
+the extension share language and country (tests/prefs_sync.test.js), and the settings defaults
+and "Reset to defaults" (tests/settings_defaults.test.js).
+In a real browser: tests/e2e/sync_prefs.e2e.js (see the comment at its top).
 With --api: scams caught out of 20, genuine messages wrongly flagged out of 10, average time.
 Each --api run calls Gemini 30 times (paid from the project's credits).
 """
@@ -196,6 +199,31 @@ def test_api(base: str) -> None:
     check(avg < 3.0, "average verdict time under 3 s")
 
 
+def node_checks(title: str, script: str) -> None:
+    """Run a Node test from tests/ that prints [[ok, message], ...] and report each check."""
+    print("\n" + title)
+    node = shutil.which("node")
+    if not node:
+        check(False, f"Node.js is needed for tests/{script}")
+        return
+    proc = subprocess.run([node, str(ROOT / "tests" / script)], capture_output=True, text=True, encoding="utf-8")
+    if proc.returncode != 0:
+        check(False, f"{script} crashed: " + proc.stderr.strip()[:300])
+        return
+    for ok, message in json.loads(proc.stdout):
+        check(ok, message)
+
+
+def test_prefs_sync() -> None:
+    """Website <-> extension language / country sync."""
+    node_checks("language and country shared between the website and the extension", "prefs_sync.test.js")
+
+
+def test_settings_defaults() -> None:
+    """Defaults (detected country, English) and "Reset to defaults"."""
+    node_checks("settings defaults and Reset to defaults", "settings_defaults.test.js")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api", help="backend base URL, e.g. http://localhost:8080")
@@ -205,6 +233,8 @@ def main() -> int:
     test_local_rules()
     test_masking()
     test_contacts()
+    test_prefs_sync()
+    test_settings_defaults()
     if args.api:
         test_api(args.api)
     print("\n" + (f"FAILED: {len(failures)}" if failures else "all passed"))

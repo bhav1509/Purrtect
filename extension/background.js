@@ -129,3 +129,27 @@ chrome.permissions.onRemoved.addListener(async () => {
   if (settings && settings.catEverywhere) await chrome.storage.local.set({ settings: { ...settings, catEverywhere: false } });
   syncEverywhere();
 });
+
+// Language and country are shared with Purrtect's website (listed under "externally_connectable"
+// in the manifest), so choosing them in one place sets them in both. Only these two settings, only
+// with that site, only on this computer; nothing goes to the backend.
+const SHARED_LANGS = ["en", "hi", "ja", "zh_CN"];
+const SHARED_COUNTRIES = ["IN", "SG", "AU", "ID", "PH", "JP"];
+chrome.runtime.onMessageExternal.addListener((msg, _sender, reply) => {
+  (async () => {
+    const { settings } = await chrome.storage.local.get("settings");
+    const s = settings || {};
+    if (msg && msg.type === "getPrefs") {
+      reply({ uiLang: s.uiLang || null, country: s.country || null });
+    } else if (msg && msg.type === "setPrefs") {
+      const patch = {};
+      if (SHARED_LANGS.includes(msg.uiLang)) patch.uiLang = msg.uiLang;
+      if (SHARED_COUNTRIES.includes(msg.country)) patch.country = msg.country;
+      if (Object.keys(patch).length) await chrome.storage.local.set({ settings: { ...s, ...patch } });
+      reply({ ok: true });
+    } else {
+      reply(null);
+    }
+  })();
+  return true; // reply comes after the storage read
+});

@@ -7,18 +7,34 @@
   const DAY = 24 * 60 * 60 * 1000;
   const GREENS_TO_KNOWN = 3;
 
-  function defaultLang() {
-    const ui = (chrome.i18n.getUILanguage() || "en").toLowerCase();
-    if (ui.startsWith("hi")) return "hi";
-    if (ui.startsWith("ja")) return "ja";
-    if (ui.startsWith("zh")) return "zh_CN";
-    return "en";
+  // --- detectCountry: same code in extension/lib/store.js and web/app.js (tests check they match) ---
+  // The country Purrtect's helplines are for, guessed on this device only (no location permission,
+  // nothing sent): first the computer's time zone, then the browser's region (e.g. "en-IN").
+  // Anywhere else falls back to India.
+  function detectCountry() {
+    const SUPPORTED = ["IN", "SG", "AU", "ID", "PH", "JP"];
+    const BY_ZONE = {
+      "Asia/Kolkata": "IN", "Asia/Calcutta": "IN", "Asia/Singapore": "SG", "Asia/Jakarta": "ID",
+      "Asia/Pontianak": "ID", "Asia/Makassar": "ID", "Asia/Jayapura": "ID", "Asia/Manila": "PH", "Asia/Tokyo": "JP",
+    };
+    try {
+      const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (BY_ZONE[zone]) return BY_ZONE[zone];
+      if (zone.startsWith("Australia/")) return "AU";
+    } catch (_) { /* no time zone available */ }
+    const langs = (typeof navigator !== "undefined" && (navigator.languages || [navigator.language])) || [];
+    for (const l of langs) {
+      const region = String(l || "").split("-")[1];
+      if (region && SUPPORTED.includes(region.toUpperCase())) return region.toUpperCase();
+    }
+    return "IN";
   }
+  // --- end detectCountry ---
 
   const DEFAULT_SETTINGS = {
     onboarded: false,
-    country: "IN",
-    uiLang: defaultLang(),
+    country: detectCountry(),   // from the time zone / browser region; changeable in Settings
+    uiLang: "en",               // English by default; changeable in Settings
     mascot: "cat",
     voice: true,
     sensitivity: "normal",

@@ -1,0 +1,7 @@
+{
+  "name": "purrtect-e2e",
+  "private": true,
+  "description": "Browser tests for Purrtect (real Chrome + the unpacked extension).",
+  "scripts": { "test": "node sync_prefs.e2e.js" },
+  "devDependencies": { "puppeteer-core": "^24.0.0" }
+}
