@@ -5,14 +5,20 @@
   "version": "1.0.0",
   "default_locale": "en",
   "icons": {
-    "16": "mascots/cat/idle.png",
-    "48": "mascots/cat/idle.png",
-    "128": "mascots/cat/idle.png"
+    "16": "mascots/icon-16.png",
+    "32": "mascots/icon-32.png",
+    "48": "mascots/icon-48.png",
+    "128": "mascots/icon-128.png"
   },
   "action": {
     "default_title": "__MSG_extName__",
-    "default_popup": "ui/settings.html",
-    "default_icon": "mascots/cat/idle.png"
+    "default_icon": {
+      "16": "mascots/icon-16.png",
+      "32": "mascots/icon-32.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "ui/settings.html"
   },
   "background": {
     "service_worker": "background.js"
@@ -21,12 +27,17 @@
     "storage",
     "contextMenus",
     "activeTab",
-    "scripting"
+    "scripting",
+    "sidePanel"
   ],
   "host_permissions": [
     "https://mail.google.com/*",
     "https://web.whatsapp.com/*",
     "https://purrtect-api-fzrq3bgblq-el.a.run.app/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
   ],
   "content_scripts": [
     {
@@ -39,9 +50,12 @@
         "ui/core.js",
         "ui/verdict-card.js",
         "ui/recovery-panel.js",
+        "ui/confirm-send.js",
         "ui/badge.js",
         "ui/click-warning.js",
         "content/site.js",
+        "content/link-card.js",
+        "content/cursor-cat.js",
         "content/gmail.js"
       ],
       "css": [
@@ -59,9 +73,12 @@
         "ui/core.js",
         "ui/verdict-card.js",
         "ui/recovery-panel.js",
+        "ui/confirm-send.js",
         "ui/badge.js",
         "ui/click-warning.js",
         "content/site.js",
+        "content/link-card.js",
+        "content/cursor-cat.js",
         "content/whatsapp.js"
       ],
       "css": [
@@ -73,7 +90,9 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "mascots/*/*.png"
+        "mascots/*/*.png",
+        "mascots/cat/sheet.json",
+        "fonts/*"
       ],
       "matches": [
         "<all_urls>"

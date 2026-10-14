@@ -37,6 +37,13 @@ async function api(path, body) {
   }
 }
 
+// The toolbar button opens settings in Chrome's side panel (like MetaMask), not a dropdown.
+function useSidePanel() {
+  if (chrome.sidePanel) chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+}
+useSidePanel();
+chrome.runtime.onStartup.addListener(useSidePanel);
+
 chrome.runtime.onInstalled.addListener((details) => {
   chrome.contextMenus.create({ id: MENU_ID, title: chrome.i18n.getMessage("menuScan"), contexts: ["selection", "link"] });
   if (details.reason === "install") chrome.tabs.create({ url: chrome.runtime.getURL("ui/settings.html?welcome=1") });
@@ -53,7 +60,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
 // Files injected into a page the first time "Scan with Purrtect" is used there
 // (Gmail and WhatsApp already have them as content scripts).
 const INJECT_JS = ["rules.js", "lib/store.js", "ui/core.js", "ui/verdict-card.js", "ui/recovery-panel.js",
-  "ui/badge.js", "ui/click-warning.js", "content/site.js"];
+  "ui/confirm-send.js", "ui/badge.js", "ui/click-warning.js", "content/site.js"];
 
 async function ensureInPage(tabId) {
   try {
@@ -85,3 +92,40 @@ async function handleMenuClick(info, tab) {
 }
 chrome.contextMenus.onClicked.addListener(handleMenuClick);
 self.purrHandleMenuClick = handleMenuClick; // used by the end-to-end test
+
+// "Cursor cat" > "On all websites": Chrome's all-sites permission is asked for only when that
+// switch is turned on. While both switches are on and the permission is granted, the cat, link
+// hover and "Check with Purrtect" load on every other website, in manual mode.
+const EVERYWHERE_ID = "purrtect-everywhere";
+const ALL_SITES = ["https://*/*", "http://*/*"];
+
+async function syncEverywhere() {
+  try {
+    const { settings } = await chrome.storage.local.get("settings");
+    const want = !!(settings && settings.cursorCat === true && settings.catEverywhere === true) &&
+      await chrome.permissions.contains({ origins: ALL_SITES });
+    const have = (await chrome.scripting.getRegisteredContentScripts({ ids: [EVERYWHERE_ID] })).length > 0;
+    if (want && !have) {
+      await chrome.scripting.registerContentScripts([{
+        id: EVERYWHERE_ID,
+        matches: ALL_SITES,
+        excludeMatches: ["https://mail.google.com/*", "https://web.whatsapp.com/*"],
+        js: ["content/everywhere.js", ...INJECT_JS, "content/link-card.js", "content/cursor-cat.js"],
+        css: ["ui/ui.css"],
+        runAt: "document_idle",
+      }]);
+    } else if (!want && have) {
+      await chrome.scripting.unregisterContentScripts({ ids: [EVERYWHERE_ID] });
+    }
+  } catch (_) { /* tried again on the next settings change */ }
+}
+syncEverywhere();
+chrome.storage.onChanged.addListener((changes, area) => { if (area === "local" && changes.settings) syncEverywhere(); });
+chrome.permissions.onAdded.addListener(syncEverywhere);
+chrome.permissions.onRemoved.addListener(async () => {
+  // Permission taken back in chrome://extensions: switch the setting off to match.
+  if (await chrome.permissions.contains({ origins: ALL_SITES })) return;
+  const { settings } = await chrome.storage.local.get("settings");
+  if (settings && settings.catEverywhere) await chrome.storage.local.set({ settings: { ...settings, catEverywhere: false } });
+  syncEverywhere();
+});

@@ -37,7 +37,7 @@
     const header = el(
       "div",
       { class: "purr-card-head" },
-      UI.mascotImg(state, 64),
+      UI.mascotImg(state, pending ? 40 : 64),
       el(
         "div",
         { class: "purr-card-heading" },
@@ -60,14 +60,15 @@
             el("li", {}, el("strong", {}, f.flag), " ", f.why)))
         : null,
       result.advice ? el("p", { class: "purr-advice" }, result.advice) : null,
-      result.basic ? el("p", { class: "purr-note" }, t("basicCheckOnly")) : null,
+      result.notSent ? el("p", { class: "purr-note" }, t("notSentNote"))
+        : result.basic ? el("p", { class: "purr-note" }, t("basicCheckOnly")) : null,
       result.localOnly ? el("p", { class: "purr-note" }, t("localCheckOnly")) : null,
     ];
 
     const actions = pending ? [] : (opts.actions || []).slice(0, 3);
     const card = el(
       "section",
-      { class: `purr-card purr-${level || "thinking"}` + (opts.container ? " purr-inline" : " purr-docked"), role: "dialog", "aria-live": "polite" },
+      { class: `purr-card purr-${level || "thinking"}` + (pending ? " purr-compact" : "") + (opts.container ? " purr-inline" : " purr-docked"), role: "dialog", "aria-live": "polite" },
       header,
       body,
       actions.length
@@ -92,6 +93,6 @@
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeFloating(); });
   // Clicking elsewhere closes a floating card (not the widget or the selection button that opened it).
   document.addEventListener("mousedown", (e) => {
-    if (floating && !floating.contains(e.target) && !e.target.closest(".purr-widget, .purr-select-btn, .purr-recovery, .purr-overlay")) closeFloating();
+    if (floating && !floating.contains(e.target) && !e.target.closest(".purr-widget, .purr-select-btn, .purr-recovery, .purr-overlay, .purr-send")) closeFloating();
   }, true);
 })();

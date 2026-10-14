@@ -3,6 +3,9 @@
 // Auto mode: every message that comes on screen is scored locally and gets a widget
 //   (✓ / ! / ⚠). Only yellow and red are sent (masked) to the backend; green stays here.
 // Manual mode: nothing is checked until text is selected and "Check with Purrtect" is pressed.
+// "Ask me every time" (default): nothing is sent to Gemini until the person approves the masked request.
+// Other websites (only with "Cursor cat" > "On all websites"): manual mode only — the cat, link hover
+//   and "Check with Purrtect" on selected text; nothing is checked automatically.
 (function () {
   "use strict";
   if (self.PurrSite) return;
@@ -10,6 +13,9 @@
   const HOST = location.hostname;
   const SITE = HOST === "web.whatsapp.com" ? "whatsapp" : HOST === "mail.google.com" ? "gmail" : "other";
   const UI = self.PurrUI;
+  const stats = { checked: 0, warnings: 0 }; // this page only; shown on the side panel's Home view
+  const paused = () => PurrStore.isPaused(HOST);
+  const everywhere = SITE === "other" && self.PurrEverywhere === true; // loaded by "On all websites"
   const send = (msg) => chrome.runtime.sendMessage(msg);
   let rules = null;
 
@@ -26,14 +32,22 @@
     await loadLocale();
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== "local") return;
-      if (changes.settings) loadLocale();
+      if (changes.settings) { loadLocale(); showPaused(); }
       if (changes.riskyOpenedAt && SITE !== "other") showBanner();
     });
+    showPaused();
     if (SITE !== "other") {
       UI.buddy(onBuddyClick);
       showBanner();
     }
   })();
+
+  // "Pause on this site": hide the widgets and stop automatic checks until it's switched back on.
+  function showPaused() {
+    const was = document.documentElement.classList.contains("purr-paused");
+    document.documentElement.classList.toggle("purr-paused", paused());
+    if (was && !paused()) dispatchEvent(new Event("purr-rescan")); // check what's on screen now
+  }
 
   function showBanner() {
     if (PurrStore.riskyOpenedAt) UI.recoveryBanner(PurrStore.riskyOpenedAt, () => openRecovery(null));
@@ -51,6 +65,31 @@
     else UI.toast("idle", UI.t("buddyHint"), 4000);
   }
 
+  // Gmail sometimes wraps links as https://www.google.com/url?q=<real link>.
+  function realHref(a) {
+    try {
+      const u = new URL(a.href);
+      if (/(^|\.)google\.[a-z.]+$/.test(u.hostname) && u.pathname === "/url") return u.searchParams.get("q") || a.href;
+    } catch (_) { /* keep */ }
+    return a.href;
+  }
+
+  // Where a link really goes and how risky it looks, judged in the browser only (nothing is sent).
+  // Used by the link card and the cursor cat. Each link gets its own level; a link that looks
+  // fine but sits in a message flagged as risky is shown as "careful", not "fine".
+  async function linkInfo(a) {
+    await ready;
+    const href = realHref(a);
+    if (!/^https?:/i.test(href)) return null;
+    const r = PurrRules.scoreLink(href, rules);
+    if (!r) return null;
+    if (PurrStore.isSafeLink(await PurrStore.hash(href))) return { host: r.host, level: "green", hits: [] };
+    let level = PurrRules.levelFor(r.points, rules, PurrStore.settings.sensitivity);
+    const inRiskyMessage = !!a.dataset.purrRisk && a.dataset.purrRisk !== "green";
+    if (inRiskyMessage && level === "green") level = "yellow";
+    return { host: r.host, level, hits: r.hits, inRiskyMessage };
+  }
+
   function scanBody(text, links, local, senderIsNew) {
     return {
       text: PurrRules.mask(text),
@@ -64,9 +103,20 @@
     };
   }
 
-  async function askBackend(text, links, local, senderIsNew) {
+  const askFirst = () => PurrStore.settings.askBeforeSend !== false;
+
+  // The only way anything reaches Gemini. With "Ask me every time" on, the person sees the
+  // masked request first; "Don't send" returns the in-browser result instead.
+  async function askBackend(text, links, local, senderIsNew, anchor, onApproved) {
+    const body = scanBody(text, links, local, senderIsNew);
+    if (askFirst()) {
+      const answer = await UI.confirmSend(body, anchor);
+      if (answer.dontAskAgain) PurrStore.saveSettings({ askBeforeSend: false });
+      if (!answer.send) return { ...UI.resultFromLocal(local, true), notSent: true };
+    }
+    if (onApproved) onApproved();
     UI.buddyBusy && UI.buddyBusy(+1);
-    const res = await UI.env.api("/api/scan", scanBody(text, links, local, senderIsNew));
+    const res = await UI.env.api("/api/scan", body);
     UI.buddyBusy && UI.buddyBusy(-1);
     return res.ok ? UI.resultFromApi(res.data, local) : UI.resultFromLocal(local, true);
   }
@@ -95,7 +145,7 @@
   // Auto mode. item: { el, anchor, text, links[], sender?: { key, displayName, address, business, verified, newHint } }
   async function process(item) {
     await ready;
-    if (PurrStore.settings.modes[SITE] === "manual") return;
+    if (PurrStore.settings.modes[SITE] === "manual" || paused()) return;
     const s = PurrStore.settings;
 
     item.senderHash = item.sender && item.sender.key ? await PurrStore.hash(SITE + ":" + item.sender.key) : null;
@@ -113,16 +163,37 @@
       : PurrRules.scoreMessage({ text: item.text, links: item.links, scanText: isNew, sender }, rules, s.sensitivity);
 
     let result = local.level === "green" ? UI.resultFromLocal(local, false) : { pending: true };
-    const widget = UI.widget(result, (button) => openCard(button));
+    const widget = UI.widget(result, (button) => onWidgetClick(button));
     item.anchor.prepend(widget);
+    stats.checked++;
+    // Tell the cursor cat (and mark risky links so it hisses when the cursor gets near them).
+    function noteWarning(r) {
+      if (r.pending) return;
+      if (r.level === "green") {
+        if (!item.safeNoted) { item.safeNoted = true; dispatchEvent(new CustomEvent("purr-safe-found")); }
+        return;
+      }
+      item.el.querySelectorAll("a[href]").forEach((a) => { a.dataset.purrRisk = r.level; });
+      if (item.noted) return;
+      item.noted = true;
+      stats.warnings++;
+      dispatchEvent(new CustomEvent("purr-risk-found", { detail: { el: widget.button(), level: r.level } }));
+    }
 
     function setGreen() {
-      result = { ...result, level: "green", headline: UI.t("headline_green"), redFlags: [], advice: UI.t("advice_green") };
+      item.el.querySelectorAll("a[data-purr-risk]").forEach((a) => { delete a.dataset.purrRisk; });
+      result = { ...result, level: "green", headline: UI.t("headline_green"), redFlags: [], advice: UI.t("advice_green"),
+        awaitingApproval: false, notSent: false };
       widget.update(result);
     }
     function openCard(button) {
       if (result.pending) return;
       UI.verdictCard(result, { anchor: button, actions: cardActions(item, result, setGreen, () => widget.button()) });
+    }
+    function onWidgetClick(button) {
+      if (result.pending) return;
+      if (result.awaitingApproval) runCheck(button); // "Ask me every time": ask now, next to the widget
+      else openCard(button);
     }
     UI.guardLinks(item.el, () => result, {
       onBack: () => UI.happy(),
@@ -130,31 +201,62 @@
       onOpen: (href) => { PurrStore.setRiskyOpened(); window.open(href, "_blank", "noopener,noreferrer"); },
     });
 
+    // Sends for the detailed check (after approval, if asked for) and updates the widget.
+    // button: the widget that was clicked (null when sending automatically).
+    let checking = false;
+    async function runCheck(button) {
+      if (checking) return;
+      checking = true;
+      const r = await askBackend(isNew ? item.text : "", item.links, local, isNew, button, () => {
+        widget.update({ pending: true });
+        if (button) UI.verdictCard({ pending: true }, { anchor: widget.button() });
+      });
+      checking = false;
+      if (r.notSent) {
+        result = { ...r, awaitingApproval: true }; // asked again next time the sign is clicked
+        widget.update(result);
+        if (button) openCard(widget.button());
+        return;
+      }
+      result = r;
+      if (!result.basic && kept.length) PurrStore.cacheLinks(kept.map((x) => x.hash), result);
+      if (result.level === "green" && item.senderHash) PurrStore.recordGreen(item.senderHash);
+      widget.update(result);
+      noteWarning(result);
+      if (button) openCard(widget.button());
+    }
+
     if (local.level === "green") {
       if (item.senderHash && !correctedSafe) PurrStore.recordGreen(item.senderHash);
+      noteWarning(result);
       return;
     }
     if (item.senderHash) PurrStore.resetGreen(item.senderHash);
 
-    // Known sender whose links were all judged in the last 24 h: reuse that verdict.
+    // Known sender whose links were all judged in the last 24 h: reuse that verdict (nothing is sent).
     const cached = !isNew && kept.length ? kept.map((x) => PurrStore.cachedLink(x.hash)) : [];
     const rank = { green: 0, yellow: 1, red: 2 };
     if (cached.length && cached.every(Boolean)) {
       result = cached.map((c) => c.result).sort((a, b) => rank[b.level] - rank[a.level])[0];
+      widget.update(result);
+      noteWarning(result);
+    } else if (askFirst()) {
+      // Show the in-browser result now; nothing leaves the browser until the sign is clicked and approved.
+      result = { ...UI.resultFromLocal(local, true), notSent: true, awaitingApproval: true };
+      widget.update(result);
+      noteWarning(result);
     } else {
-      result = await askBackend(isNew ? item.text : "", item.links, local, isNew);
-      if (!result.basic && kept.length) PurrStore.cacheLinks(kept.map((x) => x.hash), result);
+      await runCheck(null);
     }
-    if (result.level === "green" && item.senderHash) PurrStore.recordGreen(item.senderHash);
-    widget.update(result);
   }
 
-  // Manual check of selected text (or a right-clicked link): always sent to the backend, masked.
+  // Manual check of selected text (or a right-clicked link). Sent to the backend, masked,
+  // after approval when "Ask me every time" is on.
   async function manualScan(text, links, anchor) {
     await ready;
     const local = PurrRules.scoreMessage({ text, links, scanText: true, sender: { isNew: true } }, rules, PurrStore.settings.sensitivity);
-    UI.verdictCard({ pending: true }, { anchor });
-    const result = await askBackend(text, local.links.map((l) => l.url), local, true);
+    const result = await askBackend(text, local.links.map((l) => l.url), local, true, anchor,
+      () => UI.verdictCard({ pending: true }, { anchor }));
     UI.verdictCard(result, { anchor, actions: [{ label: UI.t("iClicked"), primary: true, onClick: () => openRecovery(anchor) }] });
   }
 
@@ -175,7 +277,7 @@
   // "Check with Purrtect" button beside selected text (Gmail and WhatsApp, any mode).
   let selectBtn = null;
   function hideSelectBtn() { if (selectBtn) { selectBtn.remove(); selectBtn = null; } }
-  if (SITE !== "other") {
+  if (SITE !== "other" || everywhere) {
     document.addEventListener("mousedown", (e) => { if (selectBtn && !selectBtn.contains(e.target)) hideSelectBtn(); }, true);
     document.addEventListener("mouseup", (e) => {
       if (e.target.closest && e.target.closest(".purr-card, .purr-select-btn, .purr-overlay, .purr-widget-wrap")) return;
@@ -198,8 +300,12 @@
 
   chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
     if (msg.type === "ping") reply(true);
+    else if (msg.type === "stats") {
+      reply({ site: SITE, host: HOST, checked: stats.checked, warnings: stats.warnings,
+        mode: PurrStore.settings.modes[SITE] || null, paused: paused() });
+    }
     else if (msg.type === "manualScan") manualScan(msg.text || "", msg.links || [], contextAnchor(msg.links));
   });
 
-  self.PurrSite = { ready, process, SITE };
+  self.PurrSite = { ready, process, SITE, paused, realHref, linkInfo, manualScan, everywhere };
 })();

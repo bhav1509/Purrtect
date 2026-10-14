@@ -1,6 +1,6 @@
 # Purrtect
 
-**They filter. We explain, stop the click, and help you recover.**
+**Explains scams, stops risky clicks, helps you recover.**
 
 Purrtect is a friendly mascot (cat, dog or bird) for Gmail web and WhatsApp Web. It explains
 risky messages in plain words, blocks risky clicks, and walks scam victims through the first
@@ -130,3 +130,9 @@ The extension calls the deployed backend (https://purrtect-api-fzrq3bgblq-el.a.r
 1. Download `purrtect-extension.zip` from the latest release and unzip it.
 2. Open `chrome://extensions` and turn on **Developer mode**.
 3. Click **Load unpacked** and choose the unzipped folder.
+
+## Credits
+
+Cat art: the orange tabby from the **Cat Game Pixel Pack** (original art, free to use; in `cat-game-pack/`).
+Pixel font: **Jersey 10** (SIL Open Font License; licence in `extension/fonts/OFL.txt`).
+Rebuild the extension's cat images with `python3 scripts/build_cat_assets.py` (needs Pillow), then `./scripts/sync.sh`.

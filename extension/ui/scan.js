@@ -13,8 +13,7 @@
   const rules = await fetch(chrome.runtime.getURL("rules.json")).then((r) => r.json());
   const { text, links } = pendingScan;
   const local = PurrRules.scoreMessage({ text, links, scanText: true, sender: { isNew: true } }, rules, PurrStore.settings.sensitivity);
-  PurrUI.verdictCard({ pending: true }, { container: card });
-  const res = await PurrUI.env.api("/api/scan", {
+  const body = {
     text: PurrRules.mask(text),
     links: local.links.map((l) => PurrRules.mask(l.url)),
     sender: "new",
@@ -23,8 +22,17 @@
     local_hits: local.hits,
     ui_lang: PurrUI.apiLang(),
     country: PurrStore.settings.country,
-  });
-  const result = res.ok ? PurrUI.resultFromApi(res.data, local) : PurrUI.resultFromLocal(local, true);
+  };
+  let result;
+  const answer = PurrStore.settings.askBeforeSend !== false ? await PurrUI.confirmSend(body, null) : { send: true };
+  if (answer.dontAskAgain) PurrStore.saveSettings({ askBeforeSend: false });
+  if (!answer.send) {
+    result = { ...PurrUI.resultFromLocal(local, true), notSent: true };
+  } else {
+    PurrUI.verdictCard({ pending: true }, { container: card });
+    const res = await PurrUI.env.api("/api/scan", body);
+    result = res.ok ? PurrUI.resultFromApi(res.data, local) : PurrUI.resultFromLocal(local, true);
+  }
   PurrUI.verdictCard(result, {
     container: card,
     actions: [{ label: PurrUI.t("iClicked"), primary: true, onClick: () => PurrUI.recoveryPanel({ container: recovery,

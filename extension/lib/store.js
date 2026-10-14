@@ -22,13 +22,19 @@
     mascot: "cat",
     voice: true,
     sensitivity: "normal",
+    askBeforeSend: true, // show the masked request and wait for approval before every Gemini check
+    cursorCat: false, // a small cat that follows the cursor on Gmail and WhatsApp Web
+    catEverywhere: false, // ...and on all other websites, in manual mode (asks for Chrome's permission)
     modes: { gmail: "auto", whatsapp: "auto" },
+    pausedSites: [], // hostnames where automatic checks are paused ("Pause on this site")
   };
   const DEFAULT_DATA = { knownSenders: [], greenCounts: {}, safeLinks: [], safeSenders: [], linkCache: {}, riskyOpenedAt: 0 };
 
   let state = null;
   const ready = chrome.storage.local.get({ settings: DEFAULT_SETTINGS, ...DEFAULT_DATA }).then((s) => {
     s.settings = { ...DEFAULT_SETTINGS, ...s.settings, modes: { ...DEFAULT_SETTINGS.modes, ...(s.settings.modes || {}) } };
+    s.settings.mascot = "cat"; // only the orange cat is used
+    chrome.storage.local.remove("recentChecks"); // no longer kept (removed feature)
     state = s;
     return state;
   });
@@ -96,6 +102,16 @@
     get riskyOpenedAt() { return state.riskyOpenedAt; },
     setRiskyOpened() { return save({ riskyOpenedAt: Date.now() }); },
 
+    isPaused: (host) => (state.settings.pausedSites || []).includes(host),
+    setPaused(host, paused) {
+      const list = (state.settings.pausedSites || []).filter((h) => h !== host);
+      return save({ settings: { ...state.settings, pausedSites: paused ? [...list, host] : list } });
+    },
+
     clearData() { return save({ ...DEFAULT_DATA }); },
+    // Keeps onboarding done and the chosen language; everything else back to the defaults.
+    resetSettings() {
+      return save({ settings: { ...DEFAULT_SETTINGS, onboarded: state.settings.onboarded, uiLang: state.settings.uiLang } });
+    },
   };
 })();

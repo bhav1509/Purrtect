@@ -32,7 +32,7 @@
 
   function check(msg) {
     try {
-      if (msg.dataset.purrSeen) return;
+      if (msg.dataset.purrSeen || PurrSite.paused()) return;
       msg.dataset.purrSeen = "1";
       const textEl = msg.querySelector(SEL.text);
       const links = [...msg.querySelectorAll("a[href]")].map((a) => a.href).filter((h) => /^https?:/i.test(h));
@@ -67,12 +67,18 @@
       msg.dataset.purrWatched = "1";
       onScreen.observe(msg);
     });
+    // Messages that came on screen while paused: check them once checks resume.
+    document.querySelectorAll("[data-purr-watched]:not([data-purr-seen])").forEach((msg) => {
+      const r = msg.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < innerHeight) check(msg);
+    });
   }
 
   let timer = null;
   PurrSite.ready.then(() => {
     new MutationObserver(() => { clearTimeout(timer); timer = setTimeout(watch, 300); })
       .observe(document.body, { childList: true, subtree: true });
+    addEventListener("purr-rescan", watch);
     watch();
   });
 })();

@@ -53,6 +53,231 @@
   "type_other": {
     "message": "其他骗局"
   },
+  "confirmTitle": {
+    "message": "发送进行详细检查？"
+  },
+  "confirmIntro": {
+    "message": "Purrtect 会把以下内容发送给 Google Gemini。个人信息已隐藏，不会保存。"
+  },
+  "confirmMasked": {
+    "message": "消息（号码和验证码已隐藏）"
+  },
+  "confirmNoText": {
+    "message": "（无消息正文，仅链接）"
+  },
+  "confirmLinks": {
+    "message": "链接"
+  },
+  "confirmOther": {
+    "message": "同时发送"
+  },
+  "confirmSender": {
+    "message": "发件人"
+  },
+  "confirmSender_new": {
+    "message": "陌生人"
+  },
+  "confirmSender_known": {
+    "message": "认识的人"
+  },
+  "confirmSource": {
+    "message": "来源"
+  },
+  "source_gmail": {
+    "message": "Gmail"
+  },
+  "source_whatsapp": {
+    "message": "WhatsApp Web"
+  },
+  "source_web": {
+    "message": "网页"
+  },
+  "confirmQuick": {
+    "message": "快速检查"
+  },
+  "confirmNoHits": {
+    "message": "无危险信号"
+  },
+  "confirmLanguage": {
+    "message": "回复语言"
+  },
+  "confirmCountry": {
+    "message": "国家"
+  },
+  "confirmNever": {
+    "message": "你的姓名、邮箱和电话号码绝不会被发送。"
+  },
+  "dontAskAgain": {
+    "message": "不再询问（可在设置中更改）"
+  },
+  "dontSend": {
+    "message": "不发送"
+  },
+  "sendForCheck": {
+    "message": "发送"
+  },
+  "notSentNote": {
+    "message": "未发送。这是浏览器中的快速检查结果。点击标记可进行详细检查。"
+  },
+  "tapToCheck": {
+    "message": "点击进行详细检查"
+  },
+  "set_askBefore": {
+    "message": "发送给 Gemini 之前"
+  },
+  "askBefore_ask": {
+    "message": "每次询问"
+  },
+  "askBefore_auto": {
+    "message": "自动发送"
+  },
+  "askBeforeHelp": {
+    "message": "“每次询问”会先显示将发送的内容（个人信息已隐藏），等你同意后再发送。"
+  },
+  "askBeforeSwitch": {
+    "message": "发送给 Gemini 前询问"
+  },
+  "askBeforeShort_on": {
+    "message": "先显示发送内容，等你同意。"
+  },
+  "askBeforeShort_off": {
+    "message": "可疑消息会自动发送。"
+  },
+  "moreInfo": {
+    "message": "更多信息"
+  },
+  "openWebsite": {
+    "message": "打开 Purrtect 网站"
+  },
+  "info_country": {
+    "message": "用于补救方案：如果你点击或付款了，显示哪些求助热线和举报网站。"
+  },
+  "info_language": {
+    "message": "Purrtect 的按钮、警告、说明以及朗读所用的语言。"
+  },
+  "info_voice": {
+    "message": "在每个结果上显示“朗读”按钮。关闭即可隐藏。"
+  },
+  "info_careful": {
+    "message": "Purrtect 发出警告的灵敏度：\n• 宽松：只针对明显的危险信号，提醒较少。\n• 正常：平衡（推荐）。\n• 严格：小的危险信号也会提醒，提醒和详细检查更多。"
+  },
+  "careful_relaxed": {
+    "message": "只针对明显的危险信号，提醒较少。"
+  },
+  "careful_normal": {
+    "message": "平衡，适合大多数人。"
+  },
+  "careful_strict": {
+    "message": "小的危险信号也会提醒，提醒更多。"
+  },
+  "clearShort": {
+    "message": "清除"
+  },
+  "home_protecting": {
+    "message": "正在 $1 上保护你"
+  },
+  "home_stats": {
+    "message": "已检查：$1 · 警告：$2"
+  },
+  "home_manual": {
+    "message": "$1 为手动模式"
+  },
+  "home_manualHint": {
+    "message": "选中文字，然后点“用 Purrtect 检查”。"
+  },
+  "home_paused": {
+    "message": "已在 $1 暂停"
+  },
+  "home_pausedHint": {
+    "message": "关闭暂停即可恢复检查。"
+  },
+  "home_other": {
+    "message": "适用于 Gmail 和 WhatsApp 网页版"
+  },
+  "home_otherHint": {
+    "message": "在其他网站，选中文字后右键选择“用 Purrtect 检查”。"
+  },
+  "home_refresh": {
+    "message": "请刷新此页面以开始"
+  },
+  "home_refreshHint": {
+    "message": "此页面打开后 Purrtect 才安装或更新。"
+  },
+  "pauseSite": {
+    "message": "在此网站暂停"
+  },
+  "info_pause": {
+    "message": "在你重新开启前，停止此网站的自动检查并隐藏标记。选中文字检查仍可使用。"
+  },
+  "recentTitle": {
+    "message": "最近的警告"
+  },
+  "recentEmpty": {
+    "message": "暂无警告。"
+  },
+  "ago_now": {
+    "message": "刚刚"
+  },
+  "ago_min": {
+    "message": "$1 分钟前"
+  },
+  "ago_hour": {
+    "message": "$1 小时前"
+  },
+  "ago_day": {
+    "message": "$1 天前"
+  },
+  "openSettings": {
+    "message": "设置"
+  },
+  "back": {
+    "message": "返回"
+  },
+  "privacyTitle": {
+    "message": "你的隐私"
+  },
+  "sec_general": {
+    "message": "常规"
+  },
+  "sec_where": {
+    "message": "检查范围"
+  },
+  "sec_privacy": {
+    "message": "隐私"
+  },
+  "saved": {
+    "message": "已保存"
+  },
+  "resetDefaults": {
+    "message": "恢复默认设置"
+  },
+  "resetDone": {
+    "message": "设置已重置"
+  },
+  "footer_website": {
+    "message": "网站"
+  },
+  "footer_privacy": {
+    "message": "隐私"
+  },
+  "footer_feedback": {
+    "message": "反馈"
+  },
+  "pauseOn": {
+    "message": "在 $1 上暂停"
+  },
+  "set_cursorCat": {
+    "message": "鼠标小猫"
+  },
+  "info_cursorCat": {
+    "message": "在 Gmail 和 WhatsApp Web 上，一只小猫会跟着你的光标。把光标停在链接上，它会显示链接真正去哪里（✓ 没问题，! 小心，⚠ 有风险）。你不动时它会睡觉，打字时它会看着，发现风险会跑到警告旁提醒你。它从不阻止点击。"
+  },
+  "set_catEverywhere": {
+    "message": "在所有网站上"
+  },
+  "info_catEverywhere": {
+    "message": "小猫也会陪你浏览其他网站。在那里只在你需要时检查：把光标停在链接上，会显示链接真正去哪里；或选中文字后点“用 Purrtect 检查”。Chrome 会先请求权限。开启后请刷新已打开的标签页。"
+  },
   "listen": {
     "message": "朗读"
   },
@@ -294,7 +519,7 @@
     "message": "银行转账"
   },
   "payment_upi_or_wallet": {
-    "message": "UPI 或电子钱包"
+    "message": "支付应用或电子钱包"
   },
   "payment_none": {
     "message": "没有付款"
@@ -375,7 +600,7 @@
     "message": "声称收费帮你追回钱款的人也是骗子。"
   },
   "tagline": {
-    "message": "他们负责过滤。我们解释原因、拦下点击、帮你补救。"
+    "message": "解释诈骗，拦下危险点击，帮你补救。"
   },
   "consentTitle": {
     "message": "开始之前"
@@ -384,7 +609,7 @@
     "message": "Purrtect 在你的浏览器里检查你在 Gmail 和 WhatsApp 网页版打开的消息和链接。"
   },
   "consent_sent": {
-    "message": "只有可疑内容才会在隐藏号码和验证码后送去进一步检查。"
+    "message": "只有可疑内容才可能被发送进一步检查，号码和验证码会先隐藏。默认情况下，每次发送前你都会看到内容并自行决定。"
   },
   "consent_never": {
     "message": "我们的服务器不保存任何内容，你的设置只留在这个浏览器里。"
@@ -547,5 +772,44 @@
   },
   "web_image_needs_ai": {
     "message": "截图需要完整检查，但暂时不可用。请稍后再试。"
+  },
+  "lc_label": {
+    "message": "这个链接去哪里"
+  },
+  "lc_why": {
+    "message": "为什么？"
+  },
+  "lc_checkGemini": {
+    "message": "用 Gemini 检查"
+  },
+  "lc_hidden": {
+    "message": "看不到它去哪里"
+  },
+  "lc_whyHidden": {
+    "message": "这个按钮隐藏了网址，所以这里无法检查。请小心，或让 Gemini 检查这条消息。"
+  },
+  "lc_whyNone": {
+    "message": "网址没有可疑之处。不过，点开消息里的链接后，千万不要输入密码或验证码。"
+  },
+  "lc_whyMessage": {
+    "message": "这个链接所在的消息看起来有风险。"
+  },
+  "draftIn_en": {
+    "message": "这些草稿是英文的，是当地警方和银行使用的语言。发送前请填写 [方括号] 里的内容。"
+  },
+  "draftIn_hi": {
+    "message": "这些草稿是印地语的，印度警方和银行都接受。发送前请填写 [方括号] 里的内容。"
+  },
+  "draftIn_ja": {
+    "message": "这些草稿是日文的，是日本警方和银行使用的语言。发送前请填写 [方括号] 里的内容。"
+  },
+  "draftIn_id": {
+    "message": "这些草稿是印尼文的，是印尼警方和银行使用的语言。发送前请填写 [方括号] 里的内容。"
+  },
+  "payment_gift_card": {
+    "message": "礼品卡或预付卡"
+  },
+  "payment_crypto": {
+    "message": "加密货币"
   }
 }

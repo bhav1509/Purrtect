@@ -53,6 +53,231 @@
   "type_other": {
     "message": "その他の手口"
   },
+  "confirmTitle": {
+    "message": "詳しいチェックに送信しますか？"
+  },
+  "confirmIntro": {
+    "message": "Purrtect がこれを Google Gemini に送ります。個人情報はすでに隠してあり、保存もされません。"
+  },
+  "confirmMasked": {
+    "message": "メッセージ（番号やコードは非表示）"
+  },
+  "confirmNoText": {
+    "message": "（本文なし、リンクのみ）"
+  },
+  "confirmLinks": {
+    "message": "リンク"
+  },
+  "confirmOther": {
+    "message": "あわせて送る情報"
+  },
+  "confirmSender": {
+    "message": "送信者"
+  },
+  "confirmSender_new": {
+    "message": "初めての相手"
+  },
+  "confirmSender_known": {
+    "message": "知っている相手"
+  },
+  "confirmSource": {
+    "message": "送信元"
+  },
+  "source_gmail": {
+    "message": "Gmail"
+  },
+  "source_whatsapp": {
+    "message": "WhatsApp Web"
+  },
+  "source_web": {
+    "message": "ウェブサイト"
+  },
+  "confirmQuick": {
+    "message": "簡易チェック"
+  },
+  "confirmNoHits": {
+    "message": "注意点なし"
+  },
+  "confirmLanguage": {
+    "message": "回答の言語"
+  },
+  "confirmCountry": {
+    "message": "国"
+  },
+  "confirmNever": {
+    "message": "あなたの名前・メールアドレス・電話番号は送信されません。"
+  },
+  "dontAskAgain": {
+    "message": "今後は確認しない（設定で変更できます）"
+  },
+  "dontSend": {
+    "message": "送信しない"
+  },
+  "sendForCheck": {
+    "message": "送信する"
+  },
+  "notSentNote": {
+    "message": "送信していません。ブラウザ内の簡易チェックの結果です。詳しく調べるにはマークをタップ。"
+  },
+  "tapToCheck": {
+    "message": "タップして詳しくチェック"
+  },
+  "set_askBefore": {
+    "message": "Gemini に送る前に"
+  },
+  "askBefore_ask": {
+    "message": "毎回確認する"
+  },
+  "askBefore_auto": {
+    "message": "自動で送信"
+  },
+  "askBeforeHelp": {
+    "message": "「毎回確認する」では、送る内容（個人情報は非表示）を見せてから、あなたの許可を待ちます。"
+  },
+  "askBeforeSwitch": {
+    "message": "Gemini に送る前に確認"
+  },
+  "askBeforeShort_on": {
+    "message": "送る内容を見せて、許可を待ちます。"
+  },
+  "askBeforeShort_off": {
+    "message": "怪しいメッセージは自動で送信されます。"
+  },
+  "moreInfo": {
+    "message": "詳しい説明"
+  },
+  "openWebsite": {
+    "message": "Purrtect のウェブサイトを開く"
+  },
+  "info_country": {
+    "message": "対応プランで使います。クリックや支払いをしてしまった時に、どの相談窓口や届け出先を表示するかを決めます。"
+  },
+  "info_language": {
+    "message": "ボタン・警告・説明、そして読み上げに使う言語です。"
+  },
+  "info_voice": {
+    "message": "結果ごとに「読み上げ」ボタンを表示します。オフにすると非表示になります。"
+  },
+  "info_careful": {
+    "message": "警告の出しやすさです：\n• ゆるめ：はっきりした危険のみ。警告は少なめ。\n• ふつう：バランス重視（おすすめ）。\n• きびしめ：小さな兆候でも警告。警告と詳しいチェックが増えます。"
+  },
+  "careful_relaxed": {
+    "message": "はっきりした危険のみ。警告は少なめ。"
+  },
+  "careful_normal": {
+    "message": "バランス重視。ほとんどの人におすすめ。"
+  },
+  "careful_strict": {
+    "message": "小さな兆候でも警告。警告は多め。"
+  },
+  "clearShort": {
+    "message": "消去"
+  },
+  "home_protecting": {
+    "message": "$1 で見守り中"
+  },
+  "home_stats": {
+    "message": "確認: $1 · 警告: $2"
+  },
+  "home_manual": {
+    "message": "$1 は手動モード"
+  },
+  "home_manualHint": {
+    "message": "文章を選んで「Purrtect でチェック」を押してください。"
+  },
+  "home_paused": {
+    "message": "$1 で一時停止中"
+  },
+  "home_pausedHint": {
+    "message": "一時停止をオフにすると確認を再開します。"
+  },
+  "home_other": {
+    "message": "Gmail と WhatsApp Web で動作します"
+  },
+  "home_otherHint": {
+    "message": "他のサイトでは、文章を選んで右クリックし「Purrtect でチェック」を選びます。"
+  },
+  "home_refresh": {
+    "message": "ページを再読み込みしてください"
+  },
+  "home_refreshHint": {
+    "message": "このページを開いた後に Purrtect が追加・更新されました。"
+  },
+  "pauseSite": {
+    "message": "このサイトで一時停止"
+  },
+  "info_pause": {
+    "message": "オンに戻すまで、このサイトでの自動チェックとマーク表示を止めます。文章を選んでのチェックは使えます。"
+  },
+  "recentTitle": {
+    "message": "最近の警告"
+  },
+  "recentEmpty": {
+    "message": "まだ警告はありません。"
+  },
+  "ago_now": {
+    "message": "たった今"
+  },
+  "ago_min": {
+    "message": "$1 分前"
+  },
+  "ago_hour": {
+    "message": "$1 時間前"
+  },
+  "ago_day": {
+    "message": "$1 日前"
+  },
+  "openSettings": {
+    "message": "設定"
+  },
+  "back": {
+    "message": "戻る"
+  },
+  "privacyTitle": {
+    "message": "プライバシー"
+  },
+  "sec_general": {
+    "message": "一般"
+  },
+  "sec_where": {
+    "message": "チェックする場所"
+  },
+  "sec_privacy": {
+    "message": "プライバシー"
+  },
+  "saved": {
+    "message": "保存しました"
+  },
+  "resetDefaults": {
+    "message": "初期設定に戻す"
+  },
+  "resetDone": {
+    "message": "設定を元に戻しました"
+  },
+  "footer_website": {
+    "message": "ウェブサイト"
+  },
+  "footer_privacy": {
+    "message": "プライバシー"
+  },
+  "footer_feedback": {
+    "message": "フィードバック"
+  },
+  "pauseOn": {
+    "message": "$1 で一時停止"
+  },
+  "set_cursorCat": {
+    "message": "カーソル猫"
+  },
+  "info_cursorCat": {
+    "message": "Gmail と WhatsApp Web で小さな猫がカーソルについてきます。リンクにカーソルを置くと本当の行き先を表示します（✓ 大丈夫、! 注意、⚠ 危険）。何もしないと眠り、入力を見守り、警告のところへ走って知らせます。クリックを邪魔することはありません。"
+  },
+  "set_catEverywhere": {
+    "message": "すべてのサイトで"
+  },
+  "info_catEverywhere": {
+    "message": "ほかのサイトでも猫がついてきます。そこでは頼んだときだけ確認します。リンクにカーソルを置くと本当の行き先を表示し、文字を選んで「Purrtect でチェック」を押すと調べます。最初にChromeが許可を求めます。オンにしたら開いているタブを再読み込みしてください。"
+  },
   "listen": {
     "message": "読み上げ"
   },
@@ -375,7 +600,7 @@
     "message": "「手数料でお金を取り戻す」という人も詐欺です。"
   },
   "tagline": {
-    "message": "フィルターの先で、説明し、クリックを止め、立ち直りを助けます。"
+    "message": "詐欺を説明し、危険なクリックを止め、立ち直りを助けます。"
   },
   "consentTitle": {
     "message": "はじめに"
@@ -384,7 +609,7 @@
     "message": "Purrtect は Gmail と WhatsApp Web で開いたメッセージとリンクを、ブラウザの中でチェックします。"
   },
   "consent_sent": {
-    "message": "怪しいものだけを、番号やコードを隠してから詳しいチェックに送ります。"
+    "message": "詳しいチェックに送れるのは怪しいものだけで、番号やコードは隠します。初期設定では、送る前に毎回内容を見て選べます。"
   },
   "consent_never": {
     "message": "サーバーには何も保存しません。設定はこのブラウザに残ります。"
@@ -547,5 +772,44 @@
   },
   "web_image_needs_ai": {
     "message": "スクショには詳しいチェックが必要ですが、今は使えません。少し待ってもう一度お試しください。"
+  },
+  "lc_label": {
+    "message": "このリンクの行き先"
+  },
+  "lc_why": {
+    "message": "なぜ？"
+  },
+  "lc_checkGemini": {
+    "message": "Gemini で確認"
+  },
+  "lc_hidden": {
+    "message": "行き先が見えません"
+  },
+  "lc_whyHidden": {
+    "message": "このボタンはウェブアドレスを隠しているため、ここでは確認できません。注意するか、Gemini にメッセージを確認してもらってください。"
+  },
+  "lc_whyNone": {
+    "message": "ウェブアドレスに気になる点はありません。それでも、メッセージのリンクを開いた後にパスワードや確認コードを入力しないでください。"
+  },
+  "lc_whyMessage": {
+    "message": "このリンクが入っているメッセージが危なそうです。"
+  },
+  "draftIn_en": {
+    "message": "下書きは英語です。現地の警察や銀行が使う言語です。送る前に [ ] の中を埋めてください。"
+  },
+  "draftIn_hi": {
+    "message": "下書きはヒンディー語です。インドの警察や銀行で受け付けられます。送る前に [ ] の中を埋めてください。"
+  },
+  "draftIn_ja": {
+    "message": "下書きは日本語です。日本の警察や銀行が使う言語です。送る前に [ ] の中を埋めてください。"
+  },
+  "draftIn_id": {
+    "message": "下書きはインドネシア語です。インドネシアの警察や銀行が使う言語です。送る前に [ ] の中を埋めてください。"
+  },
+  "payment_gift_card": {
+    "message": "ギフトカード・プリペイドカード"
+  },
+  "payment_crypto": {
+    "message": "暗号資産"
   }
 }

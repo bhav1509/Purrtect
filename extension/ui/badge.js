@@ -39,7 +39,8 @@
         el("span", { class: "purr-widget-icon", "aria-hidden": "true" }, ICON[level]),
         el("span", { class: "purr-widget-label" }, label));
       node.replaceChildren(button);
-      if (!r.pending && r.headline) node.append(el("span", { class: "purr-preview", role: "tooltip" }, r.headline));
+      const preview = r.awaitingApproval ? t("tapToCheck") : r.headline;
+      if (!r.pending && preview) node.append(el("span", { class: "purr-preview", role: "tooltip" }, preview));
     };
     render(result);
     node.update = render;

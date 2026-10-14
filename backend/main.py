@@ -79,7 +79,7 @@ class ScanRequest(BaseModel):
 
 class RecoverRequest(BaseModel):
     what_happened: List[Literal["opened_link", "typed_password", "shared_otp", "paid", "installed_app", "shared_id"]] = []
-    payment_method: Literal["card", "bank_transfer", "upi_or_wallet", "none"] = "none"
+    payment_method: Literal["card", "bank_transfer", "upi_or_wallet", "gift_card", "crypto", "none"] = "none"
     when: Literal["minutes", "hours", "days"] = "minutes"
     country: Country = "IN"
     lang: Literal["en", "hi", "ja", "zh"] = "en"
@@ -225,8 +225,10 @@ async def scan(req: ScanRequest):
 async def recover(req: RecoverRequest):
     started = time.monotonic()
     row = COUNTRIES[req.country]
-    contents = [prompts.recover_contents(req.what_happened, req.payment_method, req.when, row)]
-    system = prompts.RECOVER_PROMPT.format(language=prompts.LANGUAGES[req.lang])
+    contents = [prompts.recover_contents(req.what_happened, req.payment_method, req.when, row, req.country)]
+    drafts_in = prompts.draft_lang(req.country, req.lang)
+    system = prompts.RECOVER_PROMPT.format(language=prompts.LANGUAGES[req.lang],
+                                           draft_language=prompts.DRAFT_LANG_NAMES[drafts_in])
     try:
         plan, model = await ask_gemini(system, contents, prompts.RecoveryPlan, RECOVER_TIMEOUT_S)
     except AIUnavailable:
@@ -240,6 +242,7 @@ async def recover(req: RecoverRequest):
     for key in ("report_draft", "bank_message_draft", "timeline"):
         out[key] = strip_unverified(out[key], row)
     out["country"] = req.country
+    out["draft_lang"] = drafts_in
     out["contacts"] = row  # copied verbatim from countries.json
     log_event("recover", "plan", started, model)
     return out

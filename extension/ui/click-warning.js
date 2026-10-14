@@ -31,6 +31,7 @@
     );
     document.body.append(overlay);
     overlay.querySelector(".purr-btn-safe").focus();
+    if (link) dispatchEvent(new CustomEvent("purr-risk-click", { detail: { rect: link.getBoundingClientRect() } })); // cursor cat
   }
 
   // getResult is read at click time, so a later verdict (or "This is safe") applies.

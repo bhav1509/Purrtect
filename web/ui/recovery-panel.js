@@ -7,7 +7,16 @@
 
   const HAPPENED = ["opened_link", "typed_password", "shared_otp", "paid", "installed_app", "shared_id"];
   const COUNTRIES = ["IN", "SG", "AU", "ID", "PH", "JP"];
-  const PAYMENT = ["card", "bank_transfer", "upi_or_wallet", "none"];
+  // How people there usually pay (and how scammers ask to be paid). Examples are brand or system
+  // names, so they are not translated. Keep in step with PAYMENT_EXAMPLES in backend/prompts.py.
+  const PAYMENT = {
+    IN: { card: "", bank_transfer: "NEFT, IMPS", upi_or_wallet: "UPI: GPay, PhonePe, Paytm", crypto: "", none: "" },
+    SG: { card: "", bank_transfer: "FAST", upi_or_wallet: "PayNow, GrabPay", crypto: "", none: "" },
+    AU: { card: "", bank_transfer: "PayID, BSB", gift_card: "Apple, Google Play", crypto: "", none: "" },
+    ID: { card: "", bank_transfer: "BI-FAST, Virtual Account", upi_or_wallet: "QRIS, GoPay, DANA, OVO", none: "" },
+    PH: { card: "", bank_transfer: "InstaPay, PESONet", upi_or_wallet: "GCash, Maya", crypto: "", none: "" },
+    JP: { card: "", bank_transfer: "ATM", upi_or_wallet: "PayPay, Rakuten Pay", gift_card: "Apple, Google Play, Amazon", none: "" },
+  };
   const WHEN = ["minutes", "hours", "days"];
   let floating = null;
   let unplace = null;
@@ -19,13 +28,17 @@
     unplace = null;
   }
 
+  // values: a list of keys, or { key: "example" } to show a small example line under each label.
   function choiceGroup(name, values, multi, selected) {
+    const hints = Array.isArray(values) ? {} : values;
+    values = Array.isArray(values) ? values : Object.keys(values);
     const { el, t } = UI;
     return el(
       "div",
       { class: "purr-choices", role: multi ? "group" : "radiogroup" },
       values.map((v) => {
-        const b = el("button", { type: "button", class: "purr-choice", "aria-pressed": String(selected.includes(v)), "data-value": v }, t(`${name}_${v}`));
+        const b = el("button", { type: "button", class: "purr-choice", "aria-pressed": String(selected.includes(v)), "data-value": v },
+          t(`${name}_${v}`), hints[v] ? el("span", { class: "purr-choice-hint" }, hints[v]) : null);
         b.addEventListener("click", () => {
           const on = multi ? b.getAttribute("aria-pressed") !== "true" : true;
           if (!multi) b.parentElement.querySelectorAll(".purr-choice").forEach((o) => o.setAttribute("aria-pressed", "false"));
@@ -79,6 +92,7 @@
       contactsBlock(row),
       steps("planToday", plan.today),
       steps("planNextDays", plan.next_days),
+      plan.report_draft && plan.draft_lang ? el("p", { class: "purr-note purr-draft-lang" }, t("draftIn_" + plan.draft_lang)) : null,
       plan.report_draft ? draft("draftReport", plan.report_draft) : null,
       plan.bank_message_draft ? draft("draftBank", plan.bank_message_draft) : null,
       plan.timeline ? draft("draftTimeline", plan.timeline) : null,
@@ -105,7 +119,15 @@
     const settings = UI.env.settings;
     const qHappened = choiceGroup("happened", HAPPENED, true, []);
     const qCountry = choiceGroup("country", COUNTRIES, false, [settings.country || "IN"]);
-    const qPayment = choiceGroup("payment", PAYMENT, false, ["none"]);
+    let qPayment = choiceGroup("payment", PAYMENT[settings.country] || PAYMENT.IN, false, ["none"]);
+    // Picking a country swaps in that country's ways to pay (keeping the choice when it exists there).
+    qCountry.addEventListener("click", () => {
+      const options = PAYMENT[picked(qCountry)[0]] || PAYMENT.IN;
+      const was = picked(qPayment)[0];
+      const next = choiceGroup("payment", options, false, [was in options ? was : "none"]);
+      qPayment.replaceWith(next);
+      qPayment = next;
+    });
     const qWhen = choiceGroup("when", WHEN, false, ["minutes"]);
     const output = el("div", { class: "purr-recovery-output", "aria-live": "polite" });
     const submit = el("button", { type: "button", class: "purr-btn purr-btn-primary" }, t("showPlan"));

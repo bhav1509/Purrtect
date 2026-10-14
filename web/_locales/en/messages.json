@@ -53,6 +53,231 @@
   "type_other": {
     "message": "Other trick"
   },
+  "confirmTitle": {
+    "message": "Send this for a detailed check?"
+  },
+  "confirmIntro": {
+    "message": "Purrtect will send this to Google Gemini. Personal details are already hidden. Nothing is stored."
+  },
+  "confirmMasked": {
+    "message": "Message (numbers and codes hidden)"
+  },
+  "confirmNoText": {
+    "message": "(no message text, only links)"
+  },
+  "confirmLinks": {
+    "message": "Links"
+  },
+  "confirmOther": {
+    "message": "Also sent"
+  },
+  "confirmSender": {
+    "message": "Sender"
+  },
+  "confirmSender_new": {
+    "message": "New to you"
+  },
+  "confirmSender_known": {
+    "message": "Known to you"
+  },
+  "confirmSource": {
+    "message": "From"
+  },
+  "source_gmail": {
+    "message": "Gmail"
+  },
+  "source_whatsapp": {
+    "message": "WhatsApp Web"
+  },
+  "source_web": {
+    "message": "A website"
+  },
+  "confirmQuick": {
+    "message": "Quick check"
+  },
+  "confirmNoHits": {
+    "message": "no warning signs"
+  },
+  "confirmLanguage": {
+    "message": "Reply language"
+  },
+  "confirmCountry": {
+    "message": "Country"
+  },
+  "confirmNever": {
+    "message": "Your name, email address and phone number are never sent."
+  },
+  "dontAskAgain": {
+    "message": "Don't ask again (change this in Settings)"
+  },
+  "dontSend": {
+    "message": "Don't send"
+  },
+  "sendForCheck": {
+    "message": "Send"
+  },
+  "notSentNote": {
+    "message": "Not sent. This is the quick check done in your browser. Tap the sign to check in detail."
+  },
+  "tapToCheck": {
+    "message": "Tap to check in detail"
+  },
+  "set_askBefore": {
+    "message": "Before sending to Gemini"
+  },
+  "askBefore_ask": {
+    "message": "Ask me every time"
+  },
+  "askBefore_auto": {
+    "message": "Send automatically"
+  },
+  "askBeforeHelp": {
+    "message": "\"Ask me every time\" shows exactly what will be sent, with personal details hidden, and waits for your OK."
+  },
+  "askBeforeSwitch": {
+    "message": "Ask before sending to Gemini"
+  },
+  "askBeforeShort_on": {
+    "message": "Shows what's sent and waits for your OK."
+  },
+  "askBeforeShort_off": {
+    "message": "Risky messages are sent automatically."
+  },
+  "moreInfo": {
+    "message": "More information"
+  },
+  "openWebsite": {
+    "message": "Open the Purrtect website"
+  },
+  "info_country": {
+    "message": "Used for the recovery plan: which helplines and reporting websites to show if you clicked or paid."
+  },
+  "info_language": {
+    "message": "Language for Purrtect's buttons, warnings and explanations, and for reading them aloud."
+  },
+  "info_voice": {
+    "message": "Shows a Listen button on each result so it can be read aloud. Turn off to hide it."
+  },
+  "info_careful": {
+    "message": "How easily Purrtect raises a warning:\n• Relaxed: only clear warning signs, fewer alerts.\n• Normal: balanced (recommended).\n• Strict: even small warning signs, more alerts and more detailed checks."
+  },
+  "careful_relaxed": {
+    "message": "Only clear warning signs. Fewer alerts."
+  },
+  "careful_normal": {
+    "message": "Balanced. Recommended for most people."
+  },
+  "careful_strict": {
+    "message": "Even small warning signs. More alerts."
+  },
+  "clearShort": {
+    "message": "Clear"
+  },
+  "home_protecting": {
+    "message": "Protecting you on $1"
+  },
+  "home_stats": {
+    "message": "Checked: $1 · Warnings: $2"
+  },
+  "home_manual": {
+    "message": "Manual mode on $1"
+  },
+  "home_manualHint": {
+    "message": "Select text and tap Check with Purrtect."
+  },
+  "home_paused": {
+    "message": "Paused on $1"
+  },
+  "home_pausedHint": {
+    "message": "Turn off Pause to start checking again."
+  },
+  "home_other": {
+    "message": "Works on Gmail and WhatsApp Web"
+  },
+  "home_otherHint": {
+    "message": "On other sites, select text, right-click and choose Scan with Purrtect."
+  },
+  "home_refresh": {
+    "message": "Refresh this page to start"
+  },
+  "home_refreshHint": {
+    "message": "Purrtect was installed or updated after this page opened."
+  },
+  "pauseSite": {
+    "message": "Pause on this site"
+  },
+  "info_pause": {
+    "message": "Stops automatic checks and hides the signs on this site until you turn it back on. Selecting text to check still works."
+  },
+  "recentTitle": {
+    "message": "Recent warnings"
+  },
+  "recentEmpty": {
+    "message": "No warnings yet."
+  },
+  "ago_now": {
+    "message": "just now"
+  },
+  "ago_min": {
+    "message": "$1 min ago"
+  },
+  "ago_hour": {
+    "message": "$1 h ago"
+  },
+  "ago_day": {
+    "message": "$1 d ago"
+  },
+  "openSettings": {
+    "message": "Settings"
+  },
+  "back": {
+    "message": "Back"
+  },
+  "privacyTitle": {
+    "message": "Your privacy"
+  },
+  "sec_general": {
+    "message": "General"
+  },
+  "sec_where": {
+    "message": "Where to check"
+  },
+  "sec_privacy": {
+    "message": "Privacy"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "resetDefaults": {
+    "message": "Reset to defaults"
+  },
+  "resetDone": {
+    "message": "Settings reset"
+  },
+  "footer_website": {
+    "message": "Website"
+  },
+  "footer_privacy": {
+    "message": "Privacy"
+  },
+  "footer_feedback": {
+    "message": "Feedback"
+  },
+  "pauseOn": {
+    "message": "Pause on $1"
+  },
+  "set_cursorCat": {
+    "message": "Cursor cat"
+  },
+  "info_cursorCat": {
+    "message": "A small cat follows your cursor on Gmail and WhatsApp Web. Rest the cursor on a link and it shows where the link really goes (✓ fine, ! careful, ⚠ risky). It naps when you're idle, watches you type, and runs to a warning so you notice it. It never blocks clicks."
+  },
+  "set_catEverywhere": {
+    "message": "On all websites"
+  },
+  "info_catEverywhere": {
+    "message": "The cat also comes along on other websites. There it only checks when you ask: rest the cursor on a link to see where it really goes, or select text and press \"Check with Purrtect\". Chrome asks for permission first. Refresh open tabs after turning it on."
+  },
   "listen": {
     "message": "Listen"
   },
@@ -294,7 +519,7 @@
     "message": "Bank transfer"
   },
   "payment_upi_or_wallet": {
-    "message": "UPI or e-wallet"
+    "message": "Payment app or e-wallet"
   },
   "payment_none": {
     "message": "I didn't pay"
@@ -375,7 +600,7 @@
     "message": "Anyone who offers to get your money back for a fee is another scammer."
   },
   "tagline": {
-    "message": "They filter. We explain, stop the click, and help you recover."
+    "message": "Explains scams, stops risky clicks, helps you recover."
   },
   "consentTitle": {
     "message": "Before we start"
@@ -384,7 +609,7 @@
     "message": "Purrtect checks messages and links you open in Gmail and WhatsApp Web, right in your browser."
   },
   "consent_sent": {
-    "message": "Only suspicious items are sent for a closer check, after names, numbers and codes are hidden."
+    "message": "Only suspicious items can be sent for a closer check, with names, numbers and codes hidden. By default you see each one and choose before it is sent."
   },
   "consent_never": {
     "message": "Nothing is stored on our server. Your settings stay in this browser."
@@ -547,5 +772,44 @@
   },
   "web_image_needs_ai": {
     "message": "Screenshots need the full check, which is not available right now. Please try again in a minute."
+  },
+  "lc_label": {
+    "message": "Where this link goes"
+  },
+  "lc_why": {
+    "message": "Why?"
+  },
+  "lc_checkGemini": {
+    "message": "Check with Gemini"
+  },
+  "lc_hidden": {
+    "message": "Can't see where this goes"
+  },
+  "lc_whyHidden": {
+    "message": "This button hides its web address, so it can't be checked here. Be careful, or ask Gemini to check the message."
+  },
+  "lc_whyNone": {
+    "message": "Nothing worrying in the web address. Still, never type a password or OTP after clicking a link in a message."
+  },
+  "lc_whyMessage": {
+    "message": "The message this link is in looks risky."
+  },
+  "draftIn_en": {
+    "message": "These drafts are in English, the language the police and banks there use. Fill in the [brackets] before sending."
+  },
+  "draftIn_hi": {
+    "message": "These drafts are in Hindi, which the police and banks in India accept. Fill in the [brackets] before sending."
+  },
+  "draftIn_ja": {
+    "message": "These drafts are in Japanese, the language the police and banks in Japan use. Fill in the [brackets] before sending."
+  },
+  "draftIn_id": {
+    "message": "These drafts are in Indonesian, the language the police and banks in Indonesia use. Fill in the [brackets] before sending."
+  },
+  "payment_gift_card": {
+    "message": "Gift or prepaid card"
+  },
+  "payment_crypto": {
+    "message": "Crypto"
   }
 }
