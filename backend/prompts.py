@@ -8,6 +8,31 @@ from pydantic import BaseModel
 
 LANGUAGES = {"en": "English", "hi": "Hindi", "ja": "Japanese", "zh": "Simplified Chinese"}
 
+# Drafts (report, bank message, timeline) are sent to that country's police and banks, so they are
+# written in the language those use, whatever the person's app language. India takes Hindi or
+# English, so a Hindi app gets Hindi drafts there.
+DRAFT_LANG = {"IN": "en", "SG": "en", "AU": "en", "PH": "en", "ID": "id", "JP": "ja"}
+DRAFT_LANG_NAMES = {"en": "English", "hi": "Hindi", "ja": "Japanese", "id": "Indonesian"}
+
+
+# How people in each country pay; tells Gemini which payment app or system the person means.
+# Keep in step with PAYMENT in extension/ui/recovery-panel.js.
+PAYMENT_EXAMPLES = {
+    "IN": {"bank_transfer": "NEFT or IMPS", "upi_or_wallet": "UPI (GPay, PhonePe, Paytm)"},
+    "SG": {"bank_transfer": "FAST", "upi_or_wallet": "PayNow or GrabPay"},
+    "AU": {"bank_transfer": "PayID or BSB transfer", "gift_card": "Apple or Google Play gift cards"},
+    "ID": {"bank_transfer": "BI-FAST or a virtual account", "upi_or_wallet": "QRIS or an e-wallet (GoPay, DANA, OVO)"},
+    "PH": {"bank_transfer": "InstaPay or PESONet", "upi_or_wallet": "GCash or Maya"},
+    "JP": {"bank_transfer": "ATM or online bank transfer", "upi_or_wallet": "PayPay or Rakuten Pay",
+           "gift_card": "prepaid or gift cards bought at a convenience store (Apple, Google Play, Amazon)"},
+}
+
+
+def draft_lang(country: str, ui_lang: str) -> str:
+    if country == "IN" and ui_lang == "hi":
+        return "hi"
+    return DRAFT_LANG.get(country, "en")
+
 ScamType = Literal[
     "none", "delivery", "bank_kyc", "otp_theft", "job_offer", "investment",
     "lottery_prize", "impersonation", "romance", "tech_support", "other",
@@ -82,6 +107,9 @@ payment app to block cards and stop transfers (the sooner a transfer is reported
 likely it can be stopped), then the country's helpline. Then change passwords, sign out of \
 other devices, and uninstall any app that was installed or given screen access.
 - today: reporting and securing accounts.
+- If they paid with a gift or prepaid card: keep the card and receipt, and report the codes to \
+the company that issued it through its official app or website, quickly, before they are used. \
+If they paid in crypto: report it to the exchange or wallet app through its official app.
 - next_days: watching statements, following up the report, and warning that anyone who \
 offers to "recover" the money for a fee is another scam.
 Use 2 to 5 short steps per block. Only include steps that fit what happened.
@@ -99,7 +127,10 @@ number, website or email address.
 - Never give a bank's phone number. Write "use the number printed on your card or in your \
 bank's official app" instead.
 - Never ask for, and tell them never to share, an OTP, PIN, password or full card number.
-- Write every string in {language}, in short, plain sentences."""
+- In drafts, a card is only ever "[last 4 digits of card]", never the full number.
+- Write now, today and next_days in {language}, in short, plain sentences.
+- Write report_draft, bank_message_draft and timeline in {draft_language}, because they go to \
+the police and the bank in that country. Keep the placeholders in square brackets."""
 
 
 def scan_contents(text: str, links: list[str], sender: str, source: str,
@@ -118,7 +149,11 @@ def scan_contents(text: str, links: list[str], sender: str, source: str,
     ])
 
 
-def recover_contents(what_happened: list[str], payment_method: str, when: str, country: dict) -> str:
+def recover_contents(what_happened: list[str], payment_method: str, when: str, country: dict,
+                     country_code: str = "") -> str:
+    example = PAYMENT_EXAMPLES.get(country_code, {}).get(payment_method)
+    if example:
+        payment_method = f"{payment_method} ({example})"
     return "\n".join([
         f"What happened: {', '.join(what_happened) or 'not sure'}",
         f"How they paid: {payment_method}",

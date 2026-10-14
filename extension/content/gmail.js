@@ -9,24 +9,17 @@
     anchor: "h3.iw, .gE",                         // sender line; the widget goes here
   };
 
-  // Gmail sometimes wraps links as https://www.google.com/url?q=<real link>.
-  function realHref(a) {
-    try {
-      const u = new URL(a.href);
-      if (/(^|\.)google\.[a-z.]+$/.test(u.hostname) && u.pathname === "/url") return u.searchParams.get("q") || a.href;
-    } catch (_) { /* keep */ }
-    return a.href;
-  }
-
   function check(msg) {
     try {
       const body = msg.querySelector(SEL.body);
-      if (!body || !body.innerText.trim() || msg.dataset.purrSeen) return;
+      if (!body || !body.innerText.trim() || msg.dataset.purrSeen || PurrSite.paused()) return;
       msg.dataset.purrSeen = "1";
       const chip = msg.querySelector(SEL.sender);
       const address = chip ? chip.getAttribute("email") || "" : "";
       const displayName = chip ? chip.getAttribute("name") || chip.textContent.trim() : "";
-      const links = [...body.querySelectorAll("a[href]")].map(realHref).filter((h) => /^https?:/i.test(h));
+      // Only links the reader can see: Gmail keeps quoted earlier mails (the "•••") hidden in the body.
+      const links = [...body.querySelectorAll("a[href]")].filter((a) => a.getClientRects().length)
+        .map(PurrSite.realHref).filter((h) => /^https?:/i.test(h));
       PurrSite.process({
         el: body,
         anchor: msg.querySelector(SEL.anchor) || body,
@@ -63,6 +56,7 @@
   PurrSite.ready.then(() => {
     new MutationObserver(() => { clearTimeout(timer); timer = setTimeout(watch, 300); })
       .observe(document.body, { childList: true, subtree: true });
+    addEventListener("purr-rescan", watch);
     watch();
   });
 })();

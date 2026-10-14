@@ -1,0 +1,57 @@
+{
+ "frame": 32,
+ "feet": [
+  16,
+  29
+ ],
+ "animations": {
+  "idle": {
+   "row": 0,
+   "frames": 4,
+   "fps": 6,
+   "loop": true
+  },
+  "sit": {
+   "row": 1,
+   "frames": 4,
+   "fps": 4,
+   "loop": true
+  },
+  "walk": {
+   "row": 2,
+   "frames": 6,
+   "fps": 10,
+   "loop": true
+  },
+  "run": {
+   "row": 3,
+   "frames": 6,
+   "fps": 12,
+   "loop": true
+  },
+  "sleep": {
+   "row": 4,
+   "frames": 4,
+   "fps": 3,
+   "loop": true
+  },
+  "jump": {
+   "row": 5,
+   "frames": 6,
+   "fps": 10,
+   "loop": false
+  },
+  "box": {
+   "row": 6,
+   "frames": 6,
+   "fps": 5,
+   "loop": true
+  },
+  "play": {
+   "row": 7,
+   "frames": 6,
+   "fps": 8,
+   "loop": true
+  }
+ }
+}

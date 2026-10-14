@@ -9,7 +9,8 @@ cp shared/rules.json web/rules.json
 cp extension/rules.js web/rules.js
 mkdir -p web/ui
 cp extension/ui/core.js extension/ui/verdict-card.js extension/ui/recovery-panel.js extension/ui/ui.css web/ui/
-rm -rf web/_locales web/mascots
+rm -rf web/_locales web/mascots web/fonts
 cp -R extension/_locales web/_locales
 cp -R extension/mascots web/mascots
+cp -R extension/fonts web/fonts
 echo "synced shared files into extension/ and web/"

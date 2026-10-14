@@ -1,3 +1,5 @@
+/* Pixel font for headlines and badges (the extension loads it from its own package). */
+@font-face { font-family: "Jersey 10"; src: url("fonts/Jersey10-Regular.ttf") format("truetype"); font-display: swap; }
 :root {
   --bg: #f5f4ef;
   --surface: #ffffff;
@@ -1653,3 +1655,4 @@ input[type="url"]:focus {
   .confirm-foot { flex-direction: column; align-items: stretch; }
   .confirm-btns { justify-content: flex-end; }
 }
+.purr-mascot { image-rendering: pixelated; }
