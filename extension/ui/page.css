@@ -74,14 +74,15 @@ body.purr-panel .content { flex: 1; min-height: 0; overflow-y: auto; scrollbar-g
 }
 .set-info svg { display: block; }
 .set-info:hover, .set-info-wrap.open .set-info { color: var(--accent); opacity: 1; background: var(--accent-soft); }
-/* The bubble floats above the panel (fixed; placed by settings.js under its row, or above it near the
-   bottom), so it never adds a scrollbar or shifts the layout, and it never catches the mouse. */
+/* The bubble floats above the panel (fixed; placed by settings.js above its row, or below it when
+   there's no room above), so it never adds a scrollbar or shifts the layout, and it never catches the mouse. */
 .set-tip {
   display: none; position: fixed; left: 0; top: 0; z-index: 10; pointer-events: none;
   padding: 8px 12px; border-radius: 10px; background: var(--ink); color: var(--bg);
   font-size: 12.5px; font-weight: 400; line-height: 1.45; white-space: pre-line; box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
 }
 .set-info-wrap:hover .set-tip, .set-info-wrap:focus-within .set-tip, .set-info-wrap.open .set-tip { display: block; }
+.set-tip:not(.placed) { visibility: hidden; }      /* shown only once settings.js has put it in place */
 
 /* controls */
 .set-select-wrap { position: relative; display: inline-block; }
