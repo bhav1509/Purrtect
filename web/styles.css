@@ -1656,3 +1656,53 @@ input[type="url"]:focus {
   .confirm-btns { justify-content: flex-end; }
 }
 .purr-mascot { image-rendering: pixelated; }
+
+/* ---------- Fixes: shared cards on this page, left panel fit, confirm footer ---------- */
+/* The shared verdict / recovery cards (ui/ui.css) bring the extension's cream pixel palette.
+   On this page they sit on the site's own surfaces, so map their colours to the site's, in
+   light and dark mode alike (text stays readable on the dark background). */
+#result .purr-card, #recovery .purr-card, .recovery-dialog .purr-card {
+  --purr-ink: var(--ink);
+  --purr-muted: var(--muted);
+  --purr-line: var(--line-strong);
+  --purr-outline: var(--line-strong);
+  --purr-surface: var(--surface-alt);
+  --purr-blue: var(--accent);
+  --purr-blue-bg: var(--accent-soft);
+  --purr-green: var(--success);
+  --purr-green-bg: var(--success-soft);
+  --purr-yellow: var(--warn);
+  --purr-yellow-bg: var(--warn-soft);
+  --purr-red: var(--danger);
+  --purr-red-bg: var(--danger-soft);
+  --purr-shadow: var(--shadow-sm);
+  color: var(--ink);
+}
+#result .purr-card .purr-btn, #recovery .purr-card .purr-btn,
+#result .purr-card .purr-voice, #recovery .purr-card .purr-choice { box-shadow: none; }
+
+/* Left panel: never squash the text box under the confirmation toggle; when the window is
+   too short for everything, the panel scrolls inside itself instead. */
+.input { flex: 1 0 auto; }
+.panel { overflow-y: auto; overflow-x: hidden; }
+
+/* Confirm popup: the middle scrolls, the footer with the buttons always stays visible. */
+.confirm-dialog { max-height: calc(100dvh - 32px); }
+.confirm-box { max-height: calc(100dvh - 34px); overflow-y: auto; }
+.confirm-foot { position: sticky; bottom: 0; z-index: 1; flex-wrap: wrap; }
+.confirm-btns { flex-wrap: wrap; margin-left: auto; }
+.confirm-cancel-btn, .confirm-send-btn { white-space: nowrap; flex: none; }
+/* Nothing in the left panel shrinks below its content (the form had flex: 1 + min-height: 0,
+   so on short windows or when zoomed in it collapsed and the samples slid over the button).
+   The panel scrolls inside itself instead (overflow-y above). */
+.checker > *, .form > * { flex-shrink: 0; }
+.form { flex: 1 0 auto; }
+/* Header: on narrower windows (or zoomed in) the pickers and download button wrap onto a
+   second row instead of pushing the page sideways. */
+.bar { flex-wrap: wrap; row-gap: 10px; }
+.bar-actions { flex-wrap: wrap; min-width: 0; justify-content: flex-end; }
+.brand-group { flex-wrap: wrap; min-width: 0; }
+@media (max-width: 1200px) { .brand-tagline { display: none; } }
+@media (max-width: 480px) { .ai-status-pill, .brand-pill { display: none; } }
+/* "Testing sample: …" label: its display rule overrode [hidden], leaving an empty pill. */
+.sample-tag[hidden] { display: none; }
