@@ -39,9 +39,9 @@
     voice: true,
     sensitivity: "normal",
     askBeforeSend: true, // show the masked request and wait for approval before every Gemini check
-    cursorCat: false, // a small cat that follows the cursor on Gmail and WhatsApp Web
+    cursorCat: false, // off by default: a small cat that follows the cursor on Gmail and WhatsApp Web
     catEverywhere: false, // ...and on all other websites, in manual mode (asks for Chrome's permission)
-    modes: { gmail: "auto", whatsapp: "auto" },
+    modes: { gmail: "manual", whatsapp: "manual" },   // quiet by default: checks only what you pick; switch to Auto in Settings
     pausedSites: [], // hostnames where automatic checks are paused ("Pause on this site")
   };
   const DEFAULT_DATA = { knownSenders: [], greenCounts: {}, safeLinks: [], safeSenders: [], linkCache: {}, riskyOpenedAt: 0 };
