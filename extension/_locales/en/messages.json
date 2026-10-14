@@ -449,9 +449,6 @@
   "openAnyway": {
     "message": "Open anyway"
   },
-  "buddyHint": {
-    "message": "Select any text and tap me to check it, or right-click and choose Scan with Purrtect."
-  },
   "checkThis": {
     "message": "Check this"
   },

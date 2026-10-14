@@ -449,9 +449,6 @@
   "openAnyway": {
     "message": "それでも開く"
   },
-  "buddyHint": {
-    "message": "文章を選んでからタップするとチェックします。右クリックの「Purrtect でチェック」も使えます。"
-  },
   "checkThis": {
     "message": "チェック"
   },

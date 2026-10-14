@@ -36,10 +36,7 @@
       if (changes.riskyOpenedAt && SITE !== "other") showBanner();
     });
     showPaused();
-    if (SITE !== "other") {
-      UI.buddy(onBuddyClick);
-      showBanner();
-    }
+    if (SITE !== "other") showBanner();
   })();
 
   // "Pause on this site": hide the widgets and stop automatic checks until it's switched back on.
@@ -56,13 +53,6 @@
   function openRecovery(anchor) {
     UI.closeVerdictCard();
     UI.recoveryPanel({ anchor, onCountry: (c) => PurrStore.saveSettings({ country: c }) });
-  }
-
-  function onBuddyClick() {
-    const sel = getSelection();
-    const text = String(sel || "").trim();
-    if (text.length >= 8 && sel.rangeCount) manualScan(text, [], sel.getRangeAt(0).getBoundingClientRect());
-    else UI.toast("idle", UI.t("buddyHint"), 4000);
   }
 
   // Gmail sometimes wraps links as https://www.google.com/url?q=<real link>.
@@ -115,9 +105,7 @@
       if (!answer.send) return { ...UI.resultFromLocal(local, true), notSent: true };
     }
     if (onApproved) onApproved();
-    UI.buddyBusy && UI.buddyBusy(+1);
     const res = await UI.env.api("/api/scan", body);
-    UI.buddyBusy && UI.buddyBusy(-1);
     return res.ok ? UI.resultFromApi(res.data, local) : UI.resultFromLocal(local, true);
   }
 

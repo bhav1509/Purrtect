@@ -8,7 +8,7 @@
   src: url("chrome-extension://__MSG_@@extension_id__/fonts/Jersey10-Regular.ttf") format("truetype");
   font-display: swap;
 }
-.purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-buddy, .purr-select-btn, .purr-linkcard {
+.purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-select-btn, .purr-linkcard {
   --purr-pixel-font: "Jersey 10", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
   --purr-outline: #6e3a22;      /* the cat's outline */
   --purr-ink: #4a2716;
@@ -159,7 +159,7 @@
 .purr-warning .purr-headline { margin: 8px 0; color: var(--purr-red); }
 .purr-warning p { margin: 0 0 8px; }
 
-/* toasts, banner, corner buddy, selection button */
+/* toasts, banner, selection button */
 .purr-toast {
   position: fixed; right: 16px; bottom: 24px; z-index: 2147483646; display: flex; align-items: center; gap: 10px;
   padding: 10px 16px 10px 10px; border-radius: 16px; background: var(--purr-surface); border: 2px solid var(--purr-green);
@@ -171,11 +171,6 @@
   border: 2px solid var(--purr-yellow); border-radius: 999px; background: var(--purr-yellow-bg); color: var(--purr-yellow);
   font: inherit; font-weight: 800; cursor: pointer; box-shadow: var(--purr-shadow);
 }
-.purr-buddy {
-  position: fixed; left: 12px; bottom: 12px; z-index: 2147483640; width: 52px; height: 52px; padding: 2px;
-  border: 2px solid var(--purr-line); border-radius: 50%; background: var(--purr-surface); cursor: pointer; opacity: .85;
-}
-.purr-buddy:hover { opacity: 1; }
 .purr-select-btn {
   position: absolute; z-index: 2147483645; display: flex; align-items: center; gap: 6px; min-height: 44px;
   padding: 4px 12px 4px 4px; border: 2px solid var(--purr-blue); border-radius: 999px;
@@ -200,7 +195,7 @@
 }
 
 /* "Pause on this site" */
-.purr-paused .purr-widget-wrap, .purr-paused .purr-buddy { display: none !important; }
+.purr-paused .purr-widget-wrap { display: none !important; }
 
 /* Cursor cat: follows the cursor, never takes clicks (48 px = the 32 px pixel frame at 1.5x) */
 .purr-ccat {
@@ -228,7 +223,6 @@
 .purr-ccat-bubble.warn { background: #e8a317; }
 .purr-ccat-bubble.danger { background: #b8321f; }
 .purr-ccat-bubble.love { background: #e8607c; }
-.purr-ccat-on .purr-buddy { display: none !important; }
 .purr-paused .purr-ccat { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .purr-ccat-sprite { animation: none !important; } .purr-ccat-bubble { transition: none; } }
 
@@ -269,11 +263,10 @@
 .purr-widget-label { font-size: 16px; font-weight: 400; }
 .purr-w-pending .purr-widget-icon { background: #e48642; }
 
-/* toast, banner, buddy, "Check with Purrtect" button */
+/* toast, banner, "Check with Purrtect" button */
 .purr-toast { border-color: var(--purr-outline); color: var(--purr-green); }
 .purr-banner, .purr-select-btn { border: 2px solid var(--purr-outline); border-radius: 4px; box-shadow: var(--purr-shadow); }
 .purr-select-btn { color: var(--purr-blue); background: var(--purr-surface); }
-.purr-buddy { border: 2px solid var(--purr-outline); border-radius: 6px; background: var(--purr-surface); }
 .purr-send .purr-actions { background: var(--purr-surface); border-top: 2px solid var(--purr-line); }
 
 /* "checking…": a compact pill instead of a big empty card */

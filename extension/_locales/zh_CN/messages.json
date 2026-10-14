@@ -449,9 +449,6 @@
   "openAnyway": {
     "message": "仍然打开"
   },
-  "buddyHint": {
-    "message": "选中文字后点我检查，或右键选择“用 Purrtect 检查”。"
-  },
   "checkThis": {
     "message": "检查一下"
   },
