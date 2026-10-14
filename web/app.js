@@ -21,15 +21,34 @@
     try { localStorage.setItem("purr-" + key, value); } catch (_) { /* storage blocked */ }
   }
 
-  function browserLang() {
-    const l = (navigator.language || "en").toLowerCase();
-    return l.startsWith("hi") ? "hi" : l.startsWith("ja") ? "ja" : l.startsWith("zh") ? "zh_CN" : "en";
+  // --- detectCountry: same code in extension/lib/store.js and web/app.js (tests check they match) ---
+  // The country Purrtect's helplines are for, guessed on this device only (no location permission,
+  // nothing sent): first the computer's time zone, then the browser's region (e.g. "en-IN").
+  // Anywhere else falls back to India.
+  function detectCountry() {
+    const SUPPORTED = ["IN", "SG", "AU", "ID", "PH", "JP"];
+    const BY_ZONE = {
+      "Asia/Kolkata": "IN", "Asia/Calcutta": "IN", "Asia/Singapore": "SG", "Asia/Jakarta": "ID",
+      "Asia/Pontianak": "ID", "Asia/Makassar": "ID", "Asia/Jayapura": "ID", "Asia/Manila": "PH", "Asia/Tokyo": "JP",
+    };
+    try {
+      const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (BY_ZONE[zone]) return BY_ZONE[zone];
+      if (zone.startsWith("Australia/")) return "AU";
+    } catch (_) { /* no time zone available */ }
+    const langs = (typeof navigator !== "undefined" && (navigator.languages || [navigator.language])) || [];
+    for (const l of langs) {
+      const region = String(l || "").split("-")[1];
+      if (region && SUPPORTED.includes(region.toUpperCase())) return region.toUpperCase();
+    }
+    return "IN";
   }
+  // --- end detectCountry ---
 
   const settings = {
-    uiLang: stored("lang", browserLang(), ["en", "hi", "ja", "zh_CN"]),
+    uiLang: stored("lang", "en", ["en", "hi", "ja", "zh_CN"]),          // English by default
     mascot: "cat",
-    country: stored("country", "IN", COUNTRIES),
+    country: stored("country", detectCountry(), COUNTRIES),            // guessed on this device
     voice: true,
     confirmBeforeSend: stored("confirm-gemini", "true", ["true", "false"]) === "true",
   };
@@ -157,6 +176,7 @@
         settings.country = c;
         store("country", c);
         $("country").value = c;
+        shareWithExtension();
       }
     });
     $("recoveryDialog").showModal();
@@ -521,10 +541,25 @@
     initiateCheck(mode === "text" ? $("text").value : "", mode === "link" ? $("link").value : "", mode === "image" ? file : null);
   });
 
+  // ----- Language and country: shared with the Purrtect extension, if it's installed -----
+  // The extension lists this site under "externally_connectable", so the page can ask it for the
+  // two settings and tell it about changes. Without the extension this does nothing.
+  const EXTENSION_ID = "pohoamnapbegmpnhdkiimajhkhhaiaja";
+  function askExtension(msg) {
+    return new Promise((resolve) => {
+      try {
+        if (!(self.chrome && chrome.runtime && chrome.runtime.sendMessage)) return resolve(null);
+        chrome.runtime.sendMessage(EXTENSION_ID, msg, (reply) => resolve(chrome.runtime.lastError ? null : reply));
+      } catch (_) { resolve(null); }
+    });
+  }
+  const shareWithExtension = () => askExtension({ type: "setPrefs", uiLang: settings.uiLang, country: settings.country });
+
   // ----- Top Bar Controls -----
   $("lang").addEventListener("change", async () => {
     settings.uiLang = $("lang").value;
     store("lang", settings.uiLang);
+    shareWithExtension();
     PurrUI.stopSpeech();
     await applyLanguage();
     showPanel("empty");
@@ -532,6 +567,7 @@
   $("country").addEventListener("change", () => {
     settings.country = $("country").value;
     store("country", settings.country);
+    shareWithExtension();
   });
   $("howInstall").addEventListener("click", () => $("installDialog").showModal());
 
@@ -552,6 +588,14 @@
       initiateCheck(s.text, "", null);
     },
   }, s.label)));
+
+  // The extension's choice wins when the page opens (it is where most people set it).
+  const fromExtension = await askExtension({ type: "getPrefs" });
+  if (fromExtension) {
+    if (["en", "hi", "ja", "zh_CN"].includes(fromExtension.uiLang)) { settings.uiLang = fromExtension.uiLang; store("lang", settings.uiLang); }
+    if (COUNTRIES.includes(fromExtension.country)) { settings.country = fromExtension.country; store("country", settings.country); }
+    $("lang").value = settings.uiLang;
+  }
 
   await applyLanguage();
   updateCharCount();

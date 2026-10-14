@@ -6,20 +6,23 @@
 /* The website's fonts, bundled: Inter for text, Outfit for buttons. */
 @font-face { font-family: "Inter"; src: url("chrome-extension://__MSG_@@extension_id__/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: "Outfit"; src: url("chrome-extension://__MSG_@@extension_id__/fonts/Outfit-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-.purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-select-btn, .purr-linkcard {
+.purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-select-btn, .purr-linkcard, .purr-updated {
   --purr-head-font: "Outfit", "Inter", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
   --purr-outline: #7c7c78;      /* the logo's outline */
   --purr-ink: #2b2723;
-  --purr-muted: #7a726a;
+  --purr-muted: #6b635b;
   --purr-line: #ebe4da;
   --purr-surface: #ffffff;
-  --purr-blue: #c8650f;         /* accent: the fish's orange, deepened for text (name kept so rules keep working) */
+  --purr-blue: #a3500a;         /* accent: the fish's orange, deepened for text (name kept so rules keep working) */
+  --purr-blue-2: #b0570b;       /* second stop of the orange button gradient */
+  --purr-on-color: #ffffff;     /* text / symbols on coloured buttons and signs */
+  --purr-soft: #faf6f0;         /* soft panels inside a card */
   --purr-blue-bg: #fdf0e2;
-  --purr-green: #3a7d47;
+  --purr-green: #2f6b3b;
   --purr-green-bg: #e2f1d6;
-  --purr-yellow: #9a5f00;
+  --purr-yellow: #8a4f00;
   --purr-yellow-bg: #ffe7b0;
-  --purr-red: #b8321f;
+  --purr-red: #a32a17;
   --purr-red-bg: #fad8cf;
   --purr-shadow: 0 10px 28px -6px rgba(60, 45, 30, .22), 0 2px 6px rgba(60, 45, 30, .08);
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
@@ -219,6 +222,7 @@
 .purr-ccat-bubble.danger { background: #b8321f; }
 .purr-ccat-bubble.love { background: #e8607c; }
 .purr-paused .purr-ccat { display: none !important; }
+.purr-paused .purr-select-btn, .purr-paused .purr-linkcard { display: none !important; }   /* switched off */
 .purr-manual .purr-widget-wrap, .purr-manual .purr-ccat, .purr-manual .purr-linkcard { display: none !important; }   /* Manual mode: quiet */
 @media (prefers-reduced-motion: reduce) { .purr-ccat-sprite { animation: none !important; } .purr-ccat-bubble { transition: none; } }
 
@@ -247,20 +251,20 @@
 .purr-advice, .purr-contacts, .purr-draft, .purr-send-text { border-radius: 14px; }
 .purr-btn, .purr-choice, .purr-voice { border-color: var(--purr-outline); box-shadow: none; }
 .purr-btn:active, .purr-choice:active { transform: scale(.98); }
-.purr-btn-primary { background: linear-gradient(135deg, var(--purr-blue), #e48c28); border-color: transparent; color: #fff; }
-.purr-btn-safe { background: var(--purr-green); border-color: var(--purr-green); color: #fff; }
+.purr-btn-primary { background: linear-gradient(135deg, var(--purr-blue), var(--purr-blue-2)); border-color: transparent; color: var(--purr-on-color); }
+.purr-btn-safe { background: var(--purr-green); border-color: var(--purr-green); color: var(--purr-on-color); }
 .purr-btn-quiet { border-color: transparent; box-shadow: none; }
 .purr-pill { border-radius: 999px; border-width: 2px; }
 .purr-advice { border: 2px dashed var(--purr-line); }
-.purr-icon-btn { border-radius: 999px; color: var(--purr-outline); }
+.purr-icon-btn { border-radius: 999px; color: var(--purr-muted); }
 .purr-overlay { background: rgba(30, 24, 18, .5); }
 .purr-warning { border-color: var(--purr-outline); box-shadow: inset 0 8px 0 var(--purr-red), var(--purr-shadow); padding-top: 28px; }
 
 /* message widget: a small round badge */
 .purr-widget { border: 2px solid var(--purr-outline); border-radius: 999px; box-shadow: 0 2px 6px rgba(60, 45, 30, .15); padding: 2px 10px 2px 2px; }
-.purr-widget-icon { border-radius: 50%; color: #fff; }
+.purr-widget-icon { border-radius: 50%; color: var(--purr-on-color); }
 .purr-widget-label { font-size: 13.5px; font-weight: 700; }
-.purr-w-pending .purr-widget-icon { background: #e48c28; }
+.purr-w-pending .purr-widget-icon { background: var(--purr-blue); }
 
 /* toast, banner, "Check with Purrtect" button */
 .purr-toast { border-color: var(--purr-outline); color: var(--purr-green); }
@@ -285,16 +289,17 @@
 .purr-linkcard-head { display: flex; align-items: center; gap: 10px; font: 600 15.5px/1.3 "Inter", system-ui, sans-serif; overflow-wrap: anywhere; }
 .purr-linkcard-sign {
   flex: none; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%;
-  color: #fff; font: 700 14px/1 "Outfit", system-ui, sans-serif;
+  color: var(--purr-on-color); font: 700 14px/1 "Outfit", system-ui, sans-serif;
 }
 .purr-linkcard.lv-green .purr-linkcard-sign { background: var(--purr-green); }
-.purr-linkcard.lv-yellow .purr-linkcard-sign { background: #e8a317; }
+.purr-linkcard.lv-yellow .purr-linkcard-sign { background: var(--purr-yellow); }
 .purr-linkcard.lv-red .purr-linkcard-sign { background: var(--purr-red); }
-.purr-linkcard.lv-unknown .purr-linkcard-sign, .purr-linkcard.lv-unfamiliar .purr-linkcard-sign { background: #8a827a; }
+.purr-linkcard.lv-unknown .purr-linkcard-sign, .purr-linkcard.lv-unfamiliar .purr-linkcard-sign { background: var(--purr-muted); }
 .purr-linkcard-note { margin-top: -6px; padding-left: 36px; color: var(--purr-muted); font-size: 13px; }
+.purr-linkcard-warn { color: var(--purr-yellow); font-weight: 600; }   /* well-known link, risky message around it */
 .purr-linkcard.lv-red { border-top: 5px solid var(--purr-red); }
 .purr-linkcard.lv-yellow { border-top: 5px solid #e8a317; }
-.purr-linkcard-why { margin: 0; padding: 10px 12px 10px 28px; font-size: 13.5px; color: var(--purr-ink); background: #faf6f0; border-radius: 12px; }
+.purr-linkcard-why { margin: 0; padding: 10px 12px 10px 28px; font-size: 13.5px; color: var(--purr-ink); background: var(--purr-soft); border-radius: 12px; }
 .purr-linkcard-why li + li { margin-top: 4px; }
 .purr-linkcard-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .purr-linkcard-actions .purr-btn { min-height: 44px; padding: 10px 18px; font: 700 14.5px/1 "Outfit", "Inter", system-ui, sans-serif; }
@@ -306,9 +311,33 @@
 .purr-updated {
   position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 2147483647;
   display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 32px); padding: 10px 10px 10px 18px;
-  background: #ffffff; color: #2b2723; border: 1.5px solid #ebe4da; border-radius: 999px;
+  background: var(--purr-surface); color: var(--purr-ink); border: 1.5px solid var(--purr-line); border-radius: 999px;
   box-shadow: 0 18px 40px -12px rgba(60, 45, 30, .3); font: 600 15px/1.3 "Inter", system-ui, sans-serif;
 }
-.purr-updated .purr-btn { min-height: 40px; padding: 8px 18px; border-radius: 999px; border: 0; color: #fff;
-  background: linear-gradient(135deg, #c8650f, #e48c28); font: 700 14.5px/1 "Outfit", "Inter", system-ui, sans-serif; cursor: pointer; }
-.purr-updated .purr-icon-btn { min-width: 36px; min-height: 36px; border: 0; background: none; font-size: 20px; color: #7a726a; cursor: pointer; }
+.purr-updated .purr-btn { min-height: 40px; padding: 8px 18px; border-radius: 999px; border: 0; color: var(--purr-on-color);
+  background: linear-gradient(135deg, var(--purr-blue), var(--purr-blue-2)); font: 700 14.5px/1 "Outfit", "Inter", system-ui, sans-serif; cursor: pointer; }
+.purr-updated .purr-icon-btn { min-width: 36px; min-height: 36px; border: 0; background: none; font-size: 20px; color: var(--purr-muted); cursor: pointer; }
+
+/* ---------- dark theme for Purrtect's boxes on pages (html[data-purr-theme="dark"], set by site.js /
+   page-env.js from the Appearance setting). Every text colour meets WCAG AA (4.5:1). ---------- */
+:root[data-purr-theme="dark"] :is(.purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-select-btn, .purr-linkcard, .purr-updated) {
+  --purr-outline: #8a847d;
+  --purr-ink: #f3eee8;
+  --purr-muted: #b5ab9f;
+  --purr-line: #39342f;
+  --purr-surface: #23201d;
+  --purr-soft: #2b2724;
+  --purr-blue: #e8913a;
+  --purr-blue-2: #f0a04a;
+  --purr-on-color: #1d1a17;
+  --purr-blue-bg: #3a2a1a;
+  --purr-green: #7fd49a;
+  --purr-green-bg: #17301f;
+  --purr-yellow: #f5c25f;
+  --purr-yellow-bg: #3a2a10;
+  --purr-red: #ff9b8f;
+  --purr-red-bg: #3d1714;
+  --purr-shadow: 0 10px 28px -6px rgba(0, 0, 0, .55), 0 2px 6px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+:root[data-purr-theme="dark"] .purr-overlay { background: rgba(0, 0, 0, .6); }

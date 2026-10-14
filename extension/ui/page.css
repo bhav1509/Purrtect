@@ -3,28 +3,29 @@
    same palette, Inter for text, Outfit for headings, round shapes. Fonts are bundled (fonts/). */
 @font-face { font-family: "Inter"; src: url("../fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: "Outfit"; src: url("../fonts/Outfit-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+/* Colours: light by default; dark when the theme is Dark, or Automatic on a dark computer
+   (settings.js / page-env.js set html[data-theme]). Every text colour meets WCAG AA (4.5:1). */
 body.purr-page {
-  --bg: #faf6f0; --surface: #ffffff; --ink: #2b2723; --muted: #7a726a; --line: #ebe4da;
-  --ink-heading: #1d1a17; --accent: #c8650f; --accent-2: #e48c28; --accent-ink: #ffffff; --accent-soft: #fdf0e2;   /* the logo's fish orange */
+  --bg: #faf6f0; --surface: #ffffff; --ink: #2b2723; --muted: #6b635b; --line: #ebe4da;
+  --ink-heading: #1d1a17; --accent: #a3500a; --accent-2: #b0570b; --accent-ink: #ffffff; --accent-soft: #fdf0e2;   /* the logo's fish orange, deepened for text */
   --green: #1f7a45; --yellow: #8a5300; --red: #b3261e;
   margin: 0; background: var(--bg); color: var(--ink);
   --font-head: "Outfit", "Inter", system-ui, sans-serif;
   font: 14px/1.45 "Inter", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-  body.purr-page {
-    --bg: #1a1816; --surface: #23201d; --ink: #f3eee8; --muted: #aaa197; --line: #39342f;
-    --ink-heading: #ffffff; --accent: #e8913a; --accent-2: #f0a04a; --accent-ink: #1d1a17; --accent-soft: #3a2a1a;   /* warm charcoal + orange */
-    --green: #74d39c; --yellow: #f5b94f; --red: #f4908a;
-  }
+html[data-theme="dark"] body.purr-page {
+  --bg: #1a1816; --surface: #23201d; --ink: #f3eee8; --muted: #b5ab9f; --line: #39342f;
+  --ink-heading: #ffffff; --accent: #e8913a; --accent-2: #f0a04a; --accent-ink: #1d1a17; --accent-soft: #3a2a1a;   /* warm charcoal + orange */
+  --green: #74d39c; --yellow: #f5b94f; --red: #f4908a;
 }
+html[data-theme="dark"] { color-scheme: dark; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ---------- side panel frame: header / content / footer pinned to the bottom ---------- */
 body.purr-panel { height: 100vh; overflow: hidden; }
 body.purr-panel #app { display: flex; flex-direction: column; height: 100vh; }
-body.purr-panel .content { flex: 1; min-height: 0; overflow-y: auto; padding: 2px 16px 18px; }
+body.purr-panel .content { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; padding: 2px 16px 18px; }
 
 .bar { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 12px 14px 8px 16px; }
 .bar-sub { padding-left: 8px; }
@@ -38,7 +39,7 @@ body.purr-panel .content { flex: 1; min-height: 0; overflow-y: auto; padding: 2p
   background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   align-self: flex-start;   /* the gradient spans the word only, as on the website */
 }
-.set-tagline { color: var(--muted); font-size: 12.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.set-tagline { color: var(--muted); font-size: 12.5px; line-height: 1.35; }   /* wraps onto a second line: always shown in full */
 .icon-btn {
   flex: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
   border: 0; border-radius: 10px; background: none; color: var(--muted); cursor: pointer;
@@ -74,22 +75,24 @@ body.purr-panel .content { flex: 1; min-height: 0; overflow-y: auto; padding: 2p
 }
 .set-info svg { display: block; }
 .set-info:hover, .set-info-wrap.open .set-info { color: var(--accent); opacity: 1; background: var(--accent-soft); }
+/* The bubble floats above the panel (fixed; placed by settings.js above its row, or below it when
+   there's no room above), so it never adds a scrollbar or shifts the layout, and it never catches the mouse. */
 .set-tip {
-  display: none; position: absolute; left: 0; right: 0; top: calc(100% - 4px); z-index: 10;
+  display: none; position: fixed; left: 0; top: 0; z-index: 10; pointer-events: none;
   padding: 8px 12px; border-radius: 10px; background: var(--ink); color: var(--bg);
   font-size: 12.5px; font-weight: 400; line-height: 1.45; white-space: pre-line; box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
 }
 .set-info-wrap:hover .set-tip, .set-info-wrap:focus-within .set-tip, .set-info-wrap.open .set-tip { display: block; }
+.set-tip:not(.placed) { visibility: hidden; }      /* shown only once settings.js has put it in place */
 
 /* controls */
 .set-select-wrap { position: relative; display: inline-block; }
+/* Pickers: same size, spacing, text and chevron as the website's language / country pickers. */
 .set-select {
-  appearance: none; -webkit-appearance: none; height: 40px; min-width: 120px; padding: 0 36px 0 16px;
-  border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer;
-}
-.set-select-wrap::after {
-  content: ""; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; margin-top: -5px;
-  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); pointer-events: none;
+  appearance: none; -webkit-appearance: none; height: 40px; padding: 0 34px 0 14px;   /* standard: 14px in, 12px chevron + 8px gap + 14px edge */
+  field-sizing: content;   /* as wide as the chosen option, not the longest one */
+  border: 1px solid var(--line); border-radius: 999px; color: var(--ink); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%23968c82' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center / 12px 8px;
 }
 .set-seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 2px; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
 .set-seg button { height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
@@ -151,3 +154,17 @@ body.purr-welcome .saved { top: 16px; }
 .set-seg button { font-family: var(--font-head); }
 .purr-page .purr-btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: 0; color: var(--accent-ink); font-family: var(--font-head); font-weight: 700; }
 .set-select, .set-small-btn { font-family: inherit; }
+
+/* ---------- overall On / Off switch (header) ---------- */
+.set-power { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px 0 4px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--muted);
+  font: 700 13px/1 var(--font-head); cursor: pointer; }
+.set-power .set-knob { width: 34px; height: 22px; }
+.set-power .set-knob::after { top: 2px; left: 2px; width: 18px; height: 18px; }
+.set-power[aria-checked="true"] { color: var(--accent); border-color: var(--accent); }
+.set-power[aria-checked="true"] .set-knob { background: var(--accent); }
+.set-power[aria-checked="true"] .set-knob::after { transform: translateX(12px); }
+.off-note { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0 4px;
+  padding: 10px 12px 10px 14px; border-radius: 16px; background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.content.is-off .settings { opacity: .5; }
+.off-note .set-small-btn { flex: none; white-space: nowrap; }

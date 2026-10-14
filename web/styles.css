@@ -1675,6 +1675,9 @@ input[type="url"]:focus {
   --purr-red: var(--danger);
   --purr-red-bg: var(--danger-soft);
   --purr-shadow: var(--shadow-sm);
+  --purr-blue-2: var(--accent-2);
+  --purr-on-color: var(--accent-ink);
+  --purr-soft: var(--surface);
   color: var(--ink);
 }
 #result .purr-card .purr-btn, #recovery .purr-card .purr-btn,
@@ -1725,3 +1728,12 @@ textarea:focus, input[type="url"]:focus { border-color: var(--accent); box-shado
 .confirm-cancel-btn { border: 2px solid var(--line-strong); }
 #result .purr-btn-primary, #recovery .purr-btn-primary { color: var(--accent-ink); }
 #result .purr-voice { border-radius: 999px; }
+/* Pickers: the browser's own arrow sat squeezed against the pill's round end, so draw our own,
+   placed inside the curve with room before it (works in light and dark mode). */
+.pick select {
+  appearance: none; -webkit-appearance: none;
+  padding: 0 34px 0 14px; font-size: 14px; font-weight: 500;   /* same as the extension's pickers (standard select spacing) */
+  field-sizing: content;   /* as wide as the chosen option, not the longest one */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%23968c82' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 12px 8px;
+}

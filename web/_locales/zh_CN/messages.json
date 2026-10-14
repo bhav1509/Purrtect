@@ -206,9 +206,6 @@
   "pauseSite": {
     "message": "在此网站暂停"
   },
-  "info_pause": {
-    "message": "在你重新开启前，停止此网站的自动检查并隐藏标记。选中文字检查仍可使用。"
-  },
   "recentTitle": {
     "message": "最近的警告"
   },
@@ -262,9 +259,6 @@
   },
   "footer_feedback": {
     "message": "反馈"
-  },
-  "pauseOn": {
-    "message": "在 $1 上暂停"
   },
   "set_cursorCat": {
     "message": "鼠标小猫"
@@ -844,5 +838,44 @@
   },
   "refresh": {
     "message": "刷新"
+  },
+  "powerLabel": {
+    "message": "Purrtect 开或关"
+  },
+  "powerOn": {
+    "message": "开"
+  },
+  "powerOff": {
+    "message": "关"
+  },
+  "offNote": {
+    "message": "Purrtect 已关闭，不会检查或发送任何内容。"
+  },
+  "turnOn": {
+    "message": "开启"
+  },
+  "turnedOn": {
+    "message": "Purrtect 已开启"
+  },
+  "turnedOff": {
+    "message": "Purrtect 已关闭"
+  },
+  "lc_riskyAround": {
+    "message": "这个链接所在的消息看起来有风险。"
+  },
+  "set_theme": {
+    "message": "外观"
+  },
+  "theme_auto": {
+    "message": "自动"
+  },
+  "theme_light": {
+    "message": "浅色"
+  },
+  "theme_dark": {
+    "message": "深色"
+  },
+  "info_theme": {
+    "message": "为此面板以及 Gmail 和 WhatsApp 上的 Purrtect 提示框选择浅色或深色。“自动”会跟随电脑的设置。"
   }
 }

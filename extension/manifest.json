@@ -3,6 +3,7 @@
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "version": "1.0.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwzIqmb/CBwsIGsjNHzxNKPF9vDTF3gmT5iiDWA6nZKwPoQKKBEE+ElqGIkwIPSxhsu6qb4pIX9yUuuufCmonwdBZuAg61pHhc+yzEPOOEvpgjP78rbaJ+5Kl9PVn9OmpklJ8kw1TJOCNwq9t510eANCaHt68nNF0Siz83jAQmAthQm+iwrv8YoSrzDXr3f2ClHHXFj2JBtfm8pqnI/lM/meZMeebtpqgvMeQX+mm7RHdQQ6qXUYIhGhxGe55afIHpeiwFW5JVBrTmQOgYuIhGTPSXloKjT9CZ8KKOTrXuXdfZlCT5IsDB6DYgMX30WhPRQwtdi7u0CX2eTFAFcre4wIDAQAB",
   "default_locale": "en",
   "icons": {
     "16": "mascots/icon-16.png",
@@ -98,5 +99,13 @@
         "<all_urls>"
       ]
     }
-  ]
+  ],
+  "externally_connectable": {
+    "matches": [
+      "https://project-1e762a2b-4a0e-4e91-981.web.app/*",
+      "https://project-1e762a2b-4a0e-4e91-981.firebaseapp.com/*",
+      "http://localhost/*",
+      "http://127.0.0.1/*"
+    ]
+  }
 }
