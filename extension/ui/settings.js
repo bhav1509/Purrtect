@@ -148,7 +148,7 @@
   // ---------- frame: header, content, pinned footer ----------
   function header() {
     const brand = el("a", { class: "set-brand", href: WEBSITE, target: "_blank", rel: "noopener", title: t("openWebsite") },
-      el("img", { src: chrome.runtime.getURL("mascots/cat/icon.png"), alt: "", width: 48, height: 48, class: "purr-mascot" }),
+      el("img", { src: chrome.runtime.getURL("brand/logo.png"), alt: "", width: 44, height: 44 }),
       el("span", { class: "brand-text" }, el("span", { class: "brand-name" }, "Purrtect"), el("span", { class: "set-tagline" }, t("tagline"))));
     if (welcome) return el("header", { class: "bar" }, brand);
     if (view === "settings") return el("header", { class: "bar" }, brand);

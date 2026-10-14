@@ -32,7 +32,7 @@
 
   function check(msg) {
     try {
-      if (msg.dataset.purrSeen || PurrSite.paused()) return;
+      if (msg.dataset.purrSeen || PurrSite.quiet()) return;
       msg.dataset.purrSeen = "1";
       const textEl = msg.querySelector(SEL.text);
       const links = [...msg.querySelectorAll("a[href]")].map((a) => a.href).filter((h) => /^https?:/i.test(h));

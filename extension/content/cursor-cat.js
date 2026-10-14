@@ -1,24 +1,29 @@
-// Cursor cat (setting "Cursor cat", off by default): the orange pixel cat follows the cursor on Gmail
+// Cursor cat (setting "Cursor cat", off by default): the white cat follows the cursor on Gmail
 // and WhatsApp Web, and on every website with "On all websites" (content/everywhere.js).
 // It never takes clicks (pointer-events: none) and respects "reduce motion".
-// Animations come from mascots/cat/sheet.png (Cat Game Pixel Pack, orange tabby recoloured neon; see sheet.json).
+// Animations come from mascots/cat/sheet.png + sheet.json (built by scripts/build_cursor_cat.py):
+// sit (tail wag), sleep, box (pops out of a box), play (with a fish), run (also used, slower, for
+// walking), safe (✓), notsafe (⚠), unsure (?). The running cat's head is held level in every frame.
 //   follow: walks/runs after the cursor (leaning up or down when it runs diagonally), sits when
-//           it stops, hops in its box, then naps (~30 s)
-//   typing: sits and watches, tail swishing   scrolling: runs along   click: little jump
-//   cursor on a link: looks at it and shows ✓ / ! / ⚠ (puffs up and hisses at risky ones);
+//           it stops (tail wagging), plays with a fish (~10 s), pops up in a box (~20 s), then naps (~30 s)
+//   typing: sits and watches   scrolling: runs along   click: runs to the click
+//   cursor on a link: looks at it and shows ✓ / ! / ⚠; at a risky one it gets scared ("notsafe")
 //     the link card (link-card.js) underneath says where it goes
-//   risky message on screen: runs to its ⚠ widget and stays beside it
-//   click on a risky link: jumps in front of it (next to the click warning)
-//   safe message: now and then plays with its yarn, with a little heart
+//   risky message on screen: runs to its ⚠ widget, scared, and stays beside it
+//   click on a risky link: appears in front of it, scared (next to the click warning)
+//   safe message, or cursor on a well-known site's link: a happy ✓
+//   cursor on an unfamiliar link, or a button that hides its address: a puzzled "?"
 // site.js and click-warning.js announce risk with "purr-risk-found", "purr-risk-click", "purr-safe-found".
 (function () {
   "use strict";
   if (self.PurrCursorCat || !self.PurrSite || (PurrSite.SITE === "other" && !PurrSite.everywhere)) return;
 
-  const ZOOM = 1.5;                        // 32 px pixel-art frames shown at 48 px (3 device px per art px on Retina)
-  const FRAME = 32 * ZOOM;
+  let ZOOM = 0.5;                          // 1 / sheet.density: the sheet is drawn at 2x, shown at exactly half
+  const FLIP = new Set(["run", "play"]);   // side-on poses face the way the cat goes; the others face you
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  let sheet = null;                        // sheet.json: { frame, feet: [16, 29], animations: { name: { row, frames, fps, loop } } }
+  let sheet = null;                        // sheet.json: { frameW, frameH, animations: { name: { row, frames, fps, loop } } }
+  let CW = 48, CH = 48;                    // a cell on screen, px (set from the sheet)
+  const ALIAS = { idle: "sit", jump: "run", walk: "run" };   // walking = the running frames, stepped slower (a trot)
 
   let root = null, sprite = null, bubble = null;
   let x = innerWidth - 80, y = innerHeight - 24;     // the cat's feet, viewport px
@@ -31,11 +36,14 @@
   let action = null;                                 // a reaction in progress
   let typingUntil = 0, scrollUntil = 0;
   let anim = "", animStart = 0;
+  let odo = 0;                                       // distance walked (px): walk/run frames follow it, so feet don't slide
+  let gait = "walk";                                 // walk or run, switched with a margin so it doesn't flicker
+  let vel = 0;                                       // current speed, eased (px per frame)
   let running = false;
   const cooldown = {};
 
   const on = () => PurrStore.settings.cursorCat === true && (!PurrSite.everywhere || PurrStore.settings.catEverywhere === true);
-  const enabled = () => on() && !PurrSite.paused();
+  const enabled = () => on() && !PurrSite.quiet();   // paused, or Manual mode: no cat
   const reduce = () => reduceMotion.matches;
 
   async function mount() {
@@ -43,13 +51,17 @@
     sheet = await fetch(chrome.runtime.getURL("mascots/cat/sheet.json")).then((r) => r.json());
     const rows = Object.keys(sheet.animations).length;
     const cols = Math.max(...Object.values(sheet.animations).map((a) => a.frames));
+    ZOOM = 1 / (sheet.density || 2);
+    CW = Math.round(sheet.frameW * ZOOM); CH = Math.round(sheet.frameH * ZOOM);
     root = document.createElement("div");
     root.className = "purr-ccat";
     root.setAttribute("aria-hidden", "true");
+    root.style.width = `${CW}px`; root.style.height = `${CH}px`;
     sprite = document.createElement("div");
     sprite.className = "purr-ccat-sprite";
+    sprite.style.width = `${CW}px`; sprite.style.height = `${CH}px`;
     sprite.style.backgroundImage = `url("${chrome.runtime.getURL("mascots/cat/sheet.png")}")`;
-    sprite.style.backgroundSize = `${cols * FRAME}px ${rows * FRAME}px`;
+    sprite.style.backgroundSize = `${cols * CW}px ${rows * CH}px`;
     bubble = document.createElement("span");
     bubble.className = "purr-ccat-bubble";
     root.append(sprite, bubble);
@@ -57,34 +69,38 @@
   }
 
   // Show animation `name`; restart it when it changes. Non-looping animations hold their last frame.
-  function play(name, now) {
+  function play(name) {
+    const stride = name === "walk" ? 16 : 22;         // px moved per frame: unhurried steps, slower when walking
+    name = ALIAS[name] || name;
+    const now = performance.now();
     if (name !== anim) { anim = name; animStart = now; root.dataset.anim = name; }
     const a = sheet.animations[name];
-    let f = reduce() ? 0 : Math.floor(((now - animStart) / 1000) * a.fps);
+    // Walking and running step with the distance covered (one frame per a.stride px); everything
+    // else plays on time. Switching between walk and run keeps the step, so there's no jump.
+    let f = reduce() ? 0 : name === "run" ? Math.floor(odo / stride)
+      : Math.floor(((now - animStart) / 1000) * a.fps);
     f = a.loop ? f % a.frames : Math.min(f, a.frames - 1);
-    sprite.style.backgroundPosition = `-${f * FRAME}px -${a.row * FRAME}px`;
-    // The art is side-on only, so a diagonal run is shown by leaning the whole cat along its path.
-    const target = /^(walk|run|jump)$/.test(name) ? wantTilt : 0;
-    tilt += (target - tilt) * 0.2;
-    if (Math.abs(tilt) < 0.5 && !target) tilt = 0;
-    sprite.style.transform = `scaleX(${dir}) rotate(${tilt.toFixed(1)}deg)`;
+    sprite.style.backgroundPosition = `-${f * CW}px -${a.row * CH}px`;
+    // A diagonal run is shown by leaning the whole cat along its path.
+    // Only walking and running lean; every other pose stands straight at once (no wobble).
+    if (name === "run") tilt += (wantTilt - tilt) * 0.2;
+    else tilt = 0;
+    // Front-facing poses are never mirrored, so the ✓, ! and ⚠ always read the right way round.
+    sprite.style.transform = `scaleX(${FLIP.has(name) ? dir : 1}) rotate(${tilt.toFixed(1)}deg)`;
   }
 
-  function hush() { clearTimeout(say.t); bubble.className = "purr-ccat-bubble"; }
-  function say(text, kind, ms) {
-    bubble.textContent = text;
-    bubble.className = `purr-ccat-bubble show ${kind || ""}`;
-    clearTimeout(say.t);
-    say.t = setTimeout(() => { bubble.className = "purr-ccat-bubble"; }, ms || 1400);
-  }
+  function hush() { bubble.className = "purr-ccat-bubble"; }
+
 
   function place() {
-    const [fx, fy] = sheet.feet; // feet anchor inside the 32 px frame
-    root.style.transform = `translate(${Math.round(x - fx * ZOOM)}px, ${Math.round(y - fy * ZOOM)}px)`;
+    // (x, y) is where the cat sits: the bottom centre of its 48 px box.
+    // half-pixel steps (whole device pixels on Retina): smooth slow moves without blurring the art
+    const hp = (v) => Math.round(v * 2) / 2;
+    root.style.transform = `translate(${hp(x - CW / 2)}px, ${hp(y - CH)}px)`;
     // Keep a shown bubble (e.g. a long website name) inside the window.
     if (bubble.classList.contains("show")) {
       const half = bubble.offsetWidth / 2;
-      const cx = x - fx * ZOOM + FRAME / 2;
+      const cx = x;
       const shift = Math.max(0, 6 - (cx - half)) + Math.min(0, innerWidth - 6 - (cx + half));
       bubble.style.marginLeft = `${Math.round(shift)}px`;
     }
@@ -97,16 +113,17 @@
     const d = Math.hypot(dx, dy);
     if (Math.abs(dx) > 12) dir = dx > 0 ? 1 : -1;
     if (d < 3 || reduce()) { x = tx; y = ty; wantTilt = 0; return true; }
-    // Lean along the path: up to 45° nose-up or nose-down; flat when running sideways.
-    wantTilt = Math.max(-45, Math.min(45, (Math.atan2(dy, Math.abs(dx)) * 180) / Math.PI));
+    // Lean along the path: up to 30° nose-up or nose-down; flat when running sideways.
+    wantTilt = Math.max(-30, Math.min(30, (Math.atan2(dy, Math.abs(dx)) * 180) / Math.PI));
     const step = Math.min(d, speed);
     x += (dx / d) * step;
     y += (dy / d) * step;
+    odo += step;
     return false;
   }
 
   function clampTarget(tx, ty) {
-    return [Math.max(FRAME / 2, Math.min(innerWidth - FRAME / 2, tx)), Math.max(FRAME, Math.min(innerHeight - 4, ty))];
+    return [Math.max(CW / 2, Math.min(innerWidth - CW / 2, tx)), Math.max(CH, Math.min(innerHeight - 4, ty))];
   }
 
   function tick(now) {
@@ -122,21 +139,20 @@
         const [tx, ty] = action.target;
         const there = moveTo(tx, ty, action.speed || 9);
         if (there && action.faceTo !== undefined) dir = action.faceTo;
-        play(there ? action.anim : action.moving || "run", now);
+        play(there ? action.anim : action.moving || "run");
         if (there && !action.arrivedAt) action.arrivedAt = now;
         if (there && now - action.arrivedAt > action.hold) action = null;
       } else {
-        play(action.anim, now);
-        if (now > action.until) { action = null; root.classList.remove("puff"); }
+        play(action.anim);
+        if (now > action.until) action = null;
       }
       place();
       return;
     }
 
-    root.classList.toggle("swish", now < typingUntil);
-    if (now < scrollUntil) { play(reduce() ? "sit" : "run", now); place(); return; }
-    if (now < typingUntil) { play("sit", now); place(); return; }
-    if (mouse.x === null) { play("sleep", now); place(); return; }
+    if (now < scrollUntil) { play(reduce() ? "sit" : "run"); place(); return; }
+    if (now < typingUntil) { play("sit"); place(); return; }
+    if (mouse.x === null) { play("sleep"); place(); return; }
 
     // Trail beside and slightly below the cursor, never under it. The cat keeps to the side of the
     // cursor it is already on and only switches once the cursor is clearly past it; it starts
@@ -146,16 +162,20 @@
     const [tx, ty] = clampTarget(mouse.x + side * 36, mouse.y + 30);
     const dist = Math.hypot(tx - x, ty - y);
     if (!moving && dist > 28) moving = true;
-    if (moving && dist < 4) moving = false;
+    if (moving && dist < 4) { moving = false; vel = 0; }
     if (moving) {
-      const speed = Math.min(9, 1.5 + dist * 0.08);
+      // ease into and out of speed instead of jumping, so starts and stops look natural
+      vel += (Math.min(5, 1 + dist * 0.045) - vel) * 0.08;
+      const speed = vel;
       moveTo(tx, ty, speed);
-      play(reduce() ? "sit" : speed > 4.5 ? "run" : "walk", now);
+      if (gait === "walk" && speed > 3.6) gait = "run";
+      else if (gait === "run" && speed < 2.4) gait = "walk";
+      play(reduce() ? "sit" : gait);
     } else {
       if (mouse.x > x + 14) dir = 1;          // face the cursor, with a dead zone
       else if (mouse.x < x - 14) dir = -1;
       const idle = Date.now() - lastActivity;
-      play(idle > 30000 ? "sleep" : idle > 15000 ? "box" : idle > 4000 ? "sit" : "idle", now);
+      play(idle > 30000 ? "sleep" : idle > 20000 ? "box" : idle > 10000 ? "play" : "sit");
     }
     place();
   }
@@ -179,23 +199,36 @@
     lastActivity = Date.now();
   }, { passive: true });
 
-  // The cursor rests on a link (link-card.js judged it): the cat looks at it and shows the sign;
-  // the link card underneath says where it goes. Risky: it also puffs up and hisses.
-  const SIGN = { green: ["✓", "ok"], yellow: ["!", "warn"], red: ["⚠", "danger"], unknown: ["?", ""] };
+  // The cursor rests on a link (link-card.js judged it): the cat looks at it and reacts with its own
+  // sign (✓ / ? / ⚠ are part of the animations, so there's no extra bubble);
+  // the link card underneath says where it goes. Risky: it looks scared ("notsafe"); well-known: a happy ✓.
   addEventListener("purr-link-hover", (e) => {
     if (!enabled() || !root || !sheet) return;
     const { el: link, level } = e.detail;
-    const [sign, kind] = SIGN[level] || SIGN.unknown;
-    say(sign, kind, 60000); // stays while the cursor is on the link
     if (action) return;
     const r = link.getBoundingClientRect();
     dir = r.left + r.width / 2 > x ? 1 : -1; // look at the link
-    if (level === "red" && react("hiss:" + (link.href || link.innerText), 4000)) {
-      action = { anim: "idle", until: performance.now() + 1300 };
-      root.classList.add("puff");
+    if ((level === "red" || level === "yellow") && react("hiss:" + (link.href || link.innerText), 4000)) {
+      action = { anim: "notsafe", until: performance.now() + 1300 };
+    } else if (level === "green" && react("tick:" + (link.href || link.innerText), 4000)) {
+      action = { anim: "safe", until: performance.now() + 1400 };   // a happy ✓ for a well-known site
+    } else if ((level === "unfamiliar" || level === "unknown") && react("unsure:" + (link.href || link.innerText), 4000)) {
+      action = { anim: "unsure", until: performance.now() + 1600 }; // "?" for a site it doesn't know
     }
   });
   addEventListener("purr-link-leave", () => { if (root) hush(); });
+
+  // The link card opened: walk over and sit beside it (right side, or left if there's no room),
+  // showing the link's verdict, so the card never covers the cat. Back to following when it closes.
+  const VERDICT = { green: "safe", unfamiliar: "unsure", unknown: "unsure", yellow: "notsafe", red: "notsafe" };
+  addEventListener("purr-linkcard-open", (e) => {
+    if (!enabled() || !root || !sheet) return;
+    const { rect: r, level } = e.detail;
+    const right = r.right + CW / 2 + 6 <= innerWidth;
+    const [tx, ty] = clampTarget(right ? r.right + CW / 2 + 6 : r.left - CW / 2 - 6, r.bottom);
+    action = { anim: VERDICT[level] || "sit", moving: "walk", target: [tx, ty], speed: 4.5, hold: 1e9, parked: true };
+  });
+  addEventListener("purr-linkcard-close", () => { if (action && action.parked) action = null; });
 
   addEventListener("keydown", (e) => {
     const t = e.target;
@@ -216,11 +249,11 @@
     if (!enabled() || !root || reduce() || action) return;
     if (e.target.closest && e.target.closest(".purr-card, .purr-overlay, .purr-widget-wrap, .purr-select-btn, a[data-purr-risk]")) return;
     const [tx, ty] = clampTarget(e.clientX - dir * 24, e.clientY + 34);
-    action = { anim: "sit", moving: "jump", target: [tx, ty], speed: 20, hold: 300 };
+    action = { anim: "sit", moving: "run", target: [tx, ty], speed: 8, hold: 300 };
   }, true);
 
   // A risky message came on screen: run to its ⚠ widget and stay beside it.
-  // (If the cat is still loading its sheet, remember the latest one and react once it's ready.)
+  // (If the cat isn't on the page yet, remember the latest one and react once it is.)
   let pendingRisk = null;
   addEventListener("purr-risk-found", (e) => onRiskFound(e.detail));
   function onRiskFound(detail) {
@@ -231,27 +264,26 @@
     const r = w.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
     const [tx, ty] = clampTarget(r.left - 30, r.bottom + 44);
-    action = { anim: "idle", target: [tx, ty], speed: 11, hold: 2600, faceTo: 1 };
-    say("!", detail.level === "red" ? "danger" : "warn", 3200);
+    action = { anim: "notsafe", target: [tx, ty], speed: 7, hold: 2600, faceTo: 1 };
   }
 
   // A risky link was clicked: jump in front of it.
   addEventListener("purr-risk-click", (e) => {
     if (!enabled() || !root) return;
     const r = e.detail && e.detail.rect;
-    if (r) { [x, y] = clampTarget(r.left + r.width / 2, r.bottom + FRAME); }
+    if (r) { [x, y] = clampTarget(r.left + r.width / 2, r.bottom + CH); }
     document.body.append(root); // above the warning overlay
     root.classList.add("over");
-    action = { anim: "jump", until: performance.now() + 2600 };
-    say("!", "danger", 2600);
+    action = { anim: "notsafe", until: performance.now() + 2600 };
     setTimeout(() => root.classList.remove("over"), 2700);
   });
 
   // A safe message: now and then, plays with its yarn and shows a little heart.
+  // A safe message came on screen: a happy ✓ every time (at most once every 6 s, so a page of
+  // safe emails doesn't keep it busy). The fish play now happens on its own when idle.
   addEventListener("purr-safe-found", () => {
-    if (!enabled() || !root || action || Math.random() > 0.35 || !react("heart", 20000)) return;
-    action = { anim: "play", until: performance.now() + 1600 };
-    say("♥", "love", 1600);
+    if (!enabled() || !root || action || !react("tick", 6000)) return;
+    action = { anim: "safe", until: performance.now() + 1600 };
   });
 
   PurrSite.ready.then(() => {

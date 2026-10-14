@@ -27,10 +27,9 @@
     return (env.settings.uiLang || "en").replace("zh_CN", "zh");
   }
 
-  // Moods are gently animated (APNG); with "reduce motion" on, a still frame is used instead.
-  const reduceMotion = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Mood images are still pictures (the logo cat with a small badge), so "reduce motion" needs nothing extra.
   function mascotUrl(state) {
-    return env.assetUrl(`mascots/cat/${state}${reduceMotion ? "-still" : ""}.png`);
+    return env.assetUrl(`mascots/cat/${state}.png`);
   }
 
   function mascotImg(state, size, extraClass) {

@@ -666,7 +666,7 @@
     "message": "手動"
   },
   "modeHelp": {
-    "message": "自動：すべてのリンクと、初めての相手の全文をチェック。手動：選んだものだけをチェック。"
+    "message": "自動はすべてのリンクと、新しい送信者の本文全体を確認します。手動は静かに待機し（バッジ・リンクカード・カーソルの猫なし）、選んだものだけを確認します：文字を選んで「Purrtect でチェック」を押すか、右クリックしてください。"
   },
   "set_sensitivity": {
     "message": "注意の強さ"
@@ -808,5 +808,41 @@
   },
   "payment_crypto": {
     "message": "暗号資産"
+  },
+  "hit_risky_site": {
+    "message": "危険な種類のサイト"
+  },
+  "hitwhy_risky_site": {
+    "message": "海賊版、トレント、不正ソフト、ギャンブル、アダルトのサイトには偽のダウンロードや有害な広告がよくあります。"
+  },
+  "hit_lure_word": {
+    "message": "誘い文句や公式風の言葉"
+  },
+  "hitwhy_lure_word": {
+    "message": "アドレスに login、verify、bonus、claim などの言葉を入れるのは、偽ページを本物らしく見せるよくある手口です。"
+  },
+  "hit_odd_address": {
+    "message": "不自然なアドレス"
+  },
+  "hitwhy_odd_address": {
+    "message": "名前に数字を混ぜる、ハイフンが多い、とても長いアドレスは、本物のサイトをまねるためによく使われます。"
+  },
+  "hit_free_hosting": {
+    "message": "無料のサイトサービス"
+  },
+  "hitwhy_free_hosting": {
+    "message": "この無料サービスでは誰でもページを作れるため、運営者が誰かの証明になりません。"
+  },
+  "lc_unfamiliar": {
+    "message": "知らないサイト"
+  },
+  "lc_whyUnfamiliar": {
+    "message": "警告のサインは見つかりませんでしたが、このサイトは有名サイトのリストにありません。送り主を信頼できる場合だけ開くか、Gemini に確認してもらってください。"
+  },
+  "updatedRefresh": {
+    "message": "Purrtect が更新されました。引き続き使うには、このページを再読み込みしてください。"
+  },
+  "refresh": {
+    "message": "再読み込み"
   }
 }

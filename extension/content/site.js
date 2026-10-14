@@ -15,6 +15,26 @@
   const UI = self.PurrUI;
   const stats = { checked: 0, warnings: 0 }; // this page only; shown on the side panel's Home view
   const paused = () => PurrStore.isPaused(HOST);
+
+  // After Purrtect is updated or reloaded, this page still runs the old copy until it's refreshed;
+  // the old copy can't talk to Chrome any more. Instead of buttons quietly doing nothing, say so.
+  const alive = () => { try { return !!(chrome.runtime && chrome.runtime.id); } catch (_) { return false; } };
+  function showUpdated() {
+    if (document.querySelector(".purr-updated")) return;
+    const bar = UI.el("div", { class: "purr-updated", role: "alert" },
+      UI.el("span", {}, UI.t("updatedRefresh")),
+      UI.el("button", { type: "button", class: "purr-btn purr-btn-primary", onclick: () => location.reload() }, UI.t("refresh")),
+      UI.el("button", { type: "button", class: "purr-icon-btn", "aria-label": UI.t("close"), onclick: () => bar.remove() }, "×"));
+    document.body.append(bar);
+  }
+  // Any click on Purrtect's own buttons while out of date shows the notice (and does nothing else).
+  addEventListener("click", (e) => {
+    if (alive() || !e.target.closest || !e.target.closest(".purr-linkcard, .purr-card, .purr-widget-wrap, .purr-select-btn, .purr-overlay")) return;
+    if (e.target.closest(".purr-updated")) return;
+    e.preventDefault(); e.stopPropagation(); showUpdated();
+  }, true);
+  const manual = () => SITE !== "other" && (PurrStore.settings.modes || {})[SITE] === "manual";
+  const quiet = () => paused() || manual();
   const everywhere = SITE === "other" && self.PurrEverywhere === true; // loaded by "On all websites"
   const send = (msg) => chrome.runtime.sendMessage(msg);
   let rules = null;
@@ -40,10 +60,14 @@
   })();
 
   // "Pause on this site": hide the widgets and stop automatic checks until it's switched back on.
+  // Paused, or Manual mode on Gmail / WhatsApp: quiet. No badges, link cards or cursor cat; checks
+  // run only when asked (selected text, right-click). Back to Auto: check what's on screen now.
   function showPaused() {
-    const was = document.documentElement.classList.contains("purr-paused");
-    document.documentElement.classList.toggle("purr-paused", paused());
-    if (was && !paused()) dispatchEvent(new Event("purr-rescan")); // check what's on screen now
+    const root = document.documentElement;
+    const was = root.classList.contains("purr-paused") || root.classList.contains("purr-manual");
+    root.classList.toggle("purr-paused", paused());
+    root.classList.toggle("purr-manual", manual());
+    if (was && !quiet()) dispatchEvent(new Event("purr-rescan"));
   }
 
   function showBanner() {
@@ -65,8 +89,9 @@
   }
 
   // Where a link really goes and how risky it looks, judged in the browser only (nothing is sent).
-  // Used by the link card and the cursor cat. Each link gets its own level; a link that looks
-  // fine but sits in a message flagged as risky is shown as "careful", not "fine".
+  // Used by the link card and the cursor cat. Each link gets its own level: green (a well-known
+  // website), unfamiliar (no warning signs, but not on the trusted list), yellow or red. A link that
+  // looks fine but sits in a message flagged as risky is shown as "careful".
   async function linkInfo(a) {
     await ready;
     const href = realHref(a);
@@ -75,8 +100,10 @@
     if (!r) return null;
     if (PurrStore.isSafeLink(await PurrStore.hash(href))) return { host: r.host, level: "green", hits: [] };
     let level = PurrRules.levelFor(r.points, rules, PurrStore.settings.sensitivity);
+    // Only well-known websites get ✓; anything else that looks fine is "unfamiliar", never "safe".
+    if (level === "green" && !r.trusted) level = "unfamiliar";
     const inRiskyMessage = !!a.dataset.purrRisk && a.dataset.purrRisk !== "green";
-    if (inRiskyMessage && level === "green") level = "yellow";
+    if (inRiskyMessage && (level === "green" || level === "unfamiliar")) level = "yellow";
     return { host: r.host, level, hits: r.hits, inRiskyMessage };
   }
 
@@ -241,10 +268,14 @@
   // Manual check of selected text (or a right-clicked link). Sent to the backend, masked,
   // after approval when "Ask me every time" is on.
   async function manualScan(text, links, anchor) {
+    hideSelectBtn();                                     // one box at a time: the scan replaces the button
+    if (!alive()) { showUpdated(); return; }
     await ready;
     const local = PurrRules.scoreMessage({ text, links, scanText: true, sender: { isNew: true } }, rules, PurrStore.settings.sensitivity);
     const result = await askBackend(text, local.links.map((l) => l.url), local, true, anchor,
       () => UI.verdictCard({ pending: true }, { anchor }));
+    // "Don't send" or ✕ on the approval popup: the person said no, so nothing else opens (one box only).
+    if (result.notSent) return;
     UI.verdictCard(result, { anchor, actions: [{ label: UI.t("iClicked"), primary: true, onClick: () => openRecovery(anchor) }] });
   }
 
@@ -265,14 +296,20 @@
   // "Check with Purrtect" button beside selected text (Gmail and WhatsApp, any mode).
   let selectBtn = null;
   function hideSelectBtn() { if (selectBtn) { selectBtn.remove(); selectBtn = null; } }
+  // Only one way to check at a time: while a link card is open (it has its own "Check with Gemini"),
+  // the "Check with Purrtect" button for selected text stays away.
+  let linkCardOpen = false;
+  addEventListener("purr-linkcard-open", () => { linkCardOpen = true; hideSelectBtn(); });
+  addEventListener("purr-linkcard-close", () => { linkCardOpen = false; });
   if (SITE !== "other" || everywhere) {
     document.addEventListener("mousedown", (e) => { if (selectBtn && !selectBtn.contains(e.target)) hideSelectBtn(); }, true);
     document.addEventListener("mouseup", (e) => {
+      if (e.button !== 0) return;                       // right-click (context menu) never brings the button back
       if (e.target.closest && e.target.closest(".purr-card, .purr-select-btn, .purr-overlay, .purr-widget-wrap")) return;
       setTimeout(() => {
         const sel = getSelection();
         const text = String(sel || "").trim();
-        if (!UI.env || text.length < 8 || !sel.rangeCount) return;
+        if (!UI.env || text.length < 8 || !sel.rangeCount || linkCardOpen) return;
         const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         const links = [...range.cloneContents().querySelectorAll("a[href]")].map((a) => a.href);
@@ -295,5 +332,5 @@
     else if (msg.type === "manualScan") manualScan(msg.text || "", msg.links || [], contextAnchor(msg.links));
   });
 
-  self.PurrSite = { ready, process, SITE, paused, realHref, linkInfo, manualScan, everywhere };
+  self.PurrSite = { ready, process, SITE, paused, quiet, realHref, linkInfo, manualScan, everywhere };
 })();
