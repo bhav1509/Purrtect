@@ -28,6 +28,7 @@
       return {
         url: clean,
         host: u.hostname.toLowerCase().replace(/^www\./, ""),
+        path: decodeURIComponent(u.pathname + u.search).toLowerCase(),
         explicitHttp: /^http:\/\//i.test(clean),
       };
     } catch (_) {
@@ -83,21 +84,52 @@
     return null;
   }
 
-  // Points for one link, from the link rules only.
+  // A well-known website (or a bank/brand's own domain). Free-hosting sites never count:
+  // anyone can put a page on sites.google.com, github.io, web.app and the like.
+  function isTrusted(host, rules) {
+    if ((rules.trusted_domains || []).includes(host)) return true;   // an exact address (e.g. our own web.app site)
+    if ((rules.free_hosting || []).some((d) => hostIs(host, d))) return false;
+    return (rules.trusted_domains || []).some((d) => hostIs(host, d)) ||
+      rules.brands.some((b) => b.domains.some((d) => hostIs(host, d)));
+  }
+
+  // Words match whole parts of the address ("bet" in bet-365.com, not in alphabet.com);
+  // longer words (5+ letters) also match inside a part ("1337x" in x1337x).
+  function hasWord(parts, words, allowInside) {
+    return words.some((w) => parts.some((p) => p === w || (allowInside && w.length >= 5 && p.includes(w))));
+  }
+
+  // Tricks in the shape of the address: digits mixed into the name (x1337x, paypa1), lots of
+  // hyphens or dots, or a very long name.
+  function oddAddress(host) {
+    const name = mainLabel(host);
+    const mixed = /[a-z]/.test(name) && /\d/.test(name) && !/^\d+[a-z]{1,3}$/.test(name);
+    return mixed || (host.match(/-/g) || []).length >= 3 || host.split(".").length >= 5 || host.length > 35;
+  }
+
+  // Points for one link, from the link rules only. trusted=true: a well-known website.
   function scoreLink(raw, rules) {
     const parsed = parseUrl(raw);
     if (!parsed) return null;
-    const { host } = parsed;
+    const { host, path } = parsed;
     const P = rules.points;
     const hits = [];
-    if (IP_HOST_RE.test(host)) hits.push("ip_link");
-    const brand = lookalikeBrand(host, rules);
-    if (brand) hits.push("lookalike");
-    if (rules.shorteners.some((s) => hostIs(host, s))) hits.push("shortener");
+    const trusted = isTrusted(host, rules);
     if (parsed.explicitHttp) hits.push("plain_http");
-    if (rules.risky_tlds.some((t) => host.endsWith(t))) hits.push("risky_tld");
-    const points = hits.reduce((sum, h) => sum + P[h], 0);
-    return { url: parsed.url, host, hits, points, brand };
+    if (!trusted) {
+      const hostParts = host.split(/[.-]/);
+      const pathParts = path.split(/[^a-z0-9]+/).filter(Boolean);
+      if (IP_HOST_RE.test(host)) hits.push("ip_link");
+      if (lookalikeBrand(host, rules)) hits.push("lookalike");
+      if (rules.shorteners.some((s) => hostIs(host, s))) hits.push("shortener");
+      if (rules.risky_tlds.some((t) => host.endsWith(t))) hits.push("risky_tld");
+      if (hasWord(hostParts, rules.risky_site_words || [], true)) hits.push("risky_site");
+      if (hasWord([...hostParts, ...pathParts], rules.lure_words || [], false)) hits.push("lure_word");
+      if (!IP_HOST_RE.test(host) && oddAddress(host)) hits.push("odd_address");
+      if ((rules.free_hosting || []).some((d) => hostIs(host, d))) hits.push("free_hosting");
+    }
+    const points = hits.reduce((sum, h) => sum + (P[h] || 0), 0);
+    return { url: parsed.url, host, hits, points, brand: lookalikeBrand(host, rules), trusted };
   }
 
   // Display name or WhatsApp business name claims a bank/courier/government it can't back up.
@@ -176,7 +208,7 @@
     return out;
   }
 
-  const api = { scoreMessage, scoreLink, claimsInstitution, levelFor, extractLinks, parseUrl, mask };
+  const api = { scoreMessage, scoreLink, isTrusted, claimsInstitution, levelFor, extractLinks, parseUrl, mask };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.PurrRules = api;
 })(typeof self !== "undefined" ? self : this);

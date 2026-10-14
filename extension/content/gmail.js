@@ -12,7 +12,7 @@
   function check(msg) {
     try {
       const body = msg.querySelector(SEL.body);
-      if (!body || !body.innerText.trim() || msg.dataset.purrSeen || PurrSite.paused()) return;
+      if (!body || !body.innerText.trim() || msg.dataset.purrSeen || PurrSite.quiet()) return;
       msg.dataset.purrSeen = "1";
       const chip = msg.querySelector(SEL.sender);
       const address = chip ? chip.getAttribute("email") || "" : "";

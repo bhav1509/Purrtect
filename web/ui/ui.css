@@ -1,30 +1,28 @@
 /* Purrtect UI. Every selector is prefixed purr- so Gmail and WhatsApp are not affected.
    Used by the extension and the web checker.
-   Theme: matches the pixel-art orange cat — cream paper, the cat's brown outline, orange accent,
-   chunky borders, square-ish corners, hard pixel shadows, and a pixel font for headlines and badges.
-   The same warm theme is used whether the computer is in light or dark mode. */
-@font-face {
-  font-family: "Jersey 10";
-  src: url("chrome-extension://__MSG_@@extension_id__/fonts/Jersey10-Regular.ttf") format("truetype");
-  font-display: swap;
-}
+   Theme: matches the cat-and-fish logo and the website — white, the logo's grey outline, the
+   fish's orange, round shapes and soft shadows; Inter for text, Outfit for headlines, badges and
+   buttons (the website's fonts). Same theme in light and dark mode. */
+/* The website's fonts, bundled: Inter for text, Outfit for buttons. */
+@font-face { font-family: "Inter"; src: url("chrome-extension://__MSG_@@extension_id__/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Outfit"; src: url("chrome-extension://__MSG_@@extension_id__/fonts/Outfit-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 .purr-card, .purr-widget-wrap, .purr-overlay, .purr-toast, .purr-banner, .purr-select-btn, .purr-linkcard {
-  --purr-pixel-font: "Jersey 10", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
-  --purr-outline: #6e3a22;      /* the cat's outline */
-  --purr-ink: #4a2716;
-  --purr-muted: #8a6248;
-  --purr-line: #e6cba5;
-  --purr-surface: #fff6e6;      /* cream paper */
-  --purr-blue: #c25a1e;         /* accent: deep orange (name kept so existing rules keep working) */
-  --purr-blue-bg: #fce6c4;
+  --purr-head-font: "Outfit", "Inter", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
+  --purr-outline: #7c7c78;      /* the logo's outline */
+  --purr-ink: #2b2723;
+  --purr-muted: #7a726a;
+  --purr-line: #ebe4da;
+  --purr-surface: #ffffff;
+  --purr-blue: #c8650f;         /* accent: the fish's orange, deepened for text (name kept so rules keep working) */
+  --purr-blue-bg: #fdf0e2;
   --purr-green: #3a7d47;
   --purr-green-bg: #e2f1d6;
   --purr-yellow: #9a5f00;
   --purr-yellow-bg: #ffe7b0;
   --purr-red: #b8321f;
   --purr-red-bg: #fad8cf;
-  --purr-shadow: 4px 4px 0 rgba(110, 58, 34, .35);
-  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
+  --purr-shadow: 0 10px 28px -6px rgba(60, 45, 30, .22), 0 2px 6px rgba(60, 45, 30, .08);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: var(--purr-ink);
@@ -33,7 +31,7 @@
   text-align: left;
 }
 .purr-card *, .purr-overlay * { box-sizing: border-box; }
-.purr-mascot { flex: none; object-fit: contain; image-rendering: pixelated; } /* pixel-art cat stays crisp */
+.purr-mascot { flex: none; object-fit: contain; }   /* the logo cat (smooth drawing) */
 
 /* buttons: at least 44 px tall */
 .purr-btn {
@@ -129,6 +127,7 @@
 .purr-w-pending .purr-widget-icon { background: var(--purr-muted); }
 .purr-preview {
   display: none; position: absolute; left: 0; top: calc(100% + 6px); z-index: 2147483645;
+  pointer-events: none;   /* a tooltip: never covers or "catches" the text and links underneath */
   width: max-content; max-width: 280px; padding: 8px 12px; border-radius: 10px;
   background: var(--purr-surface); color: var(--purr-ink); border: 2px solid var(--purr-line); box-shadow: var(--purr-shadow); font-weight: 700;
 }
@@ -204,18 +203,14 @@
 }
 .purr-ccat.over { z-index: 2147483647; }
 .purr-ccat-sprite {
-  width: 48px; height: 48px; background-repeat: no-repeat; image-rendering: pixelated; transform-origin: 50% 70%;
-  /* neon glow: a tight bright ring plus a soft halo, visible on light and dark pages */
-  filter: drop-shadow(0 0 1px #ff8a2a) drop-shadow(0 0 5px rgba(255, 106, 26, .75)) drop-shadow(0 2px 1px rgba(0, 0, 0, .25));
+  width: 48px; height: 48px; transform-origin: 50% 70%;
 }
-.purr-ccat.swish .purr-ccat-sprite { animation: purr-swish .6s ease-in-out infinite alternate; transform-origin: 50% 100%; }
-.purr-ccat.puff .purr-ccat-sprite { animation: purr-puff .12s linear infinite alternate; }
-@keyframes purr-swish { from { rotate: -3deg; } to { rotate: 3deg; } }
-@keyframes purr-puff { from { scale: 1.08 1.12; translate: -1px 0; } to { scale: 1.1 1.14; translate: 1px 0; } }
+/* The white cat's animation sheet (mascots/cat/sheet.png); size and frame are set by cursor-cat.js. */
+.purr-ccat-sprite { background-repeat: no-repeat; transform-origin: 50% 85%; }
 .purr-ccat-bubble {
   position: absolute; left: 50%; bottom: 80%; transform: translate(-50%, 4px); opacity: 0;
-  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 3px; white-space: nowrap; border: 2px solid #6e3a22; display: flex; align-items: center; justify-content: center;
-  font: 400 17px/1 "Jersey 10", system-ui, sans-serif; color: #fff; background: #8a6248; box-shadow: 2px 2px 0 rgba(110, 58, 34, .3);
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; white-space: nowrap; border: 2px solid #7c7c78; display: flex; align-items: center; justify-content: center;
+  font: 700 14px/1 "Outfit", "Inter", system-ui, sans-serif; color: #fff; background: #7a726a; box-shadow: 0 2px 6px rgba(60, 45, 30, .2);
   transition: opacity .15s, transform .15s;
 }
 .purr-ccat-bubble.show { opacity: 1; transform: translate(-50%, 0); }
@@ -224,77 +219,96 @@
 .purr-ccat-bubble.danger { background: #b8321f; }
 .purr-ccat-bubble.love { background: #e8607c; }
 .purr-paused .purr-ccat { display: none !important; }
+.purr-manual .purr-widget-wrap, .purr-manual .purr-ccat, .purr-manual .purr-linkcard { display: none !important; }   /* Manual mode: quiet */
 @media (prefers-reduced-motion: reduce) { .purr-ccat-sprite { animation: none !important; } .purr-ccat-bubble { transition: none; } }
 
-/* ---------- pixel theme: shapes and type (overrides the base shapes above) ---------- */
+/* ---------- logo theme: round shapes, soft shadows, pixel headline font (overrides the base shapes above) ---------- */
 .purr-card, .purr-warning, .purr-toast, .purr-preview {
-  border: 3px solid var(--purr-outline); border-radius: 6px; box-shadow: var(--purr-shadow);
+  border: 2px solid var(--purr-outline); border-radius: 20px; box-shadow: var(--purr-shadow);
 }
-.purr-card { border-top-width: 3px; }
+.purr-card { border-top-width: 2px; }
+.purr-card:not(.purr-docked) { overflow: hidden; }          /* clip the coloured top edge to the corners */
+.purr-docked { overflow-y: auto; overscroll-behavior: contain; }   /* tall popups scroll inside, not the page behind */
 .purr-card.purr-green { box-shadow: inset 0 6px 0 var(--purr-green), var(--purr-shadow); }
 .purr-card.purr-yellow { box-shadow: inset 0 6px 0 #e8a317, var(--purr-shadow); }
 .purr-card.purr-red { box-shadow: inset 0 6px 0 var(--purr-red), var(--purr-shadow); }
-.purr-card.purr-thinking, .purr-card.purr-recovery, .purr-card.purr-send { box-shadow: inset 0 6px 0 #e48642, var(--purr-shadow); }
+.purr-card.purr-thinking, .purr-card.purr-recovery, .purr-card.purr-send { box-shadow: inset 0 6px 0 #e48c28, var(--purr-shadow); }
 .purr-card { padding-top: 20px; }
-/* Jersey 10 is a compact pixel font: one weight, drawn a little larger to stay easy to read. */
+/* Headlines, badges and short labels in Outfit, like the website's headings and buttons. */
 .purr-headline, .purr-alert-line, .purr-pill, .purr-widget-label, .purr-toast span, .purr-banner, .purr-select-btn, .purr-card h4 {
-  font-family: var(--purr-pixel-font); font-weight: 400; letter-spacing: .02em;
+  font-family: var(--purr-head-font); font-weight: 700; letter-spacing: -0.01em;
 }
-.purr-headline { font-size: 26px; line-height: 1.1; }
-.purr-alert-line { font-size: 22px; }
-.purr-card h4 { font-size: 19px; }
-.purr-pill { font-size: 16px; }
-.purr-toast span, .purr-banner, .purr-select-btn { font-size: 19px; }
-.purr-btn, .purr-choice, .purr-voice, .purr-advice, .purr-contacts, .purr-draft, .purr-send-text { border-radius: 4px; }
-.purr-btn, .purr-choice, .purr-voice { border-color: var(--purr-outline); box-shadow: 2px 2px 0 rgba(110, 58, 34, .3); }
-.purr-btn:active, .purr-choice:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(110, 58, 34, .3); }
-.purr-btn-primary { background: var(--purr-blue); border-color: var(--purr-outline); color: #fff; }
-.purr-btn-safe { background: var(--purr-green); border-color: var(--purr-outline); color: #fff; }
+.purr-headline { font-size: 22px; line-height: 1.2; }
+.purr-alert-line { font-size: 20px; }
+.purr-card h4 { font-size: 16.5px; }
+.purr-pill { font-size: 13.5px; }
+.purr-toast span, .purr-banner, .purr-select-btn { font-size: 16px; }
+.purr-btn, .purr-choice, .purr-voice { border-radius: 999px; }
+.purr-advice, .purr-contacts, .purr-draft, .purr-send-text { border-radius: 14px; }
+.purr-btn, .purr-choice, .purr-voice { border-color: var(--purr-outline); box-shadow: none; }
+.purr-btn:active, .purr-choice:active { transform: scale(.98); }
+.purr-btn-primary { background: linear-gradient(135deg, var(--purr-blue), #e48c28); border-color: transparent; color: #fff; }
+.purr-btn-safe { background: var(--purr-green); border-color: var(--purr-green); color: #fff; }
 .purr-btn-quiet { border-color: transparent; box-shadow: none; }
-.purr-pill { border-radius: 4px; border-width: 2px; }
+.purr-pill { border-radius: 999px; border-width: 2px; }
 .purr-advice { border: 2px dashed var(--purr-line); }
-.purr-icon-btn { border-radius: 4px; color: var(--purr-outline); }
-.purr-overlay { background: rgba(74, 39, 22, .55); }
-.purr-warning { border-color: var(--purr-outline); box-shadow: inset 0 8px 0 var(--purr-red), 6px 6px 0 rgba(0, 0, 0, .3); padding-top: 28px; }
+.purr-icon-btn { border-radius: 999px; color: var(--purr-outline); }
+.purr-overlay { background: rgba(30, 24, 18, .5); }
+.purr-warning { border-color: var(--purr-outline); box-shadow: inset 0 8px 0 var(--purr-red), var(--purr-shadow); padding-top: 28px; }
 
-/* message widget: a small pixel badge */
-.purr-widget { border: 2px solid var(--purr-outline); border-radius: 4px; box-shadow: 2px 2px 0 rgba(110, 58, 34, .3); padding: 2px 8px 2px 2px; }
-.purr-widget-icon { border-radius: 2px; color: #fff; }
-.purr-widget-label { font-size: 16px; font-weight: 400; }
-.purr-w-pending .purr-widget-icon { background: #e48642; }
+/* message widget: a small round badge */
+.purr-widget { border: 2px solid var(--purr-outline); border-radius: 999px; box-shadow: 0 2px 6px rgba(60, 45, 30, .15); padding: 2px 10px 2px 2px; }
+.purr-widget-icon { border-radius: 50%; color: #fff; }
+.purr-widget-label { font-size: 13.5px; font-weight: 700; }
+.purr-w-pending .purr-widget-icon { background: #e48c28; }
 
 /* toast, banner, "Check with Purrtect" button */
 .purr-toast { border-color: var(--purr-outline); color: var(--purr-green); }
-.purr-banner, .purr-select-btn { border: 2px solid var(--purr-outline); border-radius: 4px; box-shadow: var(--purr-shadow); }
+.purr-banner, .purr-select-btn { border: 2px solid var(--purr-outline); border-radius: 999px; box-shadow: var(--purr-shadow); }
 .purr-select-btn { color: var(--purr-blue); background: var(--purr-surface); }
 .purr-send .purr-actions { background: var(--purr-surface); border-top: 2px solid var(--purr-line); }
 
 /* "checking…": a compact pill instead of a big empty card */
 .purr-card.purr-compact { width: auto; max-width: 320px; padding: 8px 12px 8px 8px; }
 .purr-compact .purr-card-head { align-items: center; gap: 8px; }
-.purr-compact .purr-headline { font-size: 21px; }
+.purr-compact .purr-headline { font-size: 18px; }
 .purr-compact .purr-card-tools { margin: 0 -4px 0 0; }
 .purr-compact .purr-icon-btn { min-width: 36px; min-height: 36px; }
 
-/* ---------- link card: rest on a link to see where it really goes ---------- */
+/* ---------- link card: rest on a link to see where it really goes (same look as the app's cards) ---------- */
 .purr-linkcard {
-  position: fixed; z-index: 2147483641; max-width: 300px; padding: 8px 10px; display: flex; flex-direction: column; gap: 8px;
-  background: var(--purr-surface); color: var(--purr-ink); border: 3px solid var(--purr-outline); border-radius: 6px;
-  box-shadow: var(--purr-shadow); font: 15px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif;
+  position: fixed; z-index: 2147483641; max-width: 320px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+  background: var(--purr-surface); color: var(--purr-ink); border: 1.5px solid var(--purr-line); border-radius: 20px;
+  box-shadow: 0 18px 40px -12px rgba(60, 45, 30, .28), 0 2px 8px rgba(60, 45, 30, .08);
+  font: 400 14.5px/1.45 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-.purr-linkcard-head { display: flex; align-items: center; gap: 8px; font: 400 20px/1.1 "Jersey 10", system-ui, sans-serif; overflow-wrap: anywhere; }
+.purr-linkcard-head { display: flex; align-items: center; gap: 10px; font: 600 15.5px/1.3 "Inter", system-ui, sans-serif; overflow-wrap: anywhere; }
 .purr-linkcard-sign {
-  flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 3px;
-  border: 2px solid var(--purr-outline); color: #fff; font: 700 14px/1 system-ui, sans-serif;
+  flex: none; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%;
+  color: #fff; font: 700 14px/1 "Outfit", system-ui, sans-serif;
 }
 .purr-linkcard.lv-green .purr-linkcard-sign { background: var(--purr-green); }
 .purr-linkcard.lv-yellow .purr-linkcard-sign { background: #e8a317; }
 .purr-linkcard.lv-red .purr-linkcard-sign { background: var(--purr-red); }
-.purr-linkcard.lv-unknown .purr-linkcard-sign { background: #8a6248; }
-.purr-linkcard.lv-red { border-top: 6px solid var(--purr-red); }
-.purr-linkcard.lv-yellow { border-top: 6px solid #e8a317; }
-.purr-linkcard-why { margin: 0; padding-left: 18px; font-size: 15px; }
+.purr-linkcard.lv-unknown .purr-linkcard-sign, .purr-linkcard.lv-unfamiliar .purr-linkcard-sign { background: #8a827a; }
+.purr-linkcard-note { margin-top: -6px; padding-left: 36px; color: var(--purr-muted); font-size: 13px; }
+.purr-linkcard.lv-red { border-top: 5px solid var(--purr-red); }
+.purr-linkcard.lv-yellow { border-top: 5px solid #e8a317; }
+.purr-linkcard-why { margin: 0; padding: 10px 12px 10px 28px; font-size: 13.5px; color: var(--purr-ink); background: #faf6f0; border-radius: 12px; }
 .purr-linkcard-why li + li { margin-top: 4px; }
 .purr-linkcard-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.purr-linkcard-actions button { min-height: 44px; }
+.purr-linkcard-actions .purr-btn { min-height: 44px; padding: 10px 18px; font: 700 14.5px/1 "Outfit", "Inter", system-ui, sans-serif; }
+.purr-linkcard-actions .purr-btn:not(.purr-btn-primary) { border: 1.5px solid var(--purr-line); background: var(--purr-surface); color: var(--purr-ink); }
 .purr-choice-hint { display: block; font-size: 13px; font-weight: 400; opacity: .75; margin-top: 2px; }
+.purr-btn, .purr-choice, .purr-voice { font-family: "Outfit", "Inter", system-ui, sans-serif; }
+
+/* "Purrtect was updated — refresh this page" (shown when this page still runs an old copy) */
+.purr-updated {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 2147483647;
+  display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 32px); padding: 10px 10px 10px 18px;
+  background: #ffffff; color: #2b2723; border: 1.5px solid #ebe4da; border-radius: 999px;
+  box-shadow: 0 18px 40px -12px rgba(60, 45, 30, .3); font: 600 15px/1.3 "Inter", system-ui, sans-serif;
+}
+.purr-updated .purr-btn { min-height: 40px; padding: 8px 18px; border-radius: 999px; border: 0; color: #fff;
+  background: linear-gradient(135deg, #c8650f, #e48c28); font: 700 14.5px/1 "Outfit", "Inter", system-ui, sans-serif; cursor: pointer; }
+.purr-updated .purr-icon-btn { min-width: 36px; min-height: 36px; border: 0; background: none; font-size: 20px; color: #7a726a; cursor: pointer; }

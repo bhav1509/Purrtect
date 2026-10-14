@@ -666,7 +666,7 @@
     "message": "Manual"
   },
   "modeHelp": {
-    "message": "Auto checks every link, and the full text from new senders. Manual checks only what you pick."
+    "message": "Auto checks every link, and the full text from new senders. Manual stays quiet (no badges, link cards or cursor cat) and checks only what you pick: select text and press \"Check with Purrtect\", or right-click."
   },
   "set_sensitivity": {
     "message": "How careful?"
@@ -808,5 +808,41 @@
   },
   "payment_crypto": {
     "message": "Crypto"
+  },
+  "hit_risky_site": {
+    "message": "Risky kind of website"
+  },
+  "hitwhy_risky_site": {
+    "message": "Piracy, torrent, cracked-software, betting and adult sites often carry fake downloads and harmful ads."
+  },
+  "hit_lure_word": {
+    "message": "Tempting or official-sounding words"
+  },
+  "hitwhy_lure_word": {
+    "message": "Words like login, verify, bonus or claim in a web address are a common trick to make a fake page look real."
+  },
+  "hit_odd_address": {
+    "message": "Strange-looking address"
+  },
+  "hitwhy_odd_address": {
+    "message": "Numbers mixed into the name, many dashes or a very long address are often used to imitate real websites."
+  },
+  "hit_free_hosting": {
+    "message": "Free website service"
+  },
+  "hitwhy_free_hosting": {
+    "message": "Anyone can make a page on this free service, so it does not prove who is behind it."
+  },
+  "lc_unfamiliar": {
+    "message": "Unfamiliar website"
+  },
+  "lc_whyUnfamiliar": {
+    "message": "Purrtect found no warning signs, but this website is not on its list of well-known sites. Only open it if you trust where it came from, or ask Gemini to check it."
+  },
+  "updatedRefresh": {
+    "message": "Purrtect was updated. Refresh this page to keep using it."
+  },
+  "refresh": {
+    "message": "Refresh"
   }
 }

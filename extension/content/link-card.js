@@ -4,7 +4,8 @@
 //   "Check with Gemini"  a manual check of the link (masked, after approval when "Ask me" is on)
 // Works with or without the cursor cat. On WhatsApp, message buttons that hide their address
 // (e.g. "Explore the Channel") get "? Can't see where this goes".
-// Announces "purr-link-hover" { el, level } and "purr-link-leave" for the cursor cat.
+// Announces "purr-link-hover" { el, level }, "purr-link-leave", "purr-linkcard-open" { rect, level }
+// and "purr-linkcard-close" for the cursor cat.
 (function () {
   "use strict";
   if (self.PurrLinkCard || !self.PurrSite || (PurrSite.SITE === "other" && !PurrSite.everywhere)) return;
@@ -13,13 +14,13 @@
 
   const SHOW_AFTER = 700;   // ms resting on a link before the card opens
   const HIDE_AFTER = 300;   // ms after leaving both the link and the card
-  const SIGN = { green: "✓", yellow: "!", red: "⚠", unknown: "?" };
+  const SIGN = { green: "✓", unfamiliar: "?", yellow: "!", red: "⚠", unknown: "?" };
 
   let target = null;        // the link (or button) under the cursor
   let card = null, cardFor = null, unplace = null;
   let showTimer = null, hideTimer = null;
 
-  const enabled = () => !PurrSite.paused() && (!PurrSite.everywhere || PurrStore.settings.catEverywhere === true);
+  const enabled = () => !PurrSite.quiet() && (!PurrSite.everywhere || PurrStore.settings.catEverywhere === true);
 
   // A real web link, or on WhatsApp a button inside a checked message that hides its address.
   function linkFrom(node) {
@@ -56,6 +57,7 @@
   function reasons(info) {
     if (info.level === "unknown") return [t("lc_whyHidden")];
     const list = info.hits.map((h) => `${t("hit_" + h)}: ${t("hitwhy_" + h)}`);
+    if (info.level === "unfamiliar") list.push(t("lc_whyUnfamiliar"));
     if (info.inRiskyMessage) list.push(t("lc_whyMessage"));
     return list.length ? list : [t("lc_whyNone")];
   }
@@ -63,7 +65,7 @@
   function close() {
     clearTimeout(hideTimer);
     if (unplace) unplace();
-    if (card) card.remove();
+    if (card) { card.remove(); dispatchEvent(new CustomEvent("purr-linkcard-close")); }
     card = cardFor = unplace = null;
   }
 
@@ -91,6 +93,7 @@
       el("div", { class: "purr-linkcard-head" },
         el("span", { class: "purr-linkcard-sign", "aria-hidden": "true" }, SIGN[info.level]),
         el("span", {}, info.host)),
+      info.level === "unfamiliar" ? el("div", { class: "purr-linkcard-note" }, t("lc_unfamiliar")) : null,
       why,
       el("div", { class: "purr-linkcard-actions" }, whyBtn, gemini));
     card.addEventListener("mouseenter", () => clearTimeout(hideTimer));
@@ -98,6 +101,11 @@
     document.body.append(card);
     cardFor = node;
     unplace = UI.placeNear(card, node);
+    // once placed, tell the cursor cat where the card is, so it can sit beside it (not under it)
+    const shown = card;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (card === shown) dispatchEvent(new CustomEvent("purr-linkcard-open", { detail: { rect: shown.getBoundingClientRect(), level: info.level } }));
+    }));
   }
 
   function scheduleHide() {

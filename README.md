@@ -134,6 +134,7 @@ The extension calls the deployed backend (https://purrtect-api-fzrq3bgblq-el.a.r
 
 ## Credits
 
-Cat art: the orange tabby from the **Cat Game Pixel Pack** (original art, free to use; in `cat-game-pack/`).
-Pixel font: **Jersey 10** (SIL Open Font License; licence in `extension/fonts/OFL.txt`).
-Rebuild the extension's cat images with `python3 scripts/build_cat_assets.py` (needs Pillow), then `./scripts/sync.sh`.
+Cat art: the Purrtect logo (white cat holding a fish, `assets/cats/cat-fish-logo-2.png`) is used for the
+mascots, the cursor cat and the icons. Rebuild them with `python3 scripts/build_cat_assets.py` (needs Pillow),
+then `./scripts/sync.sh`.
+Fonts: **Inter** and **Outfit** (SIL Open Font License; details in `extension/fonts/OFL.txt`).

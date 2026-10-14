@@ -666,7 +666,7 @@
     "message": "手动"
   },
   "modeHelp": {
-    "message": "自动：检查所有链接和陌生人的全文。手动：只检查你选中的内容。"
+    "message": "自动模式会检查每个链接，以及新发件人的全部文字。手动模式保持安静（没有徽章、链接卡片或光标小猫），只检查你选择的内容：选中文字后点“用 Purrtect 检查”，或右键点击。"
   },
   "set_sensitivity": {
     "message": "提醒强度"
@@ -808,5 +808,41 @@
   },
   "payment_crypto": {
     "message": "加密货币"
+  },
+  "hit_risky_site": {
+    "message": "有风险的网站类型"
+  },
+  "hitwhy_risky_site": {
+    "message": "盗版、种子、破解软件、赌博和成人网站常常带有假下载和有害广告。"
+  },
+  "hit_lure_word": {
+    "message": "诱惑或冒充官方的字眼"
+  },
+  "hitwhy_lure_word": {
+    "message": "在网址里放 login、verify、bonus、claim 等词，是让假网页看起来像真的常见手段。"
+  },
+  "hit_odd_address": {
+    "message": "网址看起来很怪"
+  },
+  "hitwhy_odd_address": {
+    "message": "名字里夹数字、很多连字符或网址特别长，常被用来模仿真网站。"
+  },
+  "hit_free_hosting": {
+    "message": "免费建站服务"
+  },
+  "hitwhy_free_hosting": {
+    "message": "任何人都能在这个免费服务上建网页，所以无法证明背后是谁。"
+  },
+  "lc_unfamiliar": {
+    "message": "不熟悉的网站"
+  },
+  "lc_whyUnfamiliar": {
+    "message": "没有发现警告迹象，但这个网站不在知名网站名单里。只有在你信任来源时才打开，或者让 Gemini 检查一下。"
+  },
+  "updatedRefresh": {
+    "message": "Purrtect 已更新。请刷新此页面以继续使用。"
+  },
+  "refresh": {
+    "message": "刷新"
   }
 }

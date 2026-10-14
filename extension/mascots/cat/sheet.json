@@ -1,56 +1,54 @@
 {
- "frame": 32,
- "feet": [
-  16,
-  29
- ],
+ "frameW": 134,
+ "frameH": 126,
+ "density": 2,
  "animations": {
-  "idle": {
+  "sit": {
    "row": 0,
-   "frames": 4,
+   "frames": 6,
    "fps": 6,
    "loop": true
   },
-  "sit": {
-   "row": 1,
-   "frames": 4,
-   "fps": 4,
-   "loop": true
-  },
-  "walk": {
-   "row": 2,
-   "frames": 6,
-   "fps": 10,
-   "loop": true
-  },
   "run": {
+   "row": 1,
+   "frames": 6,
+   "fps": 14,
+   "loop": true
+  },
+  "safe": {
+   "row": 2,
+   "frames": 5,
+   "fps": 6,
+   "loop": false
+  },
+  "unsure": {
    "row": 3,
    "frames": 6,
-   "fps": 12,
-   "loop": true
+   "fps": 6,
+   "loop": false
   },
-  "sleep": {
+  "notsafe": {
    "row": 4,
-   "frames": 4,
-   "fps": 3,
-   "loop": true
+   "frames": 5,
+   "fps": 6,
+   "loop": false
   },
-  "jump": {
+  "play": {
    "row": 5,
-   "frames": 6,
-   "fps": 10,
+   "frames": 5,
+   "fps": 6,
    "loop": false
   },
   "box": {
    "row": 6,
    "frames": 6,
-   "fps": 5,
-   "loop": true
-  },
-  "play": {
-   "row": 7,
-   "frames": 6,
    "fps": 8,
+   "loop": false
+  },
+  "sleep": {
+   "row": 7,
+   "frames": 4,
+   "fps": 2,
    "loop": true
   }
  }
