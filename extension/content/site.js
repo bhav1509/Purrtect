@@ -62,7 +62,17 @@
   // "Pause on this site": hide the widgets and stop automatic checks until it's switched back on.
   // Paused, or Manual mode on Gmail / WhatsApp: quiet. No badges, link cards or cursor cat; checks
   // run only when asked (selected text, right-click). Back to Auto: check what's on screen now.
+  // Appearance: Automatic follows the computer's light / dark setting; Light and Dark force one.
+  // ui.css reads html[data-purr-theme] for Purrtect's boxes on this page.
+  const darkScheme = matchMedia("(prefers-color-scheme: dark)");
+  function applyTheme() {
+    const pick = PurrStore.settings.theme || "auto";
+    document.documentElement.dataset.purrTheme = pick === "dark" || (pick === "auto" && darkScheme.matches) ? "dark" : "light";
+  }
+  darkScheme.addEventListener("change", applyTheme);
+
   function showPaused() {
+    applyTheme();
     const root = document.documentElement;
     const was = root.classList.contains("purr-paused") || root.classList.contains("purr-manual");
     root.classList.toggle("purr-paused", paused());
@@ -90,8 +100,8 @@
 
   // Where a link really goes and how risky it looks, judged in the browser only (nothing is sent).
   // Used by the link card and the cursor cat. Each link gets its own level: green (a well-known
-  // website), unfamiliar (no warning signs, but not on the trusted list), yellow or red. A link that
-  // looks fine but sits in a message flagged as risky is shown as "careful".
+  // website), unfamiliar (no warning signs, but not on the trusted list), yellow or red. An unfamiliar
+  // link in a message flagged as risky is shown as "careful"; a well-known site stays green.
   async function linkInfo(a) {
     await ready;
     const href = realHref(a);
@@ -102,8 +112,10 @@
     let level = PurrRules.levelFor(r.points, rules, PurrStore.settings.sensitivity);
     // Only well-known websites get ✓; anything else that looks fine is "unfamiliar", never "safe".
     if (level === "green" && !r.trusted) level = "unfamiliar";
+    // A risky message makes its unfamiliar links "careful". Well-known sites keep their ✓: the address
+    // is fine, and the message's own badge carries the warning (the card adds a note about it).
     const inRiskyMessage = !!a.dataset.purrRisk && a.dataset.purrRisk !== "green";
-    if (inRiskyMessage && (level === "green" || level === "unfamiliar")) level = "yellow";
+    if (inRiskyMessage && level === "unfamiliar") level = "yellow";
     return { host: r.host, level, hits: r.hits, inRiskyMessage };
   }
 

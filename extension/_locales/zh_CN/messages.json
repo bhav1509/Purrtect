@@ -859,5 +859,23 @@
   },
   "turnedOff": {
     "message": "Purrtect 已关闭"
+  },
+  "lc_riskyAround": {
+    "message": "这个链接所在的消息看起来有风险。"
+  },
+  "set_theme": {
+    "message": "外观"
+  },
+  "theme_auto": {
+    "message": "自动"
+  },
+  "theme_light": {
+    "message": "浅色"
+  },
+  "theme_dark": {
+    "message": "深色"
+  },
+  "info_theme": {
+    "message": "为此面板以及 Gmail 和 WhatsApp 上的 Purrtect 提示框选择浅色或深色。“自动”会跟随电脑的设置。"
   }
 }

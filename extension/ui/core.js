@@ -117,29 +117,51 @@
   // anchor: an Element (followed on scroll) or a DOMRect. Without one, the popup docks top-right.
   function placeNear(node, anchor) {
     node.classList.add("purr-floating");
-    const place = () => {
+    const place = (e) => {
       if (!node.isConnected) { cleanup(); return; }
+      if (e && e.type === "scroll" && e.target instanceof Node && node.contains(e.target)) return;   // scrolling inside the card itself
       const r = anchor instanceof Element ? anchor.getBoundingClientRect() : anchor;
       if (!r) return;
       const gap = 8;
       const w = node.offsetWidth;
+      const keep = node.scrollTop;                     // measuring resets the card's own scroll; put it back after
+      node.style.maxHeight = "";                       // measure at full height first
       const h = node.offsetHeight;
-      const below = innerHeight - r.bottom - gap;
-      let top = below >= Math.min(h, 260) ? r.bottom + gap : r.top - gap - h;
-      top = Math.max(8, Math.min(top, innerHeight - h - 8));
+      const below = innerHeight - r.bottom - gap - 8;  // room under the anchor
+      const above = r.top - gap - 8;                   // room over it
+      // Below if it fits, else above if it fits, else the roomier side, scrolling inside itself:
+      // the card never covers what opened it (the badge, the link, the selected text).
+      const goBelow = h <= below || (h > above && below >= above);
+      const room = goBelow ? below : above;
+      if (h > room) node.style.maxHeight = `${Math.max(160, Math.floor(room))}px`;
+      const shown = Math.min(h, Math.max(160, room));
+      let top = goBelow ? r.bottom + gap : r.top - gap - shown;
+      top = Math.max(8, Math.min(top, innerHeight - shown - 8));
       let left = Math.min(Math.max(8, r.left), innerWidth - w - 8);
       node.style.top = `${Math.round(top)}px`;
       node.style.left = `${Math.round(left)}px`;
+      node.scrollTop = keep;
     };
+    // Place again when the card's content changes size ("checking…" becomes the verdict, the mascot
+    // image loads), so a card that grows still fits the window and scrolls instead of running off it.
+    let queued = false;
+    const later = () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; place(); }); } };
+    const sizes = new ResizeObserver(later);
+    const watchChildren = () => { sizes.disconnect(); sizes.observe(node); [...node.children].forEach((c) => sizes.observe(c)); };
+    const changes = new MutationObserver(() => { watchChildren(); later(); });
     const cleanup = () => {
       removeEventListener("scroll", place, true);
       removeEventListener("resize", place);
+      sizes.disconnect();
+      changes.disconnect();
     };
     if (anchor) {
       node.style.right = "auto";
       requestAnimationFrame(place);
       addEventListener("scroll", place, true);
       addEventListener("resize", place);
+      watchChildren();
+      changes.observe(node, { childList: true });
     }
     return cleanup;
   }

@@ -859,5 +859,23 @@
   },
   "turnedOff": {
     "message": "Purrtect बंद है"
+  },
+  "lc_riskyAround": {
+    "message": "इस लिंक वाला मैसेज खतरनाक लगता है।"
+  },
+  "set_theme": {
+    "message": "दिखावट"
+  },
+  "theme_auto": {
+    "message": "अपने आप"
+  },
+  "theme_light": {
+    "message": "हल्का"
+  },
+  "theme_dark": {
+    "message": "गहरा"
+  },
+  "info_theme": {
+    "message": "इस पैनल और Gmail व WhatsApp पर Purrtect के बॉक्स के लिए हल्के या गहरे रंग। \"अपने आप\" आपके कंप्यूटर की सेटिंग के हिसाब से चलता है।"
   }
 }

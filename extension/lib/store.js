@@ -42,6 +42,7 @@
     cursorCat: false, // off by default: a small cat that follows the cursor on Gmail and WhatsApp Web
     catEverywhere: false, // ...and on all other websites, in manual mode (asks for Chrome's permission)
     modes: { gmail: "manual", whatsapp: "manual" },   // quiet by default: checks only what you pick; switch to Auto in Settings
+    theme: "auto", // Appearance: "auto" (follow the computer), "light" or "dark" — side panel and Purrtect's boxes on pages
     enabled: true, // the overall On / Off switch (side panel header): off = Purrtect does nothing anywhere
   };
   const DEFAULT_DATA = { knownSenders: [], greenCounts: {}, safeLinks: [], safeSenders: [], linkCache: {}, riskyOpenedAt: 0 };

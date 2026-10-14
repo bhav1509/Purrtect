@@ -1675,6 +1675,9 @@ input[type="url"]:focus {
   --purr-red: var(--danger);
   --purr-red-bg: var(--danger-soft);
   --purr-shadow: var(--shadow-sm);
+  --purr-blue-2: var(--accent-2);
+  --purr-on-color: var(--accent-ink);
+  --purr-soft: var(--surface);
   color: var(--ink);
 }
 #result .purr-card .purr-btn, #recovery .purr-card .purr-btn,

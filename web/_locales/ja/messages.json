@@ -859,5 +859,23 @@
   },
   "turnedOff": {
     "message": "Purrtect はオフです"
+  },
+  "lc_riskyAround": {
+    "message": "このリンクが入っているメッセージは危なそうです。"
+  },
+  "set_theme": {
+    "message": "表示"
+  },
+  "theme_auto": {
+    "message": "自動"
+  },
+  "theme_light": {
+    "message": "ライト"
+  },
+  "theme_dark": {
+    "message": "ダーク"
+  },
+  "info_theme": {
+    "message": "このパネルと、Gmail・WhatsApp 上の Purrtect の表示を明るい色か暗い色にします。「自動」はパソコンの設定に合わせます。"
   }
 }

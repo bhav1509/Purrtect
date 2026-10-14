@@ -135,6 +135,7 @@
       section(t("sec_general"),
         row(t("set_country"), select(t("set_country"), ["IN", "SG", "AU", "ID", "PH", "JP"], s.country, (v) => t("country_" + v), (v) => save({ country: v })), t("info_country")),
         row(t("set_language"), select(t("set_language"), ["en", "hi", "ja", "zh_CN"], s.uiLang, (v) => t("langName_" + v), (v) => save({ uiLang: v })), t("info_language")),
+        row(t("set_theme"), segmented(t("set_theme"), ["auto", "light", "dark"], s.theme || "auto", (v) => t("theme_" + v), (v) => save({ theme: v })), t("info_theme"), true),
         row(t("set_voice"), toggle(t("set_voice"), s.voice !== false, (on) => save({ voice: on })), t("info_voice")),
         row(t("set_cursorCat"), toggle(t("set_cursorCat"), s.cursorCat === true, (on) => save({ cursorCat: on })), t("info_cursorCat")),
         s.cursorCat === true ? row(t("set_catEverywhere"), toggle(t("set_catEverywhere"), s.catEverywhere === true, setEverywhere), t("info_catEverywhere")) : null),

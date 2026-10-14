@@ -9,7 +9,8 @@ Offline: local rules on the 30 samples (as Auto mode would score them), masking 
 JavaScript must agree), helpline filtering, that shared files are synced, and that the website and
 the extension share language and country (tests/prefs_sync.test.js), and the settings defaults
 and "Reset to defaults" (tests/settings_defaults.test.js).
-In a real browser: tests/e2e/sync_prefs.e2e.js (see the comment at its top).
+In a real browser (cd tests/e2e && npm install && npm test): sync_prefs.e2e.js, regressions.e2e.js (one
+check for each bug that once broke the app) and scenarios.e2e.js (the "Try by hand" checklist).
 With --api: scams caught out of 20, genuine messages wrongly flagged out of 10, average time.
 Each --api run calls Gemini 30 times (paid from the project's credits).
 """

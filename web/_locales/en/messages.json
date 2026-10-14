@@ -859,5 +859,23 @@
   },
   "turnedOff": {
     "message": "Purrtect is off"
+  },
+  "lc_riskyAround": {
+    "message": "The message around this link looks risky."
+  },
+  "set_theme": {
+    "message": "Appearance"
+  },
+  "theme_auto": {
+    "message": "Automatic"
+  },
+  "theme_light": {
+    "message": "Light"
+  },
+  "theme_dark": {
+    "message": "Dark"
+  },
+  "info_theme": {
+    "message": "Light or dark colours for this panel and for Purrtect's boxes on Gmail and WhatsApp. Automatic follows your computer's setting."
   }
 }

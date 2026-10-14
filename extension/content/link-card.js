@@ -94,6 +94,7 @@
         el("span", { class: "purr-linkcard-sign", "aria-hidden": "true" }, SIGN[info.level]),
         el("span", {}, info.host)),
       info.level === "unfamiliar" ? el("div", { class: "purr-linkcard-note" }, t("lc_unfamiliar")) : null,
+      info.level === "green" && info.inRiskyMessage ? el("div", { class: "purr-linkcard-note purr-linkcard-warn" }, t("lc_riskyAround")) : null,
       why,
       el("div", { class: "purr-linkcard-actions" }, whyBtn, gemini));
     card.addEventListener("mouseenter", () => clearTimeout(hideTimer));
